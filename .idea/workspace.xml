@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="dc289ef5-b2bc-41ff-812d-4b3640bb9b24" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/3004-Ivanhoe.iml" afterPath="$PROJECT_DIR$/3004-Ivanhoe.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="3004-Ivanhoe.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -169,6 +167,7 @@
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.includeInheritedMembers" value="false" />
+    <property name="FullScreen" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.Recents.Supers">
