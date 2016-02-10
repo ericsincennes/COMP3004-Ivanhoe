@@ -4,26 +4,29 @@ import java.io.IOException;
 import java.net.*;
 
 public class Client {
+	Socket socket;
 	
-	public static void main(String[] args){
-		Socket s;
-		int port = 4488;
-		InetAddress host = null;
+	public static void main(String[] args){}
+
+	public boolean connect(String IP, int port){
+		InetAddress host;
 		
-		try{
-			host = InetAddress.getByName("localhost");
-		} catch(UnknownHostException e){
-			e.printStackTrace();
+		try {
+			host = InetAddress.getByName(IP);
+		} catch (UnknownHostException e1) {
+			//e1.printStackTrace();
+			return false;
 		}
-		
-		System.out.println("Connection to " + host + " on port "+ port);
-		
+			
 		try{
-			s = new Socket(host, port);
+			socket = new Socket(host, port);
+			System.out.println("Connection to " + host + " on port "+ port);
+			return true;
 		} catch(IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			return false;
 		}
-		
 		
 	}
 }
+

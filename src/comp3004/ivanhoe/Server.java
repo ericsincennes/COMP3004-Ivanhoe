@@ -12,21 +12,16 @@ public class Server{
 	protected boolean 		isAcceptingConnections = true;
 	protected ServerSocket 	listeningSocket;
 
-	public Server(){
-		connect();
-	}
+	public Server(){}
 
 	public static void main(String[] args){
 		new Server();
 	}
 
-	private void connect(){
+	public void startup(int port){
 
 		Scanner in = new Scanner(System.in);
 		int count = numplayers;
-
-		System.out.println("Enter port to be used");
-		port = in.nextInt();
 
 		while(numplayers < 2 || numplayers > 5){
 			print("Enter number of players to play (between 2 and 5)");
@@ -42,7 +37,7 @@ public class Server{
 
 				print(getTimestamp() + ": New client connected from address " + clientSocket.getInetAddress() + " on port " +clientSocket.getPort());
 				count--;
-				new clientConnection(clientSocket);
+				new Player(clientSocket);
 				if(count == 0){
 					listeningSocket.close();
 					isAcceptingConnections = false;
@@ -78,13 +73,12 @@ public class Server{
 		System.err.println(s);
 	}
 
-	class clientConnection extends Thread {
+	class Player extends Thread {
 
 		protected Socket client;
 
-		public clientConnection(Socket c){
+		public Player(Socket c){
 			client = c;
-			print("new thread started");
 			start();
 		}
 

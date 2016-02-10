@@ -17,34 +17,16 @@ public abstract class Card {
 		return cardtype;
 	}
 
-
-	public void setCardtype(CardType cardtype) {
-		this.cardtype = cardtype;
-	}
-
-
 	public int getValue() {
 		return value;
-	}
-
-	public void setValue(int value) {
-		this.value = value;
 	}
 
 	public String getColour() {
 		return colour;
 	}
 
-	public void setColour(String colour) {
-		this.colour = colour;
-	}
-
 	public String getCardName() {
 		return cardName;
 	}
 
-	public void setCardName(String cardName) {
-		this.cardName = cardName;
-	}
-	
 }
