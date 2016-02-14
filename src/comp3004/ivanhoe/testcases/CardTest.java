@@ -6,6 +6,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import comp3004.ivanhoe.Card;
+import comp3004.ivanhoe.Card.*;
+import comp3004.ivanhoe.ColourCard;
+
 public class CardTest {
 
 	@Before
@@ -17,8 +21,11 @@ public class CardTest {
 	}
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void ColourCardConstructor() {
+		Card ctest = new ColourCard(CardColour.Green,1);
+		assert (ctest.getCardType() == CardType.Colour);
+		assert (((ColourCard)ctest).getColour() == CardColour.Green);
+		assert (((ColourCard)ctest).getValue() == 1);
 	}
 
 }

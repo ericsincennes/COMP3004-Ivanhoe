@@ -13,7 +13,7 @@ public abstract class Card {
 	protected String cardName;
 	protected CardType cardType;
 		
-	public CardType getCardtype() {
+	public CardType getCardType() {
 		return cardType;
 	}
 

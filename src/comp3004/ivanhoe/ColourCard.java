@@ -5,11 +5,19 @@ public class ColourCard extends Card {
 	protected int cardValue;
 	
 	
-	protected ColourCard(CardColour colour, int value) {
+	public ColourCard(CardColour colour, int value) {
 		cardType = CardType.Colour;
 		cardColour = colour;
 		cardValue = value;
 		cardName = colour.name() + " " + value;
+	}
+	
+	public CardColour getColour() {
+		return cardColour;
+	}
+	
+	public int getValue() {
+		return cardValue;
 	}
 
 }
