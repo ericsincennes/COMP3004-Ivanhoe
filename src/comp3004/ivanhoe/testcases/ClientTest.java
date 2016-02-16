@@ -2,11 +2,8 @@ package comp3004.ivanhoe.testcases;
 
 
 import comp3004.ivanhoe.*;
-
 import static org.junit.Assert.*;
-
 import java.util.logging.Logger;
-
 import org.junit.Test;
 
 public class ClientTest {

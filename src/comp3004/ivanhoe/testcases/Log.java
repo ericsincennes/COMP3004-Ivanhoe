@@ -1,4 +1,4 @@
-package comp3004.ivanhoe.testcases;
+package src.comp3004.ivanhoe.testcases;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -9,8 +9,8 @@ public class Log {
 	Logger logger;
 	FileHandler fh;
 
-	public Log(String name, String classname){
-		logger = Logger.getLogger(name);
+	public Log(String loggername, String classname){
+		logger = Logger.getLogger(loggername);
 		try {  
 
 			//configure the logger  
