@@ -1,4 +1,4 @@
-package src.comp3004.ivanhoe;
+package comp3004.ivanhoe;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

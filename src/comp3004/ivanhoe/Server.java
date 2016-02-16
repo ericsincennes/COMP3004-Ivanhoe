@@ -1,11 +1,11 @@
-package src.comp3004.ivanhoe;
+package comp3004.ivanhoe;
 
 import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import src.comp3004.ivanhoe.testcases.Log;
+import comp3004.ivanhoe.testcases.Log;
 
 public class Server{
 
