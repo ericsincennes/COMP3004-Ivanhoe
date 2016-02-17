@@ -1,10 +1,11 @@
 package comp3004.ivanhoe;
 
+import java.util.List;
 import java.util.ArrayList;
 
 public class Hand {
 	
-	ArrayList<Card> hand;
+	private List<Card> hand;
 	
 	public Hand(){
 		hand = new ArrayList<Card>();
@@ -14,7 +15,7 @@ public class Hand {
 	 * Returns the whole hand
 	 * @return ArrayList<Card>
 	 */
-	public ArrayList<Card> getHand(){
+	public List<Card> getHand(){
 		return hand;
 	}
 	
