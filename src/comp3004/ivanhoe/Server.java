@@ -13,7 +13,7 @@ public class Server{
 	private int 			numplayers;
 	private boolean 		isAcceptingConnections = true;
 	private ServerSocket 	listeningSocket;
-	private Log				log = new Log(this.getClass().getName(), "ServerLog");
+	//private Log				log = new Log(this.getClass().getName(), "ServerLog");
 
 	public Server(){
 		Scanner in = new Scanner(System.in);
@@ -37,7 +37,7 @@ public class Server{
 		try{
 
 			print(getTimestamp() + " : server listening on port " + port);
-			log.logmsg(getTimestamp() + " : server listening on port " + port);
+			//log.logmsg(getTimestamp() + " : server listening on port " + port);
 			listeningSocket = new ServerSocket(port);
 
 			while(true){
@@ -45,7 +45,7 @@ public class Server{
 				Socket clientSocket = listeningSocket.accept();
 
 				print(getTimestamp() + ": New client connected from address " + clientSocket.getInetAddress() + " on port " +clientSocket.getPort());
-				log.logmsg(getTimestamp() + ": New client connected from address " + clientSocket.getInetAddress() + " on port " +clientSocket.getPort());
+				//log.logmsg(getTimestamp() + ": New client connected from address " + clientSocket.getInetAddress() + " on port " +clientSocket.getPort());
 
 				count--;
 
