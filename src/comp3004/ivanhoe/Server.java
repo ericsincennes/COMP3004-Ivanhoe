@@ -14,7 +14,8 @@ public class Server{
 	private boolean 		isAcceptingConnections = true;
 	private ServerSocket 	listeningSocket;
 	//private Log				log = new Log(this.getClass().getName(), "ServerLog");
-
+	private RulesEngine		rules;
+	
 	public Server(){
 		Scanner in = new Scanner(System.in);
 		int count = numplayers;
@@ -97,17 +98,19 @@ public class Server{
 		private InetAddress addr;
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
-
+		private long threadID = this.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
+		private Hand hand;
+		
 		public Player(Socket c){
 			client = c;
 			port = c.getPort();
 			addr = c.getInetAddress();
+			hand = new Hand();
 			
 			try {
 				out = new ObjectOutputStream(client.getOutputStream());
 				in = new ObjectInputStream(new ObjectInputStream(client.getInputStream()));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -130,7 +133,6 @@ public class Server{
 			try {
 				o = in.readObject();
 			} catch (ClassNotFoundException | IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return o;
@@ -146,7 +148,6 @@ public class Server{
 				out.flush();
 				out.writeObject(o);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return false;
 			}
