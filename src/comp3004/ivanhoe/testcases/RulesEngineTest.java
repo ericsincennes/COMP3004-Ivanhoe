@@ -16,5 +16,8 @@ public class RulesEngineTest {
 		assertTrue(c.getPlayerNum() != -1);
 	}
 	
-	
+	@Test
+	public void chooseDealer(){
+		
+	}
 }

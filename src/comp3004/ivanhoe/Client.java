@@ -20,7 +20,7 @@ public class Client {
 
 	public Client(){
 		connect(2244);
-		run();
+		start();
 	}
 	
 	public boolean connect(int port){
@@ -43,10 +43,11 @@ public class Client {
 		}
 	}
 
-	private void run(){
+	private void start(){
+		playerNum = (int) get();	//get player number from server
+		
 		while(true){
-			playerNum = (int) get();
-			print(getPlayerNum()+"");
+			
 		}
 	}
 	

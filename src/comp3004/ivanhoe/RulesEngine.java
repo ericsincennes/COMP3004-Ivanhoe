@@ -14,21 +14,27 @@ public class RulesEngine {
 	 * @param ID this.currentThread.getID() of the player thread
 	 * @return boolean of success
 	 */
-	public boolean registerThread(long ID){
+	public int registerThread(long ID){
 		//is game full?
 		if(numPlayers >= 4){
-			return false;
+			return -1;
 		}
 		//check if id already registered
-		for(long i=0; i<players.length; i++){
-			if(i == ID){
-				return false;
+		for(int i=0; i<players.length; i++){
+			if(players[i] == ID){
+				return -1;
 			}
 		}
 		
 		players[numPlayers] = ID;
 		numPlayers++;
-		return true;
+		return numPlayers;
+	}
+	
+	private void chooseDealer(){
+		if(numPlayers > 1){
+			
+		}
 	}
 	
 	public long[] getPlayers(){
