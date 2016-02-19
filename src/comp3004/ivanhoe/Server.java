@@ -125,7 +125,9 @@ public class Server{
 				boolean b = rules.registerThread(threadID);
 				if(b == true){
 					long[] p = rules.getPlayers();
-					print(""+p[0]);
+					send(p.length);
+				} else {
+					break;
 				}
 			}
 		}

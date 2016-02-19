@@ -14,7 +14,9 @@ public class Client {
 	ObjectOutputStream out;
 	int playerNum = -1;
 	
-	public static void main(String[] args){	}
+	public static void main(String[] args){
+		new Client();
+	}
 
 	public Client(){
 		connect(2244);
@@ -24,26 +26,17 @@ public class Client {
 	public boolean connect(int port){
 		InetAddress host;
 		print("Connecting to server...");
-		try {
-			host = InetAddress.getByName("localhost");
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-			return false;
-		}
-
-		try{
-			socket = new Socket(host, port);
-			System.out.println("Connection to " + host + " on port "+ port);
-
-		} catch(IOException e) {
-			e.printStackTrace();
-			return false;
-		}
 		
 		try {
+			host = InetAddress.getByName("localhost");
+			
+			socket = new Socket(host, port);
+			print("Connection to " + host + " on port "+ port);
+			
 			in = new ObjectInputStream(socket.getInputStream());
 			out = new ObjectOutputStream(socket.getOutputStream());
 			return true;
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -52,12 +45,8 @@ public class Client {
 
 	private void run(){
 		while(true){
-			
-			try {
-				playerNum = (int) in.readInt();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			playerNum = (int) get();
+			print(getPlayerNum()+"");
 		}
 	}
 	

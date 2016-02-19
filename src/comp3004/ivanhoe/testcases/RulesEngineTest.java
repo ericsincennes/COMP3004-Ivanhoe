@@ -12,6 +12,7 @@ public class RulesEngineTest {
 	public void RegisterThread(){
 		Client c = new Client();
 		
+		System.out.println(c.getPlayerNum());
 		assertTrue(c.getPlayerNum() != -1);
 	}
 	
