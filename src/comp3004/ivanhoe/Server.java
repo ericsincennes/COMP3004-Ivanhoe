@@ -30,7 +30,7 @@ public class Server{
 			numplayers = in.nextInt();
 		}
 		in.close();
-
+		rules = new RulesEngine();
 		connectAndRecieve(count);
 	}
 
@@ -50,12 +50,14 @@ public class Server{
 
 				count--;
 
-				new Player(clientSocket);
-
+				Player p = new Player(clientSocket);
+				p.start();
+				/*
 				if(count == 0){
 					listeningSocket.close();
 					isAcceptingConnections = false;
 				}
+				*/
 			}
 		} catch(IOException e){
 			error(getTimestamp() + ": Server socket unable to connect to port" + port);
@@ -101,6 +103,7 @@ public class Server{
 		private long threadID = this.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
 		private Hand hand;
 		
+		
 		public Player(Socket c){
 			client = c;
 			port = c.getPort();
@@ -109,17 +112,21 @@ public class Server{
 			
 			try {
 				out = new ObjectOutputStream(client.getOutputStream());
-				in = new ObjectInputStream(new ObjectInputStream(client.getInputStream()));
+				in = new ObjectInputStream(client.getInputStream());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
-			this.start();
+			
 		}
 
 		public void run(){
 			while(true){
-				
+				boolean b = rules.registerThread(threadID);
+				if(b == true){
+					long[] p = rules.getPlayers();
+					print(""+p[0]);
+				}
 			}
 		}
 		
@@ -145,7 +152,6 @@ public class Server{
 		 */
 		private boolean send(Object o){
 			try {
-				out.flush();
 				out.writeObject(o);
 			} catch (IOException e) {
 				e.printStackTrace();
