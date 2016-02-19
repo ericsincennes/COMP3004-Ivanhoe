@@ -12,7 +12,7 @@ public class DeckTest {
 	@Test
 	public void createDeck() {
 		assertTrue(d.cards != null);
-		assertTrue();
+
 	}
 	
 	@Test
