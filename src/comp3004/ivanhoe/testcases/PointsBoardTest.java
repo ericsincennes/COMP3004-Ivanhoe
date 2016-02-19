@@ -61,12 +61,12 @@ public class PointsBoardTest {
 	}
 	
 	@Test
-	public getCardByIndex() {
+	public void getCardByIndex() {
 		testBoard.addCard(new ColourCard(CardColour.Purple, 4));
 		testBoard.addCard(new ColourCard(CardColour.Purple, 4));
 		testBoard.addCard(new SupporterCard(3));
 		
-		assertEquals(testBoard.getCard(1).getCardName, "Purple 4");
+		assertEquals(testBoard.getCard(1).getCardName(), "Purple 4");
 		assertEquals(testBoard.getCard(1).getCardType(), CardType.Colour);
 	}
 	
@@ -77,7 +77,7 @@ public class PointsBoardTest {
 		testBoard.addCard(new SupporterCard(3));
 		
 		testBoard.remove(1);
-		assertEquals(testBoard.getCard(1).getCardName, "Squire");
+		assertEquals(testBoard.getCard(1).getCardName(), "Squire");
 		assertEquals(testBoard.getCard(1).getCardType(), CardType.Supporter);
 	}
 	
@@ -109,7 +109,7 @@ public class PointsBoardTest {
 		
 		assertEquals(testBoard.calculatePoints(), 11);
 		
-		testBoard.setColour(CardColour.Green);
+		testBoard.setColour(CardColour.Green); //green special case
 		assertEquals(testBoard.calculatePoints(), 3);
 	}
 
