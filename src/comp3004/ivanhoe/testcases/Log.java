@@ -8,7 +8,7 @@ import java.util.logging.SimpleFormatter;
 public class Log {
 	Logger logger;
 	FileHandler fh;
-	private final static String LogDirectory = (System.getProperty("user.dir") + "/src/Logs/");
+	private String LogDirectory = (System.getProperty("user.dir") + "/src/Logs/");
 
 	public Log(String loggername, String classname){
 		logger = Logger.getLogger(loggername);
