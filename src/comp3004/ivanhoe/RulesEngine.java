@@ -4,7 +4,7 @@ public class RulesEngine {
 	long[] players;
 	int numPlayers = 0;
 	Card.CardColour TournementColor = null;
-	
+	long TournementColorChooser;
 
 	public RulesEngine(){
 		players = new long[5];
@@ -36,13 +36,13 @@ public class RulesEngine {
 	 * Choose who starts the first tournament
 	 * @return player number of the first tournament starter
 	 */
-	public int firstTournement(){
+	public long firstTournement(){
 		if(numPlayers > 1){
 			int i = randRange(0, numPlayers);
 			if(i == numPlayers){
-				return 0;
+				return players[0];
 			} else {
-				return i;
+				return players[i];
 			}
 		} else {
 			return -1;
@@ -54,7 +54,7 @@ public class RulesEngine {
 	 * @return
 	 */
 	public synchronized Hand dealHand(){
-		
+		return null;
 	}
 	
 	public long[] getPlayers(){
