@@ -17,7 +17,7 @@ public class PointsBoard {
 	
 	public PointsBoard() {
 		cardsPlayed = new ArrayList<Card>();
-		cardsPlayed = new ArrayList<Card>();
+		actionsPlayed = new ArrayList<Card>();
 		score = 0;
 	}
 	
@@ -57,14 +57,14 @@ public class PointsBoard {
 	}
 	
 	public List<Card> getActionCards() {
-		List<Card> viewedCards = new ArrayList<Card>(actionsPlayed.size());
-		Collections.copy(viewedCards, actionsPlayed);
+		List<Card> viewedCards = new ArrayList<Card>(actionsPlayed);
+		//Collections.copy(viewedCards, actionsPlayed);
 		return viewedCards;
 	}
 	
 	public List<Card> getCards() {
-		List<Card> viewedCards = new ArrayList<Card>(cardsPlayed.size());
-		Collections.copy(viewedCards, cardsPlayed);
+		List<Card> viewedCards = new ArrayList<Card>(cardsPlayed);
+		//Collections.copy(viewedCards, cardsPlayed);
 		return viewedCards;
 	}
 	
