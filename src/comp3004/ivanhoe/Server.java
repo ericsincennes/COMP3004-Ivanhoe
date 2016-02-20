@@ -98,6 +98,7 @@ public class Server{
 		private Socket client;
 		private int port;
 		private InetAddress addr;
+		private boolean isRunning = true;
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
 		private long threadID = this.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
@@ -120,22 +121,16 @@ public class Server{
 		}
 
 		public void run(){
-			/*
-			String s = get().toString();
-			print(s);
-			
-			int i = (int) get();
-			print(i+"");
-			
-			send("TESTING");
-			send(8);
-			*/
 			
 			int b = rules.registerThread(threadID);
-			if(b != -1){ send(b); } //send player number
+			if(b != -1){ 
+				send(b); 
+			} else {
+				isRunning = false;
+			}
 			
-			while(true){
-				
+			while(isRunning){
+				if()
 			}
 		}
 		
