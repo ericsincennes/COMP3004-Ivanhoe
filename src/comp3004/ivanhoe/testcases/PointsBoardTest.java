@@ -27,6 +27,12 @@ public class PointsBoardTest {
 		assertEquals(testBoard.getColour(),CardColour.Red);
 	}
 	
+	@Test 
+	public void getCards() {
+		testBoard.addCard(new ColourCard(CardColour.Purple, 7));
+		assertTrue(testBoard.getCards() != null);
+	}
+	
 	@Test
 	public void playPointCard() {
 		testBoard.addCard(new ColourCard(CardColour.Purple, 7));
