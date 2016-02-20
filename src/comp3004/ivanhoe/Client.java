@@ -8,6 +8,8 @@ import java.util.Scanner;
 
 import org.hamcrest.core.Is;
 
+import comp3004.ivanhoe.Card.CardColour;
+
 public class Client {
 	Socket socket;
 	ObjectInputStream in;
@@ -47,8 +49,45 @@ public class Client {
 		playerNum = (int) get();	//get player number from server
 		
 		while(true){
-			
+			Object o = get();
+			if(o instanceof byte[]){
+				if((byte[]) o == new byte[]{0,0,0,0}){
+					send(getTournementColor());
+				}
+			}
 		}
+	}
+	
+	/**
+	 * Gets the player input for tournament colour
+	 * @return Card.CardColour
+	 */
+	private Card.CardColour getTournementColor(){
+		Scanner i = new Scanner(System.in);
+		int choice = -1;
+		
+		print("Choose the color of the tournement");
+		print("{1) - Purple");
+		print("{2) - Green");
+		print("{3) - Red");
+		print("{4) - Blue");
+		print("{5) - Yellow");
+		print("{6) - White");
+		
+		do{
+			choice = i.nextInt();
+			if(choice < 1 || choice > 6){
+				print("Please choose a number between 1 and 6");
+			}
+		}while(choice < 1 || choice > 6);
+		
+		if(choice == 1){ return Card.CardColour.Purple; }
+		else if (choice == 2){return Card.CardColour.Green; }
+		else if (choice == 3){return Card.CardColour.Red; }
+		else if (choice == 4){return Card.CardColour.Blue; }
+		else if (choice == 5){return Card.CardColour.Yellow; }
+		else if (choice == 6){return Card.CardColour.White; }
+		else { return null; }
 	}
 	
 	/**
