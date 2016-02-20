@@ -37,7 +37,7 @@ public class Server{
 	private void connectAndRecieve(int count){
 		try{
 
-			print(getTimestamp() + " : server listening on port " + port);
+			print(getTimestamp() + ": server listening on port " + port);
 			//log.logmsg(getTimestamp() + " : server listening on port " + port);
 			listeningSocket = new ServerSocket(port);
 
@@ -101,14 +101,13 @@ public class Server{
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
 		private long threadID = this.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
-		private Hand hand;
+
 		
 		
 		public Player(Socket c){
 			client = c;
 			port = c.getPort();
 			addr = c.getInetAddress();
-			hand = new Hand();
 			
 			try {
 				out = new ObjectOutputStream(client.getOutputStream());
@@ -121,14 +120,22 @@ public class Server{
 		}
 
 		public void run(){
+			/*
+			String s = get().toString();
+			print(s);
+			
+			int i = (int) get();
+			print(i+"");
+			
+			send("TESTING");
+			send(8);
+			*/
+			
+			int b = rules.registerThread(threadID);
+			if(b != -1){ send(b); } //send player number
+			
 			while(true){
-				boolean b = rules.registerThread(threadID);
-				if(b == true){
-					long[] p = rules.getPlayers();
-					send(p.length);
-				} else {
-					break;
-				}
+				
 			}
 		}
 		
@@ -155,6 +162,7 @@ public class Server{
 		private boolean send(Object o){
 			try {
 				out.writeObject(o);
+				out.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
