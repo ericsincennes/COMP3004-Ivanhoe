@@ -2,15 +2,19 @@
 package comp3004.ivanhoe;
 
 public class RulesEngine {
-	long[] players;
+	Player[] players;
 	int numPlayers = 0;
 	Card.CardColour TournementColor = null;
 	
-
+	
 	public RulesEngine(){
-		players = new long[5];
+		players = new Player[5];
 	}
 
+	public RulesEngine(int i){
+		players = new Player[i];
+	}
+	
 	/**
 	 * Registers a player with the Rules engine
 	 * @param ID this.currentThread.getID() of the player thread
@@ -18,17 +22,17 @@ public class RulesEngine {
 	 */
 	public synchronized int registerThread(long ID){
 		//is game full?
-		if(numPlayers >= 4){
+		if(numPlayers >= players.length){
 			notify();
 			return -1;
 		}
 		//check if id already registered
 		for(int i=0; i<players.length; i++){
-			if(players[i] == ID){
+			if(players[i].getid() == ID){
 				return -1;
 			}
 		}
-		players[numPlayers] = ID;
+		players[numPlayers].setid(ID);
 		numPlayers++;
 		return numPlayers;
 	}
@@ -37,13 +41,13 @@ public class RulesEngine {
 	 * Choose who starts the first tournament
 	 * @return player number of the first tournament starter
 	 */
-	public int firstTournement(){
+	public long firstTournement(){
 		if(numPlayers > 1){
 			int i = randRange(0, numPlayers);
 			if(i == numPlayers){
-				return 0;
+				return players[0].getid();
 			} else {
-				return i;
+				return players[i].getid();
 			}
 		} else {
 			return -1;
@@ -54,11 +58,13 @@ public class RulesEngine {
 	 * Deals a hand of 
 	 * @return
 	 */
-	public synchronized Hand dealHand(){
-		
+	public void dealHand(){
+		for(int i =0; i<players.length; i++){
+			
+		}
 	}
 	
-	public long[] getPlayers(){
+	public Player[] getPlayers(){
 		return players;
 	}
 	

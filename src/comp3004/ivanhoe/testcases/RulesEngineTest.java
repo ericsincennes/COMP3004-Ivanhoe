@@ -23,14 +23,14 @@ public class RulesEngineTest {
 		e.registerThread(13);
 		e.registerThread(14);
 		
-		int a = e.firstTournement();
+		long a = e.firstTournement();
 		assertTrue(a != -1);
 	}
 	
 	public void getTournementChoice(){
 		Client a = new Client();
 		Client b = new Client();
-		
-		
+	
 	}
+	
 }

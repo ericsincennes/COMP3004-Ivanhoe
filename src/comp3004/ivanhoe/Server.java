@@ -102,7 +102,7 @@ public class Server{
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
 		private long threadID = this.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
-
+		Player player;
 		
 		
 		public Player(Socket c){
@@ -130,7 +130,6 @@ public class Server{
 			}
 			
 			while(isRunning){
-				if()
 			}
 		}
 		
