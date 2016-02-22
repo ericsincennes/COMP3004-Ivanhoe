@@ -4,18 +4,20 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import comp3004.ivanhoe.*;
-import comp3004.ivanhoe.Deck;
 
 public class DeckTest {
-	Deck d = new Deck();
 
 	@Test
-	public void createDeck() {
-		assertTrue(d.cards != null);
-
+	public void createDiscard() {
+		assertTrue(Deck.createDiscard() != null);
 	}
 	
 	@Test
+	public void createDeck() {
+		assertTrue(Deck.createDeck(Deck.createDiscard()) != null);
+	}
+	
+	//@Test
 	
 	
 }
