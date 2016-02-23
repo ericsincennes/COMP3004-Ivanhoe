@@ -78,7 +78,7 @@ public class Hand {
 	
 	public boolean contains(String name){
 		for (Iterator<Card> it = hand.iterator(); it.hasNext();) {
-			if (name == it.next().getCardName()) {
+			if (name.equals(it.next().getCardName())) {
 				return true;
 			}
 		}
