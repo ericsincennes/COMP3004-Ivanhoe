@@ -28,6 +28,7 @@ public class CardTest {
 		assertTrue(green.getCardType() == CardType.Colour);
 		assertTrue(((ColourCard)green).getColour() == CardColour.Green);
 		assertTrue(((ColourCard)green).getValue() == 1);
+		assertEquals(green.getCardName(),"Green 1");
 		
 		Card blue = new ColourCard(CardColour.Blue,6);
 		assertTrue(blue.getCardType() == CardType.Colour);

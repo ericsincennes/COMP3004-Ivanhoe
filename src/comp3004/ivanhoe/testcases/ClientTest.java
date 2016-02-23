@@ -3,43 +3,34 @@ package comp3004.ivanhoe.testcases;
 
 import comp3004.ivanhoe.*;
 import static org.junit.Assert.*;
-import java.util.logging.Logger;
 import org.junit.Test;
 
 public class ClientTest {
 	
 	@Test
-	public void test1(){	//no server
+	public void connectWithoutServer(){	//no server
 		Client c = new Client();
-		String host = "localhost";
-		
-		boolean x = c.connect(host, 2244); //no server existing should be false
-		
-		assertTrue(x == true);
-		
-		
-	}
-	
-	@Test
-	public void test2(){	//server /w no code
-		Client c = new Client();
-		Server s = new Server();
-		String host = "localhost";
-		
-		boolean x = c.connect(host, 2244); //no server code
+		boolean x = c.connect(2244); //no server existing should fail
 		
 		assertTrue(x == true);
 	}
 	
 	@Test
-	public void test3(){
+	public void connecteToEmptyServer(){	//server /w no code
 		Client c = new Client();
-		Server s = new Server();
-		String host = "localhost";
+		Server s;
 		
-		s.startup(2244);
-		
-		boolean x = c.connect(host, 2244); //no server code
+		boolean x = c.connect(2244); //no server code
 		assertTrue(x == true);
 	}
+	
+	@Test
+	public void connectToCodeServer(){
+		Client c = new Client();
+		Server s = new Server();
+		
+		boolean x = c.connect(2244); //no server code
+		assertTrue(x == true);
+	}
+
 }

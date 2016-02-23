@@ -13,8 +13,9 @@ public class Server{
 	private int 			numplayers;
 	private boolean 		isAcceptingConnections = true;
 	private ServerSocket 	listeningSocket;
-	private Log				log = new Log(this.getClass().getName(), "Server and Thread Log");
-
+	//private Log				log = new Log(this.getClass().getName(), "ServerLog");
+	private RulesEngine		rules;
+	
 	public Server(){
 		Scanner in = new Scanner(System.in);
 		int count = numplayers;
@@ -29,14 +30,14 @@ public class Server{
 			numplayers = in.nextInt();
 		}
 		in.close();
-
+		rules = new RulesEngine();
 		connectAndRecieve(count);
 	}
 
 	private void connectAndRecieve(int count){
 		try{
 
-			print(getTimestamp() + " : server listening on port " + port);
+			print(getTimestamp() + ": server listening on port " + port);
 			//log.logmsg(getTimestamp() + " : server listening on port " + port);
 			listeningSocket = new ServerSocket(port);
 
@@ -49,12 +50,14 @@ public class Server{
 
 				count--;
 
-				new Player(clientSocket);
-
+				Player p = new Player(clientSocket);
+				p.start();
+				/*
 				if(count == 0){
 					listeningSocket.close();
 					isAcceptingConnections = false;
 				}
+				*/
 			}
 		} catch(IOException e){
 			error(getTimestamp() + ": Server socket unable to connect to port" + port);
@@ -95,10 +98,13 @@ public class Server{
 		private Socket client;
 		private int port;
 		private InetAddress addr;
+		private boolean isRunning = true;
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
 		private Hand hand = new Hand();
-
+		private long threadID = this.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
+		Player player;
+		
 		public Player(Socket c){
 			client = c;
 			port = c.getPort();
@@ -106,18 +112,22 @@ public class Server{
 			
 			try {
 				out = new ObjectOutputStream(client.getOutputStream());
-				in = new ObjectInputStream(new ObjectInputStream(client.getInputStream()));
+				in = new ObjectInputStream(client.getInputStream());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			
-			this.start();
+			}	
 		}
 
 		public void run(){
-			while(true){
-				
+			
+			int b = rules.registerThread(threadID);
+			if(b != -1){ 
+				send(b); 
+			} else {
+				isRunning = false;
+			}
+			
+			while(isRunning){
 			}
 		}
 		
@@ -131,7 +141,6 @@ public class Server{
 			try {
 				o = in.readObject();
 			} catch (ClassNotFoundException | IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return o;
@@ -144,10 +153,9 @@ public class Server{
 		 */
 		private boolean send(Object o){
 			try {
-				out.flush();
 				out.writeObject(o);
+				out.flush();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return false;
 			}
