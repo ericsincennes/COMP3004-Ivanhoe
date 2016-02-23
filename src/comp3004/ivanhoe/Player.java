@@ -22,6 +22,10 @@ public class Player {
 		tokens.put("Yellow", 0);
 	}
 	
+	public boolean hasInHand(String s){
+		return hand.contains(s);
+	}
+	
 	public void drawCard(Card c){
 		hand.add(c);
 	}
@@ -47,5 +51,4 @@ public class Player {
 			tokens.put(colour, tokens.get(colour)+1);
 		}
 	}
-	
 }

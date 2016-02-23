@@ -2,6 +2,7 @@ package comp3004.ivanhoe;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Hand {
 	
@@ -73,5 +74,14 @@ public class Hand {
 	
 	public boolean contains(Card c){
 		return hand.contains(c);
+	}
+	
+	public boolean contains(String name){
+		for (Iterator<Card> it = hand.iterator(); it.hasNext();) {
+			if (name == it.next().getCardName()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
