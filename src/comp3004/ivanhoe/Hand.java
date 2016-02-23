@@ -61,6 +61,18 @@ public class Hand {
 		return hand.size();
 	}
 	
+	public Card playCard(String cardname){
+		Card c;
+		for (Iterator<Card> it = hand.iterator(); it.hasNext();) {
+			c = it.next();
+			if (cardname.equals(c.getCardName())) {
+				it.remove();
+				return c;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Returns a card if it exists in the hand
 	 * @return Card or null if no card found

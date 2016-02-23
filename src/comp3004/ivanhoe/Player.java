@@ -30,8 +30,12 @@ public class Player {
 		hand.add(c);
 	}
 	
-	public void playCard(Card c){
-		display.addCard(c);
+	public void playColorCard(String cardname){
+		try{
+			hand.playCard(cardname);
+		} catch(Exception e){
+			e.printStackTrace();;
+		}
 	}
 	
 	public PointsBoard getDisplay(){
@@ -46,6 +50,10 @@ public class Player {
 		id = i;
 	}
 	
+	/**
+	 * Adds a token to the players collection
+	 * @param colour Colour of the token
+	 */
 	public void recieveToken(String colour){
 		if(tokens.containsKey(colour)){
 			tokens.put(colour, tokens.get(colour)+1);
