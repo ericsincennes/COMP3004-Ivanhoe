@@ -97,6 +97,7 @@ public class Server{
 		private InetAddress addr;
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
+		private Hand hand = new Hand();
 
 		public Player(Socket c){
 			client = c;
