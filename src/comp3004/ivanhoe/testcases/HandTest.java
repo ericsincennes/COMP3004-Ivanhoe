@@ -38,14 +38,18 @@ public class HandTest {
 	
 	@Test
 	public void removeByCard(){
-		h.remove(new ColourCard(CardColour.Blue, 1));		
-		assertEquals(h.contains(new ColourCard(CardColour.Blue, 1)), false);
+		h.add(new ColourCard(CardColour.Blue, 2));
+		h.add(new ColourCard(CardColour.Blue, 3));
+		h.remove("Blue 3");		
+		assertFalse(h.contains("Blue 3"));
+		assertEquals(h.getNumCards(),1);
 	}
 	
 	@Test
 	public void removeByIndex(){
 		addCard();
 		h.remove(0);
+		assertFalse(h.contains("Blue 1"));
 		assertEquals(h.getNumCards(), 9);
 	}
 	

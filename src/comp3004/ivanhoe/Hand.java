@@ -36,12 +36,15 @@ public class Hand {
 	}
 	
 	/**
-	 * Removes a specified card from the hand
+	 * Removes the first instance of a specified card from the hand
 	 * @param c Card to be removed
 	 */
-	public void remove(Card c){
-		if(hand.contains(c)){
-			hand.remove(c);
+	public void remove(String cardName){
+		for (Iterator<Card> it = hand.iterator(); it.hasNext();) {
+			if (cardName.equals(it.next().getCardName())) {
+				it.remove();
+				break;
+			}
 		}
 	}
 	
@@ -84,10 +87,11 @@ public class Hand {
 		return null;
 	}
 	
-	public boolean contains(Card c){
-		return hand.contains(c);
+	public Card getCard(int index){
+			return hand.get(index);
 	}
 	
+
 	public boolean contains(String name){
 		for (Iterator<Card> it = hand.iterator(); it.hasNext();) {
 			if (name.equals(it.next().getCardName())) {
