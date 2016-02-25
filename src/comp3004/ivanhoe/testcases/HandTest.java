@@ -4,13 +4,24 @@ import static org.junit.Assert.*;
 
 import java.awt.Color;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import comp3004.ivanhoe.*;
 import comp3004.ivanhoe.Card.CardColour;
 
 public class HandTest {
-	Hand h = new Hand();
+	Hand h;
+	
+	@Before
+	public void setUp() throws Exception {
+		h = new Hand();
+	}
 
+	@After
+	public void tearDown() throws Exception {}
+
+	
 	@Test
 	public void createHand() {
 		assertTrue(h != null);
@@ -22,24 +33,40 @@ public class HandTest {
 			ColourCard c = new ColourCard(CardColour.Blue , i);
 			h.add(c);
 		}
-		assertTrue(h.getNumCards() == 10);
+		assertEquals(h.getNumCards(), 10);
 	}
 	
 	@Test
 	public void removeByCard(){
-		h.remove(new ColourCard(CardColour.Blue, 1));		
-		assertTrue(h.contains(new ColourCard(CardColour.Blue, 1)) == false);
+		h.add(new ColourCard(CardColour.Blue, 2));
+		h.add(new ColourCard(CardColour.Blue, 3));
+		h.remove("Blue 3");		
+		assertFalse(h.contains("Blue 3"));
+		assertEquals(h.getNumCards(),1);
 	}
 	
 	@Test
 	public void removeByIndex(){
-		h.remove(0);;
-		assertTrue(h.getNumCards() == 9);
+		addCard();
+		h.remove(0);
+		assertFalse(h.contains("Blue 1"));
+		assertEquals(h.getNumCards(), 9);
 	}
 	
 	@Test
 	public void getCard(){
 		Card q = h.getCard(new ColourCard(CardColour.Blue, 1));
-		assertTrue(q != null);
+		assertEquals(q , null);
+	}
+	
+	@Test
+	public void getCardFromHand(){
+		Card temp = new ColourCard(CardColour.Blue, 2); 
+		h.add(temp);
+		
+		Card c = h.playCard("Blue 2");
+		
+		assertEquals(c.getCardName(), "Blue 2");
+		assertFalse(h.contains("Blue 2"));
 	}
 }

@@ -7,7 +7,7 @@ import java.util.List;
 public class Deck {
 	private List<Card> cards; //front is index 0
 	private boolean isDiscard;
-	private static Deck discardPile;
+	private Deck discardPile;
 	
 	private Deck() {
 		cards = new ArrayList<Card>();
@@ -18,7 +18,7 @@ public class Deck {
 	public static Deck createDeck(Deck discard) {
 		Deck theDeck = new Deck();
 		theDeck.isDiscard = false;
-		theDeck.discardPile = discardPile;
+		theDeck.discardPile = discard;
 		return theDeck;
 	}
 	

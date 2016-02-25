@@ -101,9 +101,9 @@ public class Server{
 		private boolean isRunning = true;
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
+		private Hand hand = new Hand();
 		private long threadID = this.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
 		Player player;
-		
 		
 		public Player(Socket c){
 			client = c;
@@ -115,9 +115,7 @@ public class Server{
 				in = new ObjectInputStream(client.getInputStream());
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-			
-			
+			}	
 		}
 
 		public void run(){
