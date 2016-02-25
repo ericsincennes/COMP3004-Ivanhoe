@@ -11,10 +11,14 @@ import comp3004.ivanhoe.Card.CardColour;
 public class PlayerTests {
 
 	@Test
-	public void test() {
+	public void addCardToHand() {
 		Player p = new Player();
 		p.drawCard(new ColourCard(CardColour.Blue, 6));
 		assertTrue(p.hasInHand("Blue 6"));
-
+	}
+	
+	@Test
+	public void playCardToBoard(){
+		
 	}
 }
