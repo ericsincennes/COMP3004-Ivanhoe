@@ -2,7 +2,7 @@ package comp3004.ivanhoe;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.List;
 
 import comp3004.ivanhoe.Card.CardColour;
@@ -19,6 +19,7 @@ public class PointsBoard {
 		cardsPlayed = new ArrayList<Card>();
 		actionsPlayed = new ArrayList<Card>();
 		score = 0;
+		tourneyColour = null;
 	}
 	
 	public PointsBoard(CardColour c) {
@@ -116,6 +117,9 @@ public class PointsBoard {
 	 * @param index index of card to be removed
 	 */
 	public void remove(int index) {
+		if (cardsPlayed.size() <= 1) {
+			return;
+		}
 		cardsPlayed.remove(index);
 		score = calculatePoints();
 	}
@@ -125,8 +129,11 @@ public class PointsBoard {
 	 * @param cardName String
 	 */
 	public void remove(String cardName) {
-		for (Iterator<Card> it = cardsPlayed.iterator(); it.hasNext();) {
-			if (cardName == it.next().getCardName()) {
+		if (cardsPlayed.size() <= 1) {
+			return;
+		}
+		for (ListIterator<Card> it = cardsPlayed.listIterator(cardsPlayed.size()); it.hasPrevious();) {
+			if (cardName == it.previous().getCardName()) {
 				it.remove();
 				break;
 			}
@@ -139,8 +146,10 @@ public class PointsBoard {
 	 * @param c CardColour
 	 */
 	public void removeColour(CardColour c) {
-		for (Iterator<Card> it = cardsPlayed.iterator(); it.hasNext();) {
-			if (c == ((ColourCard)it.next()).getColour()) {
+
+		for (ListIterator<Card> it = cardsPlayed.listIterator(cardsPlayed.size()); 
+				cardsPlayed.size() > 1 && it.hasPrevious();) {
+			if (c == ((ColourCard)it.previous()).getColour()) {
 				it.remove();
 			}
 		}
@@ -149,11 +158,13 @@ public class PointsBoard {
 	
 	/**
 	 * Removes all cards of a specific value
-	 * @param v int value
+	 * @param v int value to remove
 	 */
 	public void removeValue(int v) {
-		for (Iterator<Card> it = cardsPlayed.iterator(); it.hasNext();) {
-			if (v == ((ColourCard)it.next()).getValue()) {
+
+		for (ListIterator<Card> it = cardsPlayed.listIterator(cardsPlayed.size()); 
+				cardsPlayed.size() > 1 && it.hasPrevious();) {
+			if (v == ((ColourCard)it.previous()).getValue()) {
 				it.remove();
 			}
 		}	
@@ -170,5 +181,14 @@ public class PointsBoard {
 			points += ((ColourCard)c).getValue();
 		}
 		return (tourneyColour == CardColour.Green) ? cardsPlayed.size() : points;
+	}
+	
+	/**
+	 * Clears board
+	 */
+	public void clearBoard() {
+		cardsPlayed.clear();
+		actionsPlayed.clear();
+		score = 0;
 	}
 }
