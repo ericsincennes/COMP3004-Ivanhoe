@@ -2,7 +2,7 @@ package comp3004.ivanhoe;
 
 import java.util.HashMap;
 
-import comp3004.ivanhoe.Card.CardColour;
+import comp3004.ivanhoe.Card.CardType;
 
 public class Player {
 	private Hand hand;
@@ -30,11 +30,14 @@ public class Player {
 		hand.add(c);
 	}
 	
+	/**
+	 * Adds a Color card to the display
+	 * @param cardname name of card
+	 */
 	public void playColorCard(String cardname){
-		try{
-			hand.playCard(cardname);
-		} catch(Exception e){
-			e.printStackTrace();;
+		Card c = hand.getCardByName(cardname);
+		if(c.cardType == CardType.Colour){
+			display.addCard(c);
 		}
 	}
 	
@@ -42,6 +45,10 @@ public class Player {
 		return display;
 	}
 	
+	/**
+	 * Returns the thread ID that the player class is associated with
+	 * @return lond ID
+	 */
 	public long getid(){
 		return id;
 	}

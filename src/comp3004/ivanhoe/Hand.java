@@ -14,7 +14,7 @@ public class Hand {
 	
 	/**
 	 * Returns the whole hand
-	 * @return ArrayList<Card>
+	 * @return List<Card>
 	 */
 	public List<Card> getHand(){
 		return hand;
@@ -32,7 +32,9 @@ public class Hand {
 	 * @param c Card to be added
 	 */
 	public void add(Card c){
-		hand.add(c);
+		if(c != null){
+			hand.add(c);
+		}
 	}
 	
 	/**
@@ -49,10 +51,10 @@ public class Hand {
 	}
 	
 	/**
-	 * Removes the card from the position
+	 * Removes the card from the specified index
 	 * @param pos
 	 */
-	public void remove(int pos){
+	public void removeByIndex(int pos){
 		hand.remove(hand.get(pos));
 	}
 	
@@ -64,7 +66,12 @@ public class Hand {
 		return hand.size();
 	}
 	
-	public Card playCard(String cardname){
+	/**
+	 * Returns the first instance of a card given its name
+	 * @param cardname name of card (e.g. Blue 2)
+	 * @return Card or null if not found
+	 */
+	public Card getCardByName(String cardname){
 		Card c;
 		for (Iterator<Card> it = hand.iterator(); it.hasNext();) {
 			c = it.next();
@@ -80,18 +87,37 @@ public class Hand {
 	 * Returns a card if it exists in the hand
 	 * @return Card or null if no card found
 	 */
-	public Card getCard(Card c){
-		if (hand.contains(c)){
-			return hand.get(hand.indexOf(c));
+	public Card getCard(Card card){
+		Card temp;
+		for (Iterator<Card> it = hand.iterator(); it.hasNext();) {
+			temp = it.next();
+			if (card.equals(it.next())) {
+				it.remove();
+				return temp;
+			}
 		}
 		return null;
 	}
 	
-	public Card getCard(int index){
-			return hand.get(index);
+	/**
+	 * Returns a card from a specific index
+	 * @param index index of card
+	 * @return Card or null if index is out of bounds
+	 */
+	public Card getCardbyIndex(int index){
+		if(index < hand.size()){
+			Card c = hand.get(index);
+			hand.remove(index);
+			return c;
+		}
+		return null;
 	}
 	
-
+	/**
+	 * Checks if an instance of the card is in the hand
+	 * @param name name of card
+	 * @return boolean
+	 */
 	public boolean contains(String name){
 		for (Iterator<Card> it = hand.iterator(); it.hasNext();) {
 			if (name.equals(it.next().getCardName())) {

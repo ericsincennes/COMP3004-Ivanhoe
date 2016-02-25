@@ -48,7 +48,7 @@ public class HandTest {
 	@Test
 	public void removeByIndex(){
 		addCard();
-		h.remove(0);
+		h.removeByIndex(0);
 		assertFalse(h.contains("Blue 1"));
 		assertEquals(h.getNumCards(), 9);
 	}
@@ -64,7 +64,7 @@ public class HandTest {
 		Card temp = new ColourCard(CardColour.Blue, 2); 
 		h.add(temp);
 		
-		Card c = h.playCard("Blue 2");
+		Card c = h.getCardByName("Blue 2");
 		
 		assertEquals(c.getCardName(), "Blue 2");
 		assertFalse(h.contains("Blue 2"));
