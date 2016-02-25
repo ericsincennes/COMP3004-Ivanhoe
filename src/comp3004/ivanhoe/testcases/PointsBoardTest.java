@@ -108,6 +108,20 @@ public class PointsBoardTest {
 	}
 	
 	@Test
+	public void removeSoleCard() {
+		testBoard.addCard(new ColourCard(CardColour.Purple, 4));
+		testBoard.remove(0);
+		assertFalse(testBoard.getCards().size() == 0);
+		
+		testBoard.addCard(new ColourCard(CardColour.Purple, 4));
+		testBoard.removeColour(CardColour.Purple);
+		assertFalse(testBoard.getCards().size() == 0);
+		
+		testBoard.removeValue(4);
+		assertFalse(testBoard.getCards().size() == 0);
+	}
+	
+	@Test
 	public void calculatePoints() {
 		testBoard.addCard(new ColourCard(CardColour.Purple, 4));
 		testBoard.addCard(new ColourCard(CardColour.Purple, 4));
