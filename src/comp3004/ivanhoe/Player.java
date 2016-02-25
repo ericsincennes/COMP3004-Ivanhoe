@@ -47,7 +47,7 @@ public class Player {
 	}
 	
 	/**
-	 * Draws a card from the deck and adds it to hand
+	 * Draws a card  and adds it to hand
 	 * @param c Card
 	 */
 	public void drawCard(Card c){

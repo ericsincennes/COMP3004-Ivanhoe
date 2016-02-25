@@ -13,7 +13,7 @@ public class Server{
 	private int 			numplayers;
 	private boolean 		isAcceptingConnections = true;
 	private ServerSocket 	listeningSocket;
-	//private Log				log = new Log(this.getClass().getName(), "ServerLog");
+	//private Log			log = new Log(this.getClass().getName(), "ServerLog");
 	private RulesEngine		rules;
 	
 	public Server(){
@@ -30,7 +30,7 @@ public class Server{
 			numplayers = in.nextInt();
 		}
 		in.close();
-		rules = new RulesEngine();
+		rules = new RulesEngine(numplayers);
 		connectAndRecieve(count);
 	}
 

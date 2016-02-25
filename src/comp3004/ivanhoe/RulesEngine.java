@@ -1,21 +1,16 @@
 
 package comp3004.ivanhoe;
 
+import java.util.HashMap;
+
 public class RulesEngine {
-	private Player[] players;
-	private int numPlayers = 0;
+	private HashMap<Long, Player> players;
+	private int numPlayers = 0, expectedPlayers;
 	private Card.CardColour TournementColor = null;
 	private Deck deck, discard;
 	
-	
-	public RulesEngine(){
-		players = new Player[5];
-		discard = Deck.createDiscard();
-		deck = Deck.createDeck(discard);
-	}
-
 	public RulesEngine(int i){
-		players = new Player[i];
+		expectedPlayers = i;
 		discard = Deck.createDiscard();
 		deck = Deck.createDeck(discard);
 	}
@@ -27,17 +22,19 @@ public class RulesEngine {
 	 */
 	public synchronized int registerThread(long ID){
 		//is game full?
-		if(numPlayers >= players.length){
-			notify();
+		if(numPlayers >= expectedPlayers){
+			notifyAll();
 			return -1;
 		}
 		//check if id already registered
-		for(int i=0; i<players.length; i++){
-			if(players[i].getid() == ID){
+		for(int i=0; i<players.keySet().size(); i++){
+			if(players.containsKey(ID)){
 				return -1;
 			}
 		}
-		players[numPlayers].setid(ID);
+		Player p = new Player();
+		p.setid(ID);
+		players.put(ID, p);
 		numPlayers++;
 		return numPlayers;
 	}
@@ -46,13 +43,14 @@ public class RulesEngine {
 	 * Choose who starts the first tournament
 	 * @return player number of the first tournament starter
 	 */
-	public long firstTournement(){
+	public long firstTournament(){
 		if(numPlayers > 1){
 			int i = randRange(0, numPlayers);
+			Long[] a = (Long[]) players.keySet().toArray();
 			if(i == numPlayers){
-				return players[0].getid();
+				return a[0];
 			} else {
-				return players[i].getid();
+				return a[i];
 			}
 		} else {
 			return -1;
@@ -61,16 +59,12 @@ public class RulesEngine {
 	
 	/**
 	 * Deals a hand to each player
-	 * @return
+	 * @return 
 	 */
 	public void dealHand(){
-		for(int i =0; i<players.length; i++){
+		for(int i =0; i<players.keySet().size(); i++){
 			
 		}
-	}
-	
-	public Player[] getPlayers(){
-		return players;
 	}
 	
 	/**
