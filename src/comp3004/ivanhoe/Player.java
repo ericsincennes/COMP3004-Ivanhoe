@@ -1,6 +1,8 @@
 package comp3004.ivanhoe;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import comp3004.ivanhoe.Card.CardType;
 
@@ -22,6 +24,15 @@ public class Player {
 		tokens.put("Yellow", 0);
 	}
 	
+	public int getTokenCount(){
+		int temp = 0;
+		Collection<Integer> values = tokens.values();
+		for (Iterator<Integer> it = values.iterator(); it.hasNext();) {
+			temp += it.next();
+		}
+		return temp;
+	}
+	
 	public boolean hasInHand(String s){
 		return hand.contains(s);
 	}
@@ -38,6 +49,22 @@ public class Player {
 		Card c = hand.getCardByName(cardname);
 		if(c.cardType == CardType.Colour){
 			display.addCard(c);
+		}
+	}
+	
+	/**
+	 * Plays the Action card to the discard pile and causes the effect
+	 * @param cardname
+	 * @param id
+	 */
+	public void playActionCard(String cardname){
+		Card card = hand.getCardByName(cardname);
+		if(card.getCardName() == "Ivanhoe" || card.getCardName() == "Shield"){
+			
+		} else if(card.getCardName() == "Stunned"){
+			
+		} else {
+			
 		}
 	}
 	
