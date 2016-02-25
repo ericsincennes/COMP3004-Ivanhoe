@@ -2,17 +2,22 @@
 package comp3004.ivanhoe;
 
 public class RulesEngine {
-	Player[] players;
-	int numPlayers = 0;
-	Card.CardColour TournementColor = null;
+	private Player[] players;
+	private int numPlayers = 0;
+	private Card.CardColour TournementColor = null;
+	private Deck deck, discard;
 	
 	
 	public RulesEngine(){
 		players = new Player[5];
+		discard = Deck.createDiscard();
+		deck = Deck.createDeck(discard);
 	}
 
 	public RulesEngine(int i){
 		players = new Player[i];
+		discard = Deck.createDiscard();
+		deck = Deck.createDeck(discard);
 	}
 	
 	/**
@@ -55,7 +60,7 @@ public class RulesEngine {
 	}
 	
 	/**
-	 * Deals a hand of 
+	 * Deals a hand to each player
 	 * @return
 	 */
 	public void dealHand(){

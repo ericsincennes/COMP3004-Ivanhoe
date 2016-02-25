@@ -24,6 +24,10 @@ public class Player {
 		tokens.put("Yellow", 0);
 	}
 	
+	/**
+	 * Returns the number of tokens in the players possession
+	 * @return int
+	 */
 	public int getTokenCount(){
 		int temp = 0;
 		Collection<Integer> values = tokens.values();
@@ -33,10 +37,19 @@ public class Player {
 		return temp;
 	}
 	
+	/**
+	 * Checks if the card is in the players hand
+	 * @param s name of card
+	 * @return boolean
+	 */
 	public boolean hasInHand(String s){
 		return hand.contains(s);
 	}
 	
+	/**
+	 * Draws a card from the deck and adds it to hand
+	 * @param c Card
+	 */
 	public void drawCard(Card c){
 		hand.add(c);
 	}
