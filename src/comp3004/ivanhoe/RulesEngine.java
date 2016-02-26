@@ -12,9 +12,10 @@ public class RulesEngine {
 	private HashMap<Long, Player> players;
 	private List<Player> playersList;
 	private int numPlayers = 0, expectedPlayers;
-	private Card.CardColour TournementColor = null;
+	private Card.CardColour TournamentColor = null;
 	private Deck deck, discard;
-
+	private boolean firstTournament = true;
+	
 	public RulesEngine(int i){
 		expectedPlayers = i;
 		players = new HashMap<Long, Player>();
@@ -24,6 +25,10 @@ public class RulesEngine {
 		deck.ivanhoeDeck();
 	}
 
+	public void setTournamentColor(CardColour colour){
+		TournamentColor = colour;
+	}
+	
 	/**
 	 * Registers a player with the Rules engine
 	 * @param ID this.currentThread.getID() of the player thread
@@ -70,11 +75,7 @@ public class RulesEngine {
 		return playersList.get(0).getid();
 	}
 
-	public boolean initializeTournementColour(CardColour colour){
-		if(TournementColor == CardColour.Purple){
-			return false;
-		}
-		
+	public boolean initializeTournamentColour(CardColour colour){
 		for(Player p : playersList){
 			p.getDisplay().setColour(colour);
 		}
@@ -82,13 +83,31 @@ public class RulesEngine {
 	}
 	
 	/**
-	 * Function Assumes players have connected and tournament colour has been chosen.
+	 * Assumes all threads that are going to play have connected
 	 */
 	public void runTournament(){
-		
 	}
 	
-	
+	public void playerTurn(Long id){
+		//player draws a card
+			//rules engine draws a card for Player object
+			//server sends card to player GUI
+			//withdraw button in GUI is enabled
+		//player gets the ability to withdraw
+			//server waits for byte[]{1,1,1,1} to withdraw
+			//or server waits for List<Card> of cards to be played
+		//player plays cards
+			//Server gives Long ID and List<Card> to update PointsBoard
+			//Rules engine calculates if play is valid
+				//if valid updates point totals and returns true to server
+				//if not valid returns false to server
+				//server forwards response to client
+		//player attempts to end turn
+			//if true player can end turn 
+			//if false player cannot end turn and must play more or surrender
+		//Server updates displays for all players
+			//server sends updated boards to all players
+	}
 	
 	/**
 	 * Deals a hand of 8 cards to each player

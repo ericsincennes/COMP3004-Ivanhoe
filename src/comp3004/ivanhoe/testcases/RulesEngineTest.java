@@ -31,7 +31,7 @@ public class RulesEngineTest {
 	public void InitTourneyColours(){
 		choosefirstTournement();
 		
-		e.initializeTournementColour(CardColour.Blue);
+		e.initializeTournamentColour(CardColour.Blue);
 		assertEquals(CardColour.Blue, e.getPlayerById(10).getDisplay().getColour());
 	}
 	
