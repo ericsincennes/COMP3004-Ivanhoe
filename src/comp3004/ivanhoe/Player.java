@@ -50,7 +50,7 @@ public class Player {
 	 * Draws a card  and adds it to hand
 	 * @param c Card
 	 */
-	public void drawCard(Card c){
+	public void addCard(Card c){
 		hand.add(c);
 	}
 	
@@ -79,6 +79,10 @@ public class Player {
 		} else {
 			
 		}
+	}
+	
+	public int getHandSize(){
+		return hand.getNumCards();
 	}
 	
 	public PointsBoard getDisplay(){
