@@ -89,6 +89,15 @@ public class Deck {
 		cards.add(c);
 	}
 	
+	public void addToDiscard(Card c) {
+		if (isDiscard) {
+			cards.add(c);
+		}
+		else {
+			discardPile.cards.add(c);
+		}
+	}
+	
 	/**
 	 * Shuffles the deck
 	 */
@@ -99,20 +108,36 @@ public class Deck {
 	}
 	
 	/**
-	 * Returns the entire deck as a list
-	 * @return List
+	 * Peeks at top card of deck
+	 * @return Card
 	 */
-	public List<Card> viewCards() {
+	public Card peekDeck() {
+
+		return cards.get(0);
+	}
+	
+	/**
+	 * Returns the list of cards in the discard pile
+	 * @return List<Card>
+	 */
+	public List<Card> viewDiscard() {
 		List <Card> viewedCards;
 		if (isDiscard) {
-			viewedCards = new ArrayList<Card>(cards.size());
-			Collections.copy(viewedCards, cards);
+			viewedCards = new ArrayList<Card>(cards);
 		}
 		else {
-			viewedCards = new ArrayList<Card>(1);
-			viewedCards.add(cards.get(0));
+			viewedCards = new ArrayList<Card>(discardPile.cards);
 		}
 		return viewedCards;
+	}
+	
+	public boolean contains(String name) {
+		for (Card c : cards) {
+			if (c.getCardName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -128,7 +153,7 @@ public class Deck {
 			discardPile.cards.clear();
 			shuffle();
 		}
-		
-		return (cards.isEmpty()) ? null : cards.get(0);
+		Card toDraw = (cards.isEmpty()) ? null : cards.remove(0);
+		return toDraw;
 	}
 }
