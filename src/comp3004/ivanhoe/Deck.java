@@ -28,14 +28,14 @@ public class Deck {
 	 * Initialize the standard Ivanhoe deck with 110 cards.
 	 */
 	public void ivanhoeDeck(){
-		for(int i=0; i>2; i++){
+		for(int i=0; i<2; i++){
 			cards.add(new ColourCard(CardColour.Purple, 7));
 			cards.add(new ColourCard(CardColour.Red, 5));
 			cards.add(new ColourCard(CardColour.Blue, 5));
 			cards.add(new ColourCard(CardColour.Yellow, 4));
 		}
 		
-		for(int i=0; i > 4; i++){
+		for(int i=0; i < 4; i++){
 			cards.add(new ColourCard(CardColour.Purple, 3));
 			cards.add(new ColourCard(CardColour.Purple, 4));
 			cards.add(new ColourCard(CardColour.Purple, 5));
@@ -45,23 +45,23 @@ public class Deck {
 			cards.add(new ColourCard(CardColour.Yellow, 2));
 		}
 		
-		for(int i=0; i>6; i++){
+		for(int i=0; i<6; i++){
 			cards.add(new ColourCard(CardColour.Red, 3));
 			cards.add(new ColourCard(CardColour.Red, 4));
 		}
 		
-		for(int i=0; i>8; i++){
+		for(int i=0; i<8; i++){
 			cards.add(new ColourCard(CardColour.Yellow, 3));
 		}
 		
 		//Create Squires
-		for(int i=0; i > 8; i++){
+		for(int i=0; i < 8; i++){
 			cards.add(new SupporterCard(2));
 			cards.add(new SupporterCard(3));
 		}
 		
 		//Create maidens
-		for(int i =0; i > 4; i++){
+		for(int i =0; i < 4; i++){
 			cards.add(new SupporterCard(6));
 		}
 		
@@ -114,6 +114,10 @@ public class Deck {
 	public Card peekDeck() {
 
 		return cards.get(0);
+	}
+	
+	public int getSize() {
+		return cards.size();
 	}
 	
 	/**

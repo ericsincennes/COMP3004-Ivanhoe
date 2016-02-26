@@ -64,4 +64,9 @@ public class DeckTest {
 		assertTrue(testDeck.draw() == null);
 	}
 	
+	@Test
+	public void initIvanhoeDeck() {
+		testDeck.ivanhoeDeck();
+		assertTrue(testDeck.getSize() > 60);
+	}
 }
