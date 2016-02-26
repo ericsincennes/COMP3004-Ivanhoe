@@ -6,8 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.Scanner;
 
-import org.hamcrest.core.Is;
-
 import comp3004.ivanhoe.Card.CardColour;
 
 public class Client {
