@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import comp3004.ivanhoe.Card.CardColour;
+import comp3004.ivanhoe.Card.CardType;
 
 public class RulesEngine {
 	private HashMap<Long, Player> players;
@@ -15,6 +16,7 @@ public class RulesEngine {
 	private Card.CardColour TournamentColor = null;
 	private Deck deck, discard;
 	private boolean firstTournament = true;
+	private int highestScore = 0;
 	
 	public RulesEngine(int i){
 		expectedPlayers = i;
@@ -28,7 +30,7 @@ public class RulesEngine {
 	public void setTournamentColor(CardColour colour){
 		TournamentColor = colour;
 	}
-	
+
 	/**
 	 * Registers a player with the Rules engine
 	 * @param ID this.currentThread.getID() of the player thread
@@ -64,7 +66,7 @@ public class RulesEngine {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Choose who starts the first tournament
 	 * @return player number of the first tournament starter
@@ -81,34 +83,74 @@ public class RulesEngine {
 		}
 		return true;
 	}
-	
+
+	public void withdrawPlayer(Long id){
+		players.get(id).setPlaying(false);
+	}
+
 	/**
-	 * Assumes all threads that are going to play have connected
+	 * Validates if playing a colour card is possible given the current tournement colour
+	 * @param card String name of card
+	 * @param id Long ID of player
+	 * @return True if card is played
 	 */
-	public void runTournament(){
+	public boolean validatePlay(String card, Long id){
+		//if player exists
+		if(!players.containsKey(id)){
+			return false;
+		}
+
+		Player p = players.get(id);
+		Card c;
+
+		//if card in player hand
+		if(p.hasInHand(card)){
+			c = p.getCardByName(card);
+
+			//if card is colour card
+			if(c.getCardType() == CardType.Colour &&
+					((ColourCard)c).getColour() == TournamentColor){
+				p.playCard(card);
+				return true;
+
+				//Support cards dont care about tournement colour
+			} else if(c.getCardType() == CardType.Supporter){
+				p.playCard(card);
+				return true;
+
+				//Action cards
+			} else if(c.getCardType() == CardType.Action){
+				//TODO validate Action Cards
+			}
+		}
+		return false;
 	}
-	
-	public void playerTurn(Long id){
-		//player draws a card
-			//rules engine draws a card for Player object
-			//server sends card to player GUI
-			//withdraw button in GUI is enabled
-		//player gets the ability to withdraw
-			//server waits for byte[]{1,1,1,1} to withdraw
-			//or server waits for List<Card> of cards to be played
-		//player plays cards
-			//Server gives Long ID and List<Card> to update PointsBoard
-			//Rules engine calculates if play is valid
-				//if valid updates point totals and returns true to server
-				//if not valid returns false to server
-				//server forwards response to client
-		//player attempts to end turn
-			//if true player can end turn 
-			//if false player cannot end turn and must play more or surrender
-		//Server updates displays for all players
-			//server sends updated boards to all players
+
+	public boolean endTurn(Long id){
+		if(players.get(id).getDisplay().calculatePoints() > highestScore){
+			highestScore = players.get(id).getDisplay().calculatePoints();
+			return true;
+		}
+		return false;
 	}
-	
+	//player draws a card - rules engine draws a card for Player object
+	//server sends card to player GUI & withdraw button in GUI is enabled 
+	//server waits for string command to withdraw or server waits for String[] of cards to be played
+
+	//player plays cards
+	//TODO in player class make function to handle String[] of cards to play
+
+	//TODO create RulesEngine.validateColour to validate if legal play
+	//Rules engine calculates if play is valid 
+	//if valid updates point totals and returns true to server
+	//if not valid returns false to server
+	//server forwards response to client
+	//player attempts to end turn
+	//if true player can end turn 
+	//if false player cannot end turn and must play more or surrender
+	//Server updates displays for all players
+	//server sends updated boards to all players
+
 	/**
 	 * Deals a hand of 8 cards to each player
 	 */

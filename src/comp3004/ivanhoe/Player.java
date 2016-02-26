@@ -12,6 +12,7 @@ public class Player {
 	private PointsBoard display;
 	private HashMap<String, Integer> tokens;
 	private long id;
+	private boolean isPlaying = true;
 	
 	public Player(){
 		tokens = new HashMap<String,Integer>();
@@ -27,6 +28,18 @@ public class Player {
 	
 	public List<Card> getHand(){
 		return hand.getHand();
+	}
+	
+	public boolean getPlaying(){
+		return isPlaying;
+	}
+	
+	public Card getCardByName(String s){
+		return hand.getCardByName(s);
+	}
+	
+	public void setPlaying(boolean s){
+		isPlaying = s;
 	}
 	
 	/**
@@ -59,11 +72,20 @@ public class Player {
 		hand.add(c);
 	}
 	
+	public void playCard(String cardname){
+		Card c = hand.getCardByName(cardname);
+		if(c.cardType == CardType.Colour || c.cardType == CardType.Supporter){
+			playColorCard(cardname);
+		} else if(c.cardType == CardType.Action){
+			playActionCard(cardname);
+		}
+	}
+	
 	/**
 	 * Adds a Color card to the display
 	 * @param cardname name of card
 	 */
-	public void playColorCard(String cardname){
+	private void playColorCard(String cardname){
 		Card c = hand.getCardByName(cardname);
 		if(c.cardType == CardType.Colour){
 			display.addCard(c);
@@ -75,7 +97,7 @@ public class Player {
 	 * @param cardname
 	 * @param id
 	 */
-	public void playActionCard(String cardname){
+	private void playActionCard(String cardname){
 		Card card = hand.getCardByName(cardname);
 		if(card.getCardName() == "Ivanhoe" || card.getCardName() == "Shield"){
 			
