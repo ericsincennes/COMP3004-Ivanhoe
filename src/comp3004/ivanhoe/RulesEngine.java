@@ -114,7 +114,7 @@ public class RulesEngine {
 	 */
 	public void dealHand(){
 		for(Player p : playersList){
-			for(int q =0; q < 8; q++){
+			for(int i =0; i < 8; i++){
 				p.addCard(deck.draw());
 			}
 		}		

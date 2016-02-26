@@ -39,7 +39,6 @@ public class RulesEngineTest {
 	public void dealHand(){
 		InitTourneyColours();
 		e.dealHand();
-		System.out.print(e.getPlayerById(11).getHandSize());
 		assertEquals(8, e.getPlayerById(11).getHandSize());
 	}
 }

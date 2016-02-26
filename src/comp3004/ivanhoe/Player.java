@@ -3,6 +3,7 @@ package comp3004.ivanhoe;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import comp3004.ivanhoe.Card.CardType;
 
@@ -22,6 +23,10 @@ public class Player {
 		tokens.put("Red", 0);
 		tokens.put("Blue", 0);
 		tokens.put("Yellow", 0);
+	}
+	
+	public List<Card> getHand(){
+		return hand.getHand();
 	}
 	
 	/**
