@@ -24,7 +24,7 @@ public class RulesEngine {
 		playersList = new ArrayList<Player>();
 		discard = Deck.createDiscard();
 		deck = Deck.createDeck(discard);
-		deck.ivanhoeDeck();
+		deck.testDeck();
 	}
 
 	public void setTournamentColor(CardColour colour){
@@ -71,25 +71,44 @@ public class RulesEngine {
 	 * Choose who starts the first tournament
 	 * @return player number of the first tournament starter
 	 */
-	public long chooseFirstTournament(){
+	public synchronized long chooseFirstTournament(){
 		int i = randRange(0, numPlayers);
 		Collections.rotate(playersList, i);
+		//notifyAll();
 		return playersList.get(0).getid();
 	}
 
+	/**
+	 * initialize the tournament colour
+	 * @param colour CardColour
+	 * @return Boolean
+	 */
 	public boolean initializeTournamentColour(CardColour colour){
 		for(Player p : playersList){
 			p.getDisplay().setColour(colour);
 		}
+		TournamentColor = colour;
 		return true;
 	}
 
+	/**
+	 * Removes  the player from the tournament
+	 * @param id
+	 */
 	public void withdrawPlayer(Long id){
 		players.get(id).setPlaying(false);
 	}
 
 	/**
-	 * Validates if playing a colour card is possible given the current tournement colour
+	 * Adds a card to the players hand
+	 * @param id ID of player
+	 */
+	public void giveCardToPlayer(long id){
+		players.get(id).addCard(deck.draw());
+	}
+	
+	/**
+	 * Validates if playing a colour card is possible given the current tournament colour
 	 * @param card String name of card
 	 * @param id Long ID of player
 	 * @return True if card is played
@@ -102,30 +121,43 @@ public class RulesEngine {
 
 		Player p = players.get(id);
 		Card c;
-
+		System.out.println("ValidatePlay Card " + card + " ID " + id);
 		//if card in player hand
 		if(p.hasInHand(card)){
 			c = p.getCardByName(card);
-
 			//if card is colour card
 			if(c.getCardType() == CardType.Colour &&
 					((ColourCard)c).getColour() == TournamentColor){
-				p.playCard(card);
 				return true;
 
 				//Support cards dont care about tournement colour
 			} else if(c.getCardType() == CardType.Supporter){
-				p.playCard(card);
 				return true;
 
 				//Action cards
 			} else if(c.getCardType() == CardType.Action){
 				//TODO validate Action Cards
+				return true;
 			}
 		}
 		return false;
 	}
 
+	public boolean playCard(String cardname, Long id){
+		Player p = players.get(id);
+		Card c = p.getCardByName(cardname);
+		boolean b = validatePlay(cardname, id);
+		System.out.println(b);
+		if(b){
+			p.playColourCard(cardname);
+			return true;
+		} else if(c.cardType == CardType.Action){
+			p.playActionCard(cardname);
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean endTurn(Long id){
 		if(players.get(id).getDisplay().calculatePoints() > highestScore){
 			highestScore = players.get(id).getDisplay().calculatePoints();
@@ -133,6 +165,7 @@ public class RulesEngine {
 		}
 		return false;
 	}
+	
 	//player draws a card - rules engine draws a card for Player object
 	//server sends card to player GUI & withdraw button in GUI is enabled 
 	//server waits for string command to withdraw or server waits for String[] of cards to be played
@@ -171,4 +204,9 @@ public class RulesEngine {
 	private int randRange(int min, int max){
 		return min + (int)(Math.random() * ((max - min) + 1));
 	}
+	
+	private void print(String s){
+		System.out.println(s);
+	}
+
 }

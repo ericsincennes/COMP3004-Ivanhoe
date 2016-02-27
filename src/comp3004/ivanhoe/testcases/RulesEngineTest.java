@@ -13,16 +13,15 @@ public class RulesEngineTest {
 	@Before
 	public void setUp() throws Exception {
 		e = new RulesEngine(5);
-	}
-	
-	@Test
-	public void choosefirstTournement(){
 		e.registerThread(10);
 		e.registerThread(11);
 		e.registerThread(12);
 		e.registerThread(13);
 		e.registerThread(14);
-		
+	}
+	
+	@Test
+	public void choosefirstTournement(){
 		long a = e.chooseFirstTournament();
 		assertTrue(a >= 10 && a <= 14);
 	}
@@ -37,8 +36,38 @@ public class RulesEngineTest {
 	
 	@Test
 	public void dealHand(){
-		InitTourneyColours();
 		e.dealHand();
 		assertEquals(8, e.getPlayerById(11).getHandSize());
 	}
+	
+	@Test
+	public void validatePlay(){
+		e.initializeTournamentColour(CardColour.Blue);
+		e.getPlayerById(11).addCard(new ColourCard(CardColour.Blue, 4));
+		assertTrue(e.validatePlay("Blue 4", (long) 11));
+	}
+	
+	@Test
+	public void playCard(){
+		Player p = e.getPlayerById(11);
+		e.initializeTournamentColour(CardColour.Blue);
+		p.addCard(new ColourCard(CardColour.Blue, 4));
+		assertTrue(e.playCard("Blue 4",(long) 11));
+	}
+	
+	@Test
+	public void playTurn(){
+		e.chooseFirstTournament();
+		e.initializeTournamentColour(CardColour.Red);
+		e.dealHand();
+		
+		Player p = e.getPlayerById(11);
+		//e.giveCardToPlayer(p.getid());
+		p.addCard(new ColourCard(CardColour.Red, 3));
+		
+		assertTrue(e.playCard("Red 3", p.getid()));
+		assertTrue(e.endTurn(p.getid()));
+		
+	}
+	
 }

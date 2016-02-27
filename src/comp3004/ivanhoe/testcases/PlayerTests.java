@@ -30,7 +30,7 @@ public class PlayerTests {
 	public void playColourCardtoBoard(){
 		p.addCard(new ColourCard(CardColour.Blue, 2));
 		p.getDisplay().setColour(CardColour.Blue);
-		p.playCard("Blue 2");
+		p.playColourCard("Blue 2");
 		Card q = p.getDisplay().getLastPlayed();
 		assertEquals("Blue 2", q.getCardName());
 	}
