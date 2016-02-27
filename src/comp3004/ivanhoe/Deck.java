@@ -25,6 +25,15 @@ public class Deck {
 	}
 	
 	/**
+	 * Initialize a test deck with 80 maidens.
+	 */
+	public void testDeck(){
+		for (int i=0;i<80;i++) {
+			cards.add(new SupporterCard(6));
+		}
+	}
+	
+	/**
 	 * Initialize the standard Ivanhoe deck with 110 cards.
 	 */
 	public void ivanhoeDeck(){
