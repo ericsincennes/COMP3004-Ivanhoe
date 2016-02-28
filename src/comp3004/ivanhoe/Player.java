@@ -3,7 +3,9 @@ package comp3004.ivanhoe;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
+import comp3004.ivanhoe.Card.CardColour;
 import comp3004.ivanhoe.Card.CardType;
 
 public class Player {
@@ -11,6 +13,7 @@ public class Player {
 	private PointsBoard display;
 	private HashMap<String, Integer> tokens;
 	private long id;
+	private boolean isPlaying = true;
 	
 	public Player(){
 		tokens = new HashMap<String,Integer>();
@@ -22,6 +25,22 @@ public class Player {
 		tokens.put("Red", 0);
 		tokens.put("Blue", 0);
 		tokens.put("Yellow", 0);
+	}
+	
+	public List<Card> getHand(){
+		return hand.getHand();
+	}
+	
+	public boolean getPlaying(){
+		return isPlaying;
+	}
+	
+	public Card getCardByName(String s){
+		return hand.getCardByName(s);
+	}
+	
+	public void setPlaying(boolean s){
+		isPlaying = s;
 	}
 	
 	/**
@@ -50,7 +69,7 @@ public class Player {
 	 * Draws a card  and adds it to hand
 	 * @param c Card
 	 */
-	public void drawCard(Card c){
+	public void addCard(Card c){
 		hand.add(c);
 	}
 	
@@ -58,7 +77,7 @@ public class Player {
 	 * Adds a Color card to the display
 	 * @param cardname name of card
 	 */
-	public void playColorCard(String cardname){
+	public void playColourCard(String cardname){
 		Card c = hand.getCardByName(cardname);
 		if(c.cardType == CardType.Colour){
 			display.addCard(c);
@@ -72,13 +91,11 @@ public class Player {
 	 */
 	public void playActionCard(String cardname){
 		Card card = hand.getCardByName(cardname);
-		if(card.getCardName() == "Ivanhoe" || card.getCardName() == "Shield"){
-			
-		} else if(card.getCardName() == "Stunned"){
-			
-		} else {
-			
-		}
+		
+	}
+	
+	public int getHandSize(){
+		return hand.getNumCards();
 	}
 	
 	public PointsBoard getDisplay(){
@@ -87,7 +104,7 @@ public class Player {
 	
 	/**
 	 * Returns the thread ID that the player class is associated with
-	 * @return lond ID
+	 * @return long ID
 	 */
 	public long getid(){
 		return id;

@@ -19,21 +19,18 @@ public class PlayerTests {
 	public void setUp() throws Exception {
 		p = new Player();
 	}
-
-	@After
-	public void tearDown() throws Exception {}
-
+	
 	@Test
 	public void addCardToHand() {
-		p.drawCard(new ColourCard(CardColour.Blue, 6));
+		p.addCard(new ColourCard(CardColour.Blue, 6));
 		assertTrue(p.hasInHand("Blue 6"));
 	}
 	
 	@Test
 	public void playColourCardtoBoard(){
-		p.drawCard(new ColourCard(CardColour.Blue, 2));
+		p.addCard(new ColourCard(CardColour.Blue, 2));
 		p.getDisplay().setColour(CardColour.Blue);
-		p.playColorCard("Blue 2");
+		p.playColourCard("Blue 2");
 		Card q = p.getDisplay().getLastPlayed();
 		assertEquals("Blue 2", q.getCardName());
 	}

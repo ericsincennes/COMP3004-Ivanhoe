@@ -128,6 +128,12 @@ public class Server{
 			}
 			
 			while(isRunning){
+				Object o = get();
+				if(o instanceof byte[]){
+					if(o.equals(new byte[]{1,1,1,1})){
+						rules.initializeTournamentColour(null);
+					}
+				}
 			}
 		}
 		

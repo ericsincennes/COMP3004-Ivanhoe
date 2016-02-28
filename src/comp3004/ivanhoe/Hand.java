@@ -32,9 +32,7 @@ public class Hand {
 	 * @param c Card to be added
 	 */
 	public void add(Card c){
-		if(c != null){
-			hand.add(c);
-		}
+		hand.add(c);
 	}
 	
 	/**
