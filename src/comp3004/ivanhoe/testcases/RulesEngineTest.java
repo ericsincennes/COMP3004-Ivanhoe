@@ -28,7 +28,7 @@ public class RulesEngineTest {
 	}
 	
 	@Test
-	public void getTournementChoice(){
+	public void getTournementColour(){
 		
 	}
 	
