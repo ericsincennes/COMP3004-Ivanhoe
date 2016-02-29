@@ -74,12 +74,13 @@ public class Hand {
 		for (Iterator<Card> it = hand.iterator(); it.hasNext();) {
 			c = it.next();
 			if (cardname.equals(c.getCardName())) {
-				it.remove();
+				//it.remove();
 				return c;
 			}
 		}
 		return null;
 	}
+	
 	
 	/**
 	 * Returns a card if it exists in the hand

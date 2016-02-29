@@ -39,6 +39,10 @@ public class Player {
 		return hand.getCardByName(s);
 	}
 	
+	public void removeCard(String s) {
+		hand.remove(s);
+	}
+	
 	public void setPlaying(boolean s){
 		isPlaying = s;
 	}

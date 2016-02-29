@@ -150,6 +150,7 @@ public class RulesEngine {
 		System.out.println(b);
 		if(b){
 			p.playColourCard(cardname);
+			p.removeCard(cardname);
 			return true;
 		} else if(c.cardType == CardType.Action){
 			p.playActionCard(cardname);
