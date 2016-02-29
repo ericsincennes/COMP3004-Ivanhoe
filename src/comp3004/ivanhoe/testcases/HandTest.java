@@ -66,6 +66,6 @@ public class HandTest {
 		Card c = h.getCardByName("Blue 2");
 		
 		assertEquals(c.getCardName(), "Blue 2");
-		assertFalse(h.contains("Blue 2"));
+		assertTrue(h.contains("Blue 2"));
 	}
 }
