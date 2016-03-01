@@ -91,7 +91,7 @@ public class Hand {
 		for (Iterator<Card> it = hand.iterator(); it.hasNext();) {
 			temp = it.next();
 			if (card.equals(it.next())) {
-				it.remove();
+				//it.remove();
 				return temp;
 			}
 		}
@@ -106,7 +106,7 @@ public class Hand {
 	public Card getCardbyIndex(int index){
 		if(index < hand.size()){
 			Card c = hand.get(index);
-			hand.remove(index);
+			//hand.remove(index);
 			return c;
 		}
 		return null;
