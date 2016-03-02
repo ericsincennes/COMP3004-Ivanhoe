@@ -65,8 +65,7 @@ public class RulesEngineTest {
 		p.addCard(new ColourCard(CardColour.Red, 3));
 		
 		assertTrue(e.playCard("Red 3", p.getid()));
-		assertTrue(e.playCard("Maiden",p.getid()));
-		System.out.println(p.getDisplay().calculatePoints()); 
+		assertTrue(e.playCard("Maiden", p.getid()));
 		assertEquals(p.getDisplay().calculatePoints(),9);
 		assertTrue(e.canEndTurn(p.getid()));
 		//assertFalse(p.getPlaying());

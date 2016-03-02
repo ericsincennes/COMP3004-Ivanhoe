@@ -83,7 +83,7 @@ public class Player {
 	 */
 	public void playColourCard(String cardname){
 		Card c = hand.getCardByName(cardname);
-		if(c.cardType == CardType.Colour){
+		if(c.cardType == CardType.Colour || c.cardType == CardType.Supporter){
 			display.addCard(c);
 		}
 	}
