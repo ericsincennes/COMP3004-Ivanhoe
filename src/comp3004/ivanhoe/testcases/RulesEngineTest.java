@@ -12,18 +12,18 @@ public class RulesEngineTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		e = new RulesEngine(5);
-		e.registerThread(10);
-		e.registerThread(11);
-		e.registerThread(12);
-		e.registerThread(13);
-		e.registerThread(14);
+		e = new RulesEngine(2);
+		e.registerThread(1);
+		e.registerThread(2);
+		//e.registerThread(3);
+		//e.registerThread(4);
+		//e.registerThread(5);
 	}
 	
 	@Test
 	public void choosefirstTournement(){
 		long a = e.chooseFirstTournament();
-		assertTrue(a >= 10 && a <= 14);
+		assertTrue(a >= 1 && a <= 2);
 	}
 	
 	@Test
@@ -31,27 +31,27 @@ public class RulesEngineTest {
 		choosefirstTournement();
 		
 		e.initializeTournamentColour(CardColour.Blue);
-		assertEquals(CardColour.Blue, e.getPlayerById(10).getDisplay().getColour());
+		assertEquals(CardColour.Blue, e.getPlayerById(1).getDisplay().getColour());
 	}
 	
 	@Test
 	public void dealHand(){
 		e.dealHand();
-		assertEquals(8, e.getPlayerById(11).getHandSize());
+		assertEquals(8, e.getPlayerById(2).getHandSize());
 	}
 		
 	public void validatePlay(){
 		e.initializeTournamentColour(CardColour.Blue);
-		e.getPlayerById(11).addCard(new ColourCard(CardColour.Blue, 4));
-		assertTrue(e.validatePlay("Blue 4", (long) 11));
+		e.getPlayerById(1).addCard(new ColourCard(CardColour.Blue, 4));
+		assertTrue(e.validatePlay("Blue 4", (long) 1));
 	}
 	
 	@Test
 	public void playCard(){
-		Player p = e.getPlayerById(11);
+		Player p = e.getPlayerById(2);
 		e.initializeTournamentColour(CardColour.Blue);
 		p.addCard(new ColourCard(CardColour.Blue, 4));
-		assertTrue(e.playCard("Blue 4",(long) 11));
+		assertTrue(e.playCard("Blue 4", p.getid()));
 	}
 	
 	@Test
@@ -60,12 +60,16 @@ public class RulesEngineTest {
 		e.initializeTournamentColour(CardColour.Red);
 		e.dealHand();
 		
-		Player p = e.getPlayerById(11);
+		Player p = e.getPlayerById(2);
 		//e.giveCardToPlayer(p.getid());
 		p.addCard(new ColourCard(CardColour.Red, 3));
 		
 		assertTrue(e.playCard("Red 3", p.getid()));
-		assertTrue(e.endTurn(p.getid()));
+		assertTrue(e.playCard("Maiden",p.getid()));
+		System.out.println(p.getDisplay().calculatePoints()); 
+		assertEquals(p.getDisplay().calculatePoints(),9);
+		assertTrue(e.canEndTurn(p.getid()));
+		//assertFalse(p.getPlaying());
 		
 	}
 	

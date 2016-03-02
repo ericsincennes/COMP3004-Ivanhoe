@@ -121,7 +121,7 @@ public class RulesEngine {
 
 		Player p = players.get(id);
 		Card c;
-		System.out.println("ValidatePlay Card " + card + " ID " + id);
+		System.out.println("ValidatePlay Card " + card + " ID " + id); //testing
 		//if card in player hand
 		if(p.hasInHand(card)){
 			c = p.getCardByName(card);
@@ -147,7 +147,7 @@ public class RulesEngine {
 		Player p = players.get(id);
 		Card c = p.getCardByName(cardname);
 		boolean b = validatePlay(cardname, id);
-		System.out.println(b);
+		System.out.println(b); //test print
 		if(b){
 			p.playColourCard(cardname);
 			p.removeCard(cardname);
@@ -159,7 +159,7 @@ public class RulesEngine {
 		return false;
 	}
 	
-	public boolean endTurn(Long id){
+	public boolean canEndTurn(Long id){
 		if(players.get(id).getDisplay().calculatePoints() > highestScore){
 			highestScore = players.get(id).getDisplay().calculatePoints();
 			return true;

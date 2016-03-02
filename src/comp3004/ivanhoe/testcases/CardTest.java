@@ -60,7 +60,7 @@ public class CardTest {
 		Card maiden = new SupporterCard(6);
 		assertTrue(maiden.getCardType() == CardType.Supporter);
 		assertTrue(maiden.getCardName() == "Maiden");
-		assertTrue(((SupporterCard)maiden).getValue() == 6);
+		assertTrue(((ColourCard)maiden).getValue() == 6);
 	}
 	
 	@Test
