@@ -167,24 +167,6 @@ public class RulesEngine {
 		return false;
 	}
 	
-	//player draws a card - rules engine draws a card for Player object
-	//server sends card to player GUI & withdraw button in GUI is enabled 
-	//server waits for string command to withdraw or server waits for String[] of cards to be played
-
-	//player plays cards
-	//TODO in player class make function to handle String[] of cards to play
-
-	//TODO create RulesEngine.validateColour to validate if legal play
-	//Rules engine calculates if play is valid 
-	//if valid updates point totals and returns true to server
-	//if not valid returns false to server
-	//server forwards response to client
-	//player attempts to end turn
-	//if true player can end turn 
-	//if false player cannot end turn and must play more or surrender
-	//Server updates displays for all players
-	//server sends updated boards to all players
-
 	/**
 	 * Deals a hand of 8 cards to each player
 	 */
@@ -209,5 +191,25 @@ public class RulesEngine {
 	private void print(String s){
 		System.out.println(s);
 	}
+	
+	
+	// -- SETUP FOR A TURN --
+	//player draws a card - rules engine draws a card for Player object
+	//server sends card to player GUI & withdraw button in GUI is enabled 
+	//server waits for string command to withdraw or server waits for String[] of cards to be played
+
+	//player plays cards
+	//TODO in player class make function to handle String[] of cards to play
+
+	//TODO create RulesEngine.validateColour to validate if legal play
+	//Rules engine calculates if play is valid 
+	//if valid updates point totals and returns true to server
+	//if not valid returns false to server
+	//server forwards response to client
+	//player attempts to end turn
+	//if true player can end turn 
+	//if false player cannot end turn and must play more or surrender
+	//Server updates displays for all players
+	//server sends updated boards to all players
 
 }

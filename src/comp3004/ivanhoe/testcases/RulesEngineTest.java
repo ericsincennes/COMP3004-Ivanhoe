@@ -70,6 +70,13 @@ public class RulesEngineTest {
 		assertTrue(e.canEndTurn(p.getid()));
 		//assertFalse(p.getPlaying());
 		
+		//turn 2 - testing end turn checks after plays have already been made
+		Player p2 = e.getPlayerById(1);
+		assertTrue(e.playCard("Maiden", p2.getid()));
+		assertFalse(e.canEndTurn(p.getid()));
+		assertTrue(e.playCard("Maiden", p2.getid()));
+		assertTrue(e.canEndTurn(p2.getid()));
+		
 	}
 	
 }
