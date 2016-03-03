@@ -28,6 +28,10 @@ public class RulesEngine {
 		deck.testDeck();
 	}
 	
+	public List<Player> getPlayerList(){
+		return playersList;
+	}
+	
 	/**
 	 * Registers a player with the Rules engine
 	 * @param ID this.currentThread.getID() of the player thread
@@ -141,7 +145,7 @@ public class RulesEngine {
 			p.addCard(deck.draw());
 			return true;
 		} else {
-			activePlayer++;
+			Collections.rotate(playersList, -1);
 			return false;
 		}
 	}
@@ -158,11 +162,37 @@ public class RulesEngine {
 	 * Removes  the player from the tournament
 	 * @param id
 	 */
-	public void withdrawPlayer(Long id){
+	public Long withdrawPlayer(Long id){
 		Player p = getPlayerById(id);
-		//TODO: Maiden check
 		p.setPlaying(false);
+		int count = 0;
+		
+		//Maiden check
+		if(p.getDisplay().contains("Maiden")){
+			//TODO: take token from player
+		}
+		
 		p.getDisplay().clearBoard();
+		Collections.rotate(playersList, -1);
+		
+		//check how many players left
+		for(Player a : playersList){
+			if(a.getPlaying()){
+				count++;
+			}
+		}
+		
+		//If only 1 player remains
+		if(count == 1){
+			//notify remaining player of winning
+			for(Player x : playersList){
+				if(x.getPlaying()){
+					Collections.rotate(playersList, -1*playersList.indexOf(x));
+					return x.getid();
+				} 
+			} 
+		}
+		return null;
 	}
 
 	/**
@@ -179,7 +209,7 @@ public class RulesEngine {
 			p.playColourCard(cardname);
 			p.removeCard(cardname);
 			return true;
-		} else if(c.cardType == CardType.Action){
+		} else if(c != null && c.cardType == CardType.Action){
 			p.playActionCard(cardname);
 			p.removeCard(cardname);
 			return true;
@@ -201,7 +231,7 @@ public class RulesEngine {
 
 		Player p = players.get(id);
 		Card c;
-		System.out.println("ValidatePlay Card " + card + " ID " + id); //testing
+		//System.out.println("ValidatePlay Card " + card + " ID " + id); //testing
 		//if card in player hand
 		if(p.hasInHand(card)){
 			c = p.getCardByName(card);
@@ -244,19 +274,8 @@ public class RulesEngine {
 	public boolean endTurn(long id){
 		if(canEndTurn(id)){
 			highestScore = players.get(id).getDisplay().calculatePoints();
-			boolean win = false;
-			for(Player p: playersList){
-				if(p.getid() != id){
-					win |= p.getPlaying();
-				}
-			}
-			if(!win){ 
-				roundCleanup(); 
-			} else {
-				activePlayer++;
-				return true;
-			}
-
+			Collections.rotate(playersList, -1);
+			return true;
 		}
 		return false;
 	}
@@ -267,8 +286,8 @@ public class RulesEngine {
 	public void roundCleanup(){
 		for(Player p : playersList){
 			p.getDisplay().clearBoard();
+			p.setPlaying(true);
 		}
-		activePlayer = 0;
 	}
 	
 	/**
@@ -290,4 +309,9 @@ public class RulesEngine {
 		}
 		return null;
 	}
+	
+	public Card.CardColour getTournamentColor() {
+		return TournamentColor;
+	}
+
 }

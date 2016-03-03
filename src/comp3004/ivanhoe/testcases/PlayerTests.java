@@ -37,35 +37,35 @@ public class PlayerTests {
 	
 	@Test
 	public void recievePurpleToken(){
-		p.recieveToken("Purple");
+		p.recieveToken(CardColour.Purple);
 		int i = p.getTokenCount();
 		assertTrue(i != 0);
 	}
 	
 	@Test
 	public void recieveGreenToken(){
-		p.recieveToken("Green");
+		p.recieveToken(CardColour.Green);
 		int i = p.getTokenCount();
 		assertTrue(i != 0);
 	}
 	
 	@Test
 	public void recieveRedToken(){
-		p.recieveToken("Red");
+		p.recieveToken(CardColour.Red);
 		int i = p.getTokenCount();
 		assertTrue(i != 0);
 	}
 	
 	@Test
 	public void recieveYellowToken(){
-		p.recieveToken("Yellow");
+		p.recieveToken(CardColour.Yellow);
 		int i = p.getTokenCount();
 		assertTrue(i != 0);
 	}
 	
 	@Test
 	public void recieveBlueToken(){
-		p.recieveToken("Blue");
+		p.recieveToken(CardColour.Blue);
 		int i = p.getTokenCount();
 		assertTrue(i != 0);
 	}

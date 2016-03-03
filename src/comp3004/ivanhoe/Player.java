@@ -11,20 +11,20 @@ import comp3004.ivanhoe.Card.CardType;
 public class Player {
 	private Hand hand;
 	private PointsBoard display;
-	private HashMap<String, Integer> tokens;
+	private HashMap<CardColour, Integer> tokens;
 	private long id;
 	private boolean isPlaying = true;
 	
 	public Player(){
-		tokens = new HashMap<String,Integer>();
+		tokens = new HashMap<CardColour,Integer>();
 		display = new PointsBoard();
 		hand = new Hand();
 		
-		tokens.put("Purple", 0);
-		tokens.put("Green", 0);
-		tokens.put("Red", 0);
-		tokens.put("Blue", 0);
-		tokens.put("Yellow", 0);
+		tokens.put(CardColour.Purple, 0);
+		tokens.put(CardColour.Green, 0);
+		tokens.put(CardColour.Red, 0);
+		tokens.put(CardColour.Blue, 0);
+		tokens.put(CardColour.Yellow, 0);
 	}
 	
 	public List<Card> getHand(){
@@ -122,9 +122,18 @@ public class Player {
 	 * Adds a token to the players collection
 	 * @param colour Colour of the token
 	 */
-	public void recieveToken(String colour){
+	public void recieveToken(CardColour colour){
 		if(tokens.containsKey(colour)){
-			tokens.put(colour, tokens.get(colour)+1);
+			tokens.put(colour, 1);
+		}
+	}
+	/**
+	 * Remove a token from the player
+	 * @param colour
+	 */
+	public void removeToken(CardColour colour){
+		if(tokens.containsKey(colour)){
+			tokens.put(colour, 0);
 		}
 	}
 }
