@@ -45,20 +45,45 @@ public class PointsBoard {
 	}
 	
 	/**
-	 * Add Card to display
+	 * Add Card to display 
 	 * @param c Card to be added
 	 */
-	public void addCard(Card c) {
+	public boolean addCard(Card c) {
 		if (c.getCardType() == CardType.Colour || c.getCardType() == CardType.Supporter) {
 			if (((ColourCard)c).cardColour == CardColour.White || ((ColourCard)c).cardColour == tourneyColour) {
+				if (c.getCardName() == "Maiden" && this.contains("Maiden")) {
+					return false;
+				}
 				cardsPlayed.add(c);
 				score = calculatePoints();
+				return true;
 			}
 		}
 		
 		if (c.getCardType() == CardType.Action) {
 			actionsPlayed.add(c);
+			return true;
 		}
+		return false;
+	}
+	
+	
+	/**
+	 * checks if the display board contains the card played, actions and points card
+	 * @param name - name of card to check
+	 */
+	public boolean contains(String name) {
+		for (Card c : cardsPlayed) {
+			if (name == c.getCardName()) {
+				return true;
+			}
+		}
+		for (Card c : actionsPlayed) {
+			if (name == c.getCardName()) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
