@@ -29,7 +29,7 @@ public class Deck {
 	 */
 	public void testDeck(){
 		for (int i=0;i<80;i++) {
-			cards.add(new SupporterCard(6));
+			cards.add(new SupporterCard(2));
 		}
 	}
 	
