@@ -1,0 +1,49 @@
+Server to client optcoded
+
+Sender: Server
+Reciever: Client
+Msg: player hand
+optcode: 001
+
+Sender: Server
+Reciever: Client
+Msg: update board state
+optcode: 002
+
+Sender: Server
+Reciever: Client
+Msg: first tournament
+optcode: 003
+
+Sender: Server
+Reciever: Client
+Msg: colour choice 
+optcode: 004
+
+----------------------------------------------------
+Client to Server optcoded
+
+Sender: Client
+Reciever: Server
+Msg: first tournament colour choice
+optcode: 101
+
+Sender: Client
+Reciever: Server
+Msg: tournament colour choice
+optcode: 102
+
+Sender: Client
+Reciever: Server
+Msg: Cards to be played
+optcode: 103
+
+Sender: Client
+Reciever: Server
+Msg: withdraw
+optcode: 104
+
+Sender: Client
+Reciever: Server
+Msg: end turn
+optcode: 105
