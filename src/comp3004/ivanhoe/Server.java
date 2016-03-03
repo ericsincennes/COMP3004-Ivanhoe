@@ -101,9 +101,7 @@ public class Server{
 		private boolean isRunning = true;
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
-		private Hand hand = new Hand();
-		private long threadID = this.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
-		Player player;
+		private long threadID = Thread.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
 		
 		public Player(Socket c){
 			client = c;
@@ -119,7 +117,6 @@ public class Server{
 		}
 
 		public void run(){
-			
 			int b = rules.registerThread(threadID);
 			
 			if(b != -1){ 
@@ -129,6 +126,13 @@ public class Server{
 			}
 			
 			while(isRunning){
+				//Get first tournament colour from client
+				if(threadID == rules.chooseFirstTournament()){
+					print("Thread " + threadID + ": getting tournamane colour from client");
+					send("Enter Tournament Colour");
+					String o = (String) get();
+					//rules.initializeTournamentColour(colour);
+				}
 				
 			}
 		}
