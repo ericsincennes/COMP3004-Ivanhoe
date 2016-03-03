@@ -61,14 +61,13 @@ public class RulesEngineTest {
 		e.dealHand();
 		
 		Player p = e.getPlayerById(2);
-		//e.giveCardToPlayer(p.getid());
 		p.addCard(new ColourCard(CardColour.Red, 3));
 		
 		assertTrue(e.playCard("Red 3", p.getid()));
 		assertTrue(e.playCard("Maiden", p.getid()));
-		assertEquals(p.getDisplay().calculatePoints(),9);
+		assertEquals(p.getDisplay().calculatePoints(), 9);
 		assertTrue(e.canEndTurn(p.getid()));
-		//assertFalse(p.getPlaying());
+		assertTrue(e.endTurn(p.getid()));
 		
 		//turn 2 - testing end turn checks after plays have already been made
 		Player p2 = e.getPlayerById(1);

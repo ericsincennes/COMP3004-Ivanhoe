@@ -17,7 +17,8 @@ public class RulesEngine {
 	private Deck deck, discard;
 	private boolean firstTournament = true;
 	private int highestScore = 0;
-	
+	private int activePlayer;
+
 	public RulesEngine(int i){
 		expectedPlayers = i;
 		players = new HashMap<Long, Player>();
@@ -26,11 +27,7 @@ public class RulesEngine {
 		deck = Deck.createDeck(discard);
 		deck.testDeck();
 	}
-
-	public void setTournamentColor(CardColour colour){
-		TournamentColor = colour;
-	}
-
+	
 	/**
 	 * Registers a player with the Rules engine
 	 * @param ID this.currentThread.getID() of the player thread
@@ -56,29 +53,6 @@ public class RulesEngine {
 	}
 
 	/**
-	 * Returns the player if the id exists
-	 * @param id Long 
-	 * @return Player
-	 */
-	public Player getPlayerById(long id){
-		if(players.containsKey(id)){
-			return players.get(id);
-		}
-		return null;
-	}
-
-	/**
-	 * Choose who starts the first tournament
-	 * @return player number of the first tournament starter
-	 */
-	public synchronized long chooseFirstTournament(){
-		int i = randRange(0, numPlayers);
-		Collections.rotate(playersList, i);
-		//notifyAll();
-		return playersList.get(0).getid();
-	}
-
-	/**
 	 * initialize the tournament colour
 	 * @param colour CardColour
 	 * @return Boolean
@@ -90,21 +64,127 @@ public class RulesEngine {
 		TournamentColor = colour;
 		return true;
 	}
+	
+	/**
+	 * Choose who starts the first tournament
+	 * @return player number of the first tournament starter
+	 */
+	public synchronized long chooseFirstTournament(){
+		Collections.shuffle(playersList);
+		//notifyAll();
+		activePlayer = 0;
+		return playersList.get(0).getid();
+	}
 
+	/**
+	 * Checks if the player can start a tournament 
+	 * @param id id of player
+	 * @return boolean
+	 */
+	private boolean canStartTournament(long id){
+		List<Card> hand = getPlayerById(id).getHand();
+		for(Card c: hand){
+			if(c.getCardType() == CardType.Colour || c.getCardType() == CardType.Supporter){
+				if(TournamentColor == CardColour.Purple 
+						&& ((ColourCard) c).getColour() != CardColour.Purple){
+					return true;
+				} else if(TournamentColor != CardColour.Purple ) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Initializing a tournament that is not the first tournament
+	 * @param colour 
+	 */
+	public boolean initTournament(CardColour colour){
+		Collections.rotate(playersList, -1*activePlayer);
+		activePlayer = 0;
+
+		if(TournamentColor == CardColour.Purple && colour == CardColour.Purple){
+			activePlayer++;
+			return false;
+		} else {
+			if(canStartTournament(playersList.get(0).getid())){
+				initializeTournamentColour(colour);
+				return true;
+			}
+		}
+		activePlayer++;
+		return false;
+	}
+	
+	/**
+	 * Deals a hand of 8 cards to each player
+	 */
+	public void dealHand(){
+		for(Player p : playersList){
+			for(int i =0; i < 8; i++){
+				drawCard(p.getid());
+			}
+		}		
+	}
+
+	/**
+	 * Checks if the player can play their turn
+	 * if true then draw a card
+	 * else go to next player
+	 * @param id player id
+	 * @return boolean
+	 */
+	public boolean startTurn(long id){
+		Player p = getPlayerById(id);
+		if(p.getPlaying()){
+			p.addCard(deck.draw());
+			return true;
+		} else {
+			activePlayer++;
+			return false;
+		}
+	}
+	
+	/**
+	 * Adds a card to the players hand
+	 * @param id ID of player
+	 */
+	public void drawCard(long id){
+		getPlayerById(id).addCard(deck.draw());
+	}
+	
 	/**
 	 * Removes  the player from the tournament
 	 * @param id
 	 */
 	public void withdrawPlayer(Long id){
-		players.get(id).setPlaying(false);
+		Player p = getPlayerById(id);
+		//TODO: Maiden check
+		p.setPlaying(false);
+		p.getDisplay().clearBoard();
 	}
 
 	/**
-	 * Adds a card to the players hand
-	 * @param id ID of player
+	 * Plays a card to the playes display and check if the play is valid
+	 * @param cardname name of card
+	 * @param id player id
+	 * @return boolean
 	 */
-	public void giveCardToPlayer(long id){
-		players.get(id).addCard(deck.draw());
+	public boolean playCard(String cardname, Long id){
+		Player p = players.get(id);
+		Card c = p.getCardByName(cardname);
+		boolean b = validatePlay(cardname, id);
+		if(b){
+			p.playColourCard(cardname);
+			p.removeCard(cardname);
+			return true;
+		} else if(c.cardType == CardType.Action){
+			p.playActionCard(cardname);
+			p.removeCard(cardname);
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -143,73 +223,71 @@ public class RulesEngine {
 		return false;
 	}
 
-	public boolean playCard(String cardname, Long id){
-		Player p = players.get(id);
-		Card c = p.getCardByName(cardname);
-		boolean b = validatePlay(cardname, id);
-		System.out.println(b); //test print
-		if(b){
-			p.playColourCard(cardname);
-			p.removeCard(cardname);
-			return true;
-		} else if(c.cardType == CardType.Action){
-			p.playActionCard(cardname);
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean canEndTurn(Long id){
-		if(players.get(id).getDisplay().calculatePoints() > highestScore){
-			highestScore = players.get(id).getDisplay().calculatePoints();
-			return true;
-		}
-		return false;
-	}
-	
 	/**
-	 * Deals a hand of 8 cards to each player
+	 * Checks the highest score and compares it with the players score
+	 * to see if they can legally end their turn
+	 * @param id player id
+	 * @return boolean
 	 */
-	public void dealHand(){
-		for(Player p : playersList){
-			for(int i =0; i < 8; i++){
-				p.addCard(deck.draw());
-			}
-		}		
+	public boolean canEndTurn(Long id){
+		return (players.get(id).getDisplay().calculatePoints() > highestScore);
 	}
 
 	/**
-	 * Returns a random number between min and max inclusive
-	 * @param min
-	 * @param max
-	 * @return random int between min inclusive and max inclusive
+	 * Checks if a player can end their turn
+	 * 	if yes checks if the player is the last player left
+	 * 		if yes ends the round
+	 * 	else moves to the next player
+	 * @param id player id
+	 * @return boolean
 	 */
-	private int randRange(int min, int max){
-		return min + (int)(Math.random() * ((max - min) + 1));
+	public boolean endTurn(long id){
+		if(canEndTurn(id)){
+			highestScore = players.get(id).getDisplay().calculatePoints();
+			boolean win = false;
+			for(Player p: playersList){
+				if(p.getid() != id){
+					win |= p.getPlaying();
+				}
+			}
+			if(!win){ 
+				roundCleanup(); 
+			} else {
+				activePlayer++;
+				return true;
+			}
+
+		}
+		return false;
+	}
+
+	/**
+	 * Clears the board for all players and resets the active player
+	 */
+	public void roundCleanup(){
+		for(Player p : playersList){
+			p.getDisplay().clearBoard();
+		}
+		activePlayer = 0;
 	}
 	
+	/**
+	 * Convenience function
+	 * @param s String to be printed
+	 */
 	private void print(String s){
 		System.out.println(s);
 	}
-	
-	
-	// -- SETUP FOR A TURN --
-	//player draws a card - rules engine draws a card for Player object
-	//server sends card to player GUI & withdraw button in GUI is enabled 
-	//server waits for string command to withdraw or server waits for String[] of cards to be played
 
-	//player plays cards
-	//TODO in player class make function to handle String[] of cards to play
-
-	//TODO create RulesEngine.validateColour to validate if legal play
-	//Rules engine calculates if play is valid 
-	//if valid updates point totals and returns true to server
-	//if not valid returns false to server
-	//server forwards response to client
-	//player attempts to end turn
-	//if true player can end turn 
-	//if false player cannot end turn and must play more or surrender
-	//Server updates displays for all players
-	//server sends updated boards to all players
-
+	/**
+	 * Returns the player if the id exists
+	 * @param id Long 
+	 * @return Player
+	 */
+	public Player getPlayerById(long id){
+		if(players.containsKey(id)){
+			return players.get(id);
+		}
+		return null;
+	}
 }
