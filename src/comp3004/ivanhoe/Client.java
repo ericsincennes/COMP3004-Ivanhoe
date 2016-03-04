@@ -93,10 +93,10 @@ public class Client {
 
 		do{
 			choice = i.nextInt();
-			if(choice < 1 || choice > 6){
+			if (choice < 1 || choice > 5){
 				print("Please choose a number between 1 and 5");
 			}
-		} while(choice < 1 || choice > 6);
+		} while (choice > 0 || choice < 6);
 
 		switch (choice) {
 			case 1: send(Card.CardColour.Purple);
