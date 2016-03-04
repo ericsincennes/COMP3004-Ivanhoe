@@ -17,7 +17,7 @@ public class Server{
 	private ServerSocket 	listeningSocket;
 	//private Log			log = new Log(this.getClass().getName(), "ServerLog");
 	private RulesEngine		rules;
-
+	
 	
 	public Server(){
 		Scanner in = new Scanner(System.in);
@@ -44,7 +44,7 @@ public class Server{
 			//log.logmsg(getTimestamp() + " : server listening on port " + port);
 			listeningSocket = new ServerSocket(port);
 
-			while(true){
+			while(isAcceptingConnections){
 
 				Socket clientSocket = listeningSocket.accept();
 
@@ -121,11 +121,7 @@ public class Server{
 			
 			//Wait for other playes to connect before starting
 			while(isAcceptingConnections){
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				
 			}
 			
 			//Register Thread with the rules engine
@@ -148,6 +144,8 @@ public class Server{
 					rules.initializeTournamentColour(o); 
 					rules.dealHand(); //deal the hands
 				}
+				
+				
 				
 			}
 		}
