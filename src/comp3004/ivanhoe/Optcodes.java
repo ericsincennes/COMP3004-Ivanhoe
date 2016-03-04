@@ -2,14 +2,14 @@ package comp3004.ivanhoe;
 
 public class Optcodes {
 	//Server to Client Opt codes
-	public static final byte[] ClientGetHand 			= {0,0,1};
-	public static final byte[] ClientupdateBoardState 	= {0,0,2};
-	public static final byte[] ClientFirstTournament 	= {0,0,3};
-	public static final byte[] ClientGetColourChoice 	= {0,0,4};
+	public static final int ClientGetHand 			= 101;
+	public static final int ClientupdateBoardState 	= 102;
+	public static final int ClientFirstTournament 	= 103;
+	public static final int ClientGetColourChoice 	= 104;
 	
 	//Client to Server Opt codes
-	public static final byte[] ServerSendColourChoice 	= {1,0,1};
-	public static final byte[] ServerGetCardsToBePlayed = {1,0,3};
-	public static final byte[] ServerWithdrawClient  	= {1,0,4};
-	public static final byte[] ServerEndClientTurn	 	= {1,0,5};
+	public static final int ServerSendColourChoice 	= 201;
+	public static final int ServerGetCardsToBePlayed= 202;
+	public static final int ServerWithdrawClient  	= 203;
+	public static final int ServerEndClientTurn	 	= 204;
 }

@@ -49,34 +49,34 @@ public class Client {
 		playerNum = (int) get();	//get player number from server
 
 		while(true){
-			byte[] optcode = (byte[]) get();
-			
-			//if client gets to decide the tournament colour
-			if(optcode == Optcodes.ClientFirstTournament){
+			int optcode = (int) get();
+
+			switch(optcode) {
+			case Optcodes.ClientFirstTournament:
 				handleGetTournamentColour();
-				continue;
-			}
-			
-			if(optcode == Optcodes.ClientGetHand){
+				break;
+			case Optcodes.ClientGetHand:
 				handleGetHand();
+				break;
+			default: new Exception("Unexpected Value");
+
 			}
-			
 		}
 	}
-	
+
 	/**
 	 * Gets the hand from the server and displays it to the player
 	 */
 	private void handleGetHand(){
 		List<Card> hand = (List<Card>) get();
-		
-		
+
+
 		for(Card c: hand){
-			
+
 		}
-		
+
 	}
-	
+
 	/**
 	 * Gets the player input for tournament colour
 	 * @return Card.CardColour

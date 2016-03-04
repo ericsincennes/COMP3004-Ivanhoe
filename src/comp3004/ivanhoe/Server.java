@@ -138,11 +138,17 @@ public class Server{
 				//Get first tournament colour from client
 				if(threadID == rules.getPlayerList().get(0).getid()){
 					print("Thread " + threadID + ": getting tournamane colour from client");
-					send(Optcodes.ClientFirstTournament);	
+					send(Optcodes.ClientFirstTournament);
 					
 					CardColour o = (CardColour) get(); //get colour from client
 					rules.initializeTournamentColour(o); 
 					rules.dealHand(); //deal the hands
+				} else {
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 				
 				
