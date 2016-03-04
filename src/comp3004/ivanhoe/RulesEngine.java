@@ -15,7 +15,7 @@ public class RulesEngine {
 	private int numPlayers = 0, expectedPlayers;
 	private Card.CardColour TournamentColor = null;
 	private Deck deck, discard;
-	private boolean firstTournament = true;
+	private boolean colourChosen = false;
 	private int highestScore = 0;
 	private int activePlayer;
 
@@ -56,18 +56,6 @@ public class RulesEngine {
 		return numPlayers;
 	}
 
-	/**
-	 * initialize the tournament colour
-	 * @param colour CardColour
-	 * @return Boolean
-	 */
-	public boolean initializeTournamentColour(CardColour colour){
-		for(Player p : playersList){
-			p.getDisplay().setColour(colour);
-		}
-		TournamentColor = colour;
-		return true;
-	}
 	
 	/**
 	 * Choose who starts the first tournament
@@ -81,8 +69,8 @@ public class RulesEngine {
 	}
 
 	/**
-	 * Checks if the player can start a tournament 
-	 * @param id id of player
+	 * Checks if the player can start a tournament of any colour
+	 * @param id - id of player
 	 * @return boolean
 	 */
 	private boolean canStartTournament(long id){
@@ -100,28 +88,62 @@ public class RulesEngine {
 	}
 	
 	/**
-	 * Initializing a tournament that is not the first tournament
-	 * @param colour 
+	 * Checks if the player can start a tournament of the specific colour
+	 * @param id - id of player
+	 * @param colour - colour player wants to set tournament to
+	 * @return boolean
 	 */
-	public boolean initTournament(CardColour colour){
-		activePlayer = 0;
-
-		if(TournamentColor == CardColour.Purple && colour == CardColour.Purple){
-			return false;
-		} else {
-			if(canStartTournament(playersList.get(0).getid())){
-				initializeTournamentColour(colour);
-				return true;
+	private boolean canStartTournament(long id, CardColour colour){
+		for(Card c:  getPlayerById(id).getHand().getHand()){
+			if(c.getCardType() == CardType.Colour && ((ColourCard)c).getColour() == colour || c.getCardType() == CardType.Supporter){
+				if(TournamentColor == CardColour.Purple 
+						&& ((ColourCard) c).getColour() != CardColour.Purple){
+					return true;
+				} else if(TournamentColor != CardColour.Purple ) {
+					return true;
+				}
 			}
 		}
-		activePlayer++;
 		return false;
+	}
+	
+	/**
+	 * initialize the tournament colour, should only be called if a tournament can be started
+	 * @param colour CardColour
+	 * @return Boolean
+	 */
+	public boolean initializeTournamentColour(CardColour colour){
+		if (!canStartTournament(playersList.get(0).getid(),colour)) {
+			colourChosen = false;
+			return false;
+		}
+		for(Player p : playersList){
+			p.getDisplay().setColour(colour);
+		}
+		TournamentColor = colour;
+		colourChosen = true;
+		return true;
+	}
+	
+	/**
+	 * Initializing gamestate for a tournament if no tournament is started
+	 * @param colour 
+	 */
+	public void initTournament(){
+		
+		for(Player p : playersList){
+			for(int i = 0; i < 8; i++){
+				drawCard(p.getid());
+			}
+			p.setPlaying(true);
+		}
+		colourChosen = false;
 	}
 	
 	/**
 	 * Deals a hand of 8 cards to each player
 	 */
-	public void dealHand(){
+	public void dealHand(){ //up for being replaced by initTournament
 		for(Player p : playersList){
 			for(int i =0; i < 8; i++){
 				drawCard(p.getid());
@@ -184,8 +206,8 @@ public class RulesEngine {
 			//notify remaining player of winning
 			for(Player x : playersList){
 				if(x.getPlaying()){
-					Collections.rotate(playersList, -1*playersList.indexOf(x));
-					return x.getid();
+					Collections.rotate(playersList, -1*playersList.indexOf(x)); //might need to change where this gets done
+					return x.getid();											//due to server synchro issues
 				} 
 			} 
 		}
@@ -288,6 +310,7 @@ public class RulesEngine {
 				deck.addToDiscard(c);
 			}
 		}
+		colourChosen = false;
 	}
 	
 	/**
