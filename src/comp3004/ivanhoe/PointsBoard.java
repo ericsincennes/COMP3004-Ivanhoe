@@ -209,11 +209,15 @@ public class PointsBoard {
 	}
 	
 	/**
-	 * Clears board
+	 * Clears board and returns the cards cleared
 	 */
-	public void clearBoard() {
+	public List<Card> clearBoard() {
+		List<Card> cleared = new ArrayList<Card>();
+		cleared.addAll(cardsPlayed);
+		cleared.addAll(actionsPlayed);
 		cardsPlayed.clear();
 		actionsPlayed.clear();
 		score = 0;
+		return cleared;
 	}
 }

@@ -105,11 +105,9 @@ public class RulesEngine {
 	 * @param colour 
 	 */
 	public boolean initTournament(CardColour colour){
-		Collections.rotate(playersList, -1*activePlayer);
 		activePlayer = 0;
 
 		if(TournamentColor == CardColour.Purple && colour == CardColour.Purple){
-			activePlayer++;
 			return false;
 		} else {
 			if(canStartTournament(playersList.get(0).getid())){
@@ -285,8 +283,11 @@ public class RulesEngine {
 	 */
 	public void roundCleanup(){
 		for(Player p : playersList){
-			p.getDisplay().clearBoard();
-			p.setPlaying(true);
+			List<Card> toDiscard = p.getDisplay().clearBoard();
+			toDiscard.addAll(p.getHand());
+			for (Card c : toDiscard) {
+				deck.addToDiscard(c);
+			}
 		}
 	}
 	
