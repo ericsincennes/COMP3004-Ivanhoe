@@ -193,7 +193,7 @@ public class RulesEngine {
 	}
 
 	/**
-	 * Plays a card to the playes display and check if the play is valid
+	 * Plays a card to the players display and check if the play is valid
 	 * @param cardname name of card
 	 * @param id player id
 	 * @return boolean
@@ -237,7 +237,7 @@ public class RulesEngine {
 					((ColourCard)c).getColour() == TournamentColor){
 				return true;
 
-				//Support cards dont care about tournement colour
+				//Support cards don't care about tournament colour
 			} else if(c.getCardType() == CardType.Supporter){
 				return true;
 
