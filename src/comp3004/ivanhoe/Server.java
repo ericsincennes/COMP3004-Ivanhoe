@@ -136,7 +136,7 @@ public class Server{
 			
 			while(isRunning){
 				//Get first tournament colour from client
-				if(threadID == rules.chooseFirstTournament()){
+				if(threadID == rules.getPlayerList().get(0).getid()){
 					print("Thread " + threadID + ": getting tournamane colour from client");
 					send(Optcodes.ClientFirstTournament);	
 					
