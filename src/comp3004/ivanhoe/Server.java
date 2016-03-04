@@ -17,8 +17,8 @@ public class Server{
 	private ServerSocket 	listeningSocket;
 	//private Log			log = new Log(this.getClass().getName(), "ServerLog");
 	private RulesEngine		rules;
-	
-	
+
+
 	public Server(){
 		Scanner in = new Scanner(System.in);
 		int count = numplayers;
@@ -103,12 +103,12 @@ public class Server{
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
 		private long threadID = Thread.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
-		
+
 		public Player(Socket c){
 			client = c;
 			port = c.getPort();
 			addr = c.getInetAddress();
-			
+
 			try {
 				out = new ObjectOutputStream(client.getOutputStream());
 				in = new ObjectInputStream(client.getInputStream());
@@ -118,31 +118,55 @@ public class Server{
 		}
 
 		public void run(){
+			/*
+				if no tournament running
+					run init tournament
+						deals players hands
+						sets their status to playing (instead of withdrawn)
+						colourChosen = false
+				endif
+
+				start turn
+						draw a card
+				if colourchosen = false
+					check if can start tournament with a colour
+					set tournament colour to that colour
+					if cant start tournament, 
+						colourchosen = false
+						reveal hand
+					endif
+				endif
+				play rest of turn
+				end turn or withdraw
+			*/
+
 			
 			//Wait for other playes to connect before starting
 			while(isAcceptingConnections){
-				
+
 			}
-			
+
 			//Register Thread with the rules engine
 			int b = rules.registerThread(threadID);
-			
+
 			//if game full close connection
 			if(b != -1){ 
 				send(b); 
 			} else {
 				isRunning = false;
 			}
-			
+
 			while(isRunning){
+				//check if tournament has started;
+				//
+
 				//Get first tournament colour from client
 				if(threadID == rules.getPlayerList().get(0).getid()){
 					print("Thread " + threadID + ": getting tournamane colour from client");
 					send(Optcodes.ClientFirstTournament);
-					
+
 					CardColour o = (CardColour) get(); //get colour from client
 					rules.initializeTournamentColour(o); 
-					rules.dealHand(); //deal the hands
 				} else {
 					try {
 						Thread.sleep(100);
@@ -150,12 +174,9 @@ public class Server{
 						e.printStackTrace();
 					}
 				}
-				
-				
-				
 			}
 		}
-		
+
 		/**
 		 * Gets an object from the client
 		 * Does not verify the typeOf an object
@@ -170,7 +191,7 @@ public class Server{
 			}
 			return o;
 		}
-		
+
 		/**
 		 * Sends an object to the client
 		 * @param o Object to be sent
