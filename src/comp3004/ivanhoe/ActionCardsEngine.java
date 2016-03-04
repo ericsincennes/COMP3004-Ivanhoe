@@ -10,7 +10,7 @@ public class ActionCardsEngine {
 	 * @param caster player playing action card
 	 * @param players players that are effected by the card
 	 */
-	public void actionHandler(Card card, Player caster,  Player... players){
+	public void actionHandler(Card card, Player caster,  Object... targets){
 		
 		switch(card.getCardName()){
 		case "Unhorse":
