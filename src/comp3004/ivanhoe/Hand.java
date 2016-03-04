@@ -23,8 +23,10 @@ public class Hand {
 	/**
 	 * Removes all cards from hand
 	 */
-	public void clear(){
+	public List<Card> discardHand(){
+		List<Card> cards = new ArrayList<Card>(hand);
 		hand.clear();
+		return cards;
 	}
 	
 	/**
@@ -125,4 +127,5 @@ public class Hand {
 		}
 		return false;
 	}
+	
 }

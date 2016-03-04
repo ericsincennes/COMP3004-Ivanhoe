@@ -86,8 +86,7 @@ public class RulesEngine {
 	 * @return boolean
 	 */
 	private boolean canStartTournament(long id){
-		List<Card> hand = getPlayerById(id).getHand();
-		for(Card c: hand){
+		for(Card c:  getPlayerById(id).getHand().getHand()){
 			if(c.getCardType() == CardType.Colour || c.getCardType() == CardType.Supporter){
 				if(TournamentColor == CardColour.Purple 
 						&& ((ColourCard) c).getColour() != CardColour.Purple){
@@ -284,7 +283,7 @@ public class RulesEngine {
 	public void roundCleanup(){
 		for(Player p : playersList){
 			List<Card> toDiscard = p.getDisplay().clearBoard();
-			toDiscard.addAll(p.getHand());
+			toDiscard.addAll(p.getHand().discardHand());
 			for (Card c : toDiscard) {
 				deck.addToDiscard(c);
 			}
