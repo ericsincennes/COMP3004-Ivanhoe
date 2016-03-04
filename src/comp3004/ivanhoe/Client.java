@@ -69,13 +69,12 @@ public class Client {
 	 */
 	private void handleGetHand(){
 		List<Card> hand = (List<Card>) get();
-
-
-		for(Card c: hand){
-
+		print("Hand:");
+		
+		for (Card c: hand){
+			print(c.getCardName());
 		}
-
-	}
+	}			
 
 	/**
 	 * Gets the player input for tournament colour
@@ -97,13 +96,23 @@ public class Client {
 			if(choice < 1 || choice > 6){
 				print("Please choose a number between 1 and 5");
 			}
-		}while(choice < 1 || choice > 6);
+		} while(choice < 1 || choice > 6);
 
-		if (choice == 1){send(Card.CardColour.Purple); }
-		else if (choice == 2){send(Card.CardColour.Green); 	}
-		else if (choice == 3){send(Card.CardColour.Red); 	}
-		else if (choice == 4){send(Card.CardColour.Blue); 	}
-		else if (choice == 5){send(Card.CardColour.Yellow); }
+		switch (choice) {
+			case 1: send(Card.CardColour.Purple);
+					break;
+			case 2: send(Card.CardColour.Green);
+					break;
+			case 3: send(Card.CardColour.Red);
+					break;
+			case 4: send(Card.CardColour.Blue);
+					break;
+			case 5: send(Card.CardColour.Yellow);
+					break;
+			default:
+					break;
+		}
+		i.close();
 	}
 
 	/**
