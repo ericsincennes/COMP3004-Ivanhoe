@@ -271,6 +271,92 @@ public class RulesEngine {
 		}
 		return false;
 	}
+	
+	//nested rules engine action card handler
+	//assuming one player target
+	public void actionHandler(Card card, Player caster,  Player target){
+		Card taken;
+		switch(card.getCardName()){
+		case "Unhorse":
+			if (TournamentColor == CardColour.Purple) {
+				//set color to red blue or yellow
+				//d-rank
+			}
+			break;
+		case "Change Weapon":
+			if (!(TournamentColor == CardColour.Purple) || !(TournamentColor == CardColour.Green)) {
+				//set color to red blue or yellow
+				//d-rank
+			}
+			break;
+		case "Drop Weapon":
+			if (!(TournamentColor == CardColour.Purple)) {
+				TournamentColor = CardColour.Green;
+			}
+			break;
+		case "Break Lance":
+			target.getDisplay().removeColour(CardColour.Purple);
+			break;
+		case "Riposte":
+			taken = target.getDisplay().getLastPlayed();
+			target.getDisplay().remove(taken.getCardName());
+			caster.getDisplay().addCard(taken);
+			break;
+		case "Dodge":
+			//todo
+			//b-rank
+			break;
+		case "Retreat":
+			//todo
+			//c-rank
+			break;
+		case "Knock Down":
+			taken = target.getHand().getCardbyIndex(0);//placeholder for random
+			target.getHand().remove(taken.getCardName());
+			caster.getHand().add(taken);
+			break;
+		case "Outmaneuver":
+			//for each opponent 
+			//taken = .getDisplay().getLastPlayed();
+			//  get.Display().remove(taken.getCardName());
+			break;
+		case "Charge":
+			//todo
+			//b-rank
+			break;
+		case "Countercharge":
+			//todo
+			//b-rank
+			break;
+		case "Disgrace":
+			//for all players
+			caster.getDisplay().removeColour(CardColour.White);
+			break;
+		case "Adapt":
+			//todo
+			//a-rank
+			break;
+		case "Outwit":
+			//todo
+			//a-rank
+			break;
+		case "Shield":
+			//todo
+			//s-rank
+			break;
+		case "Stunned":
+			//todo
+			//s-rank
+			break;
+		case "Ivanhoe":
+			//todo
+			//ss-rank
+			break;
+		default:
+			print("unexpected input");
+			break;
+		}
+	}
 
 	/**
 	 * Checks the highest score and compares it with the players score
