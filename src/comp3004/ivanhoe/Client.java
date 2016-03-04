@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,12 +16,14 @@ public class Client {
 	ObjectInputStream in;
 	ObjectOutputStream out;
 	int playerNum = -1;
+	List<Card> CardsInHand;	//ArrayList of current hand
 
 	public static void main(String[] args){
 		new Client();
 	}
 
 	public Client(){
+		CardsInHand = new ArrayList<Card>();
 		connect(2244);
 		start();
 	}
@@ -58,23 +61,51 @@ public class Client {
 			case Optcodes.ClientGetHand:
 				handleGetHand();
 				break;
+			case Optcodes.ClientupdateBoardState:
+				handleUpdateBoardState();
+				break;
 			default: new Exception("Unexpected Value");
 
 			}
 		}
 	}
-
+	
+	/**
+	 * Prints the Players Display and the display of all other players playiing
+	 */
+	private void printBoardState(){
+		
+	}
+	
+	/**
+	 * Gets input of what cards are goint to be sent to the server to be played
+	 * If card is an action card then gets input of the card's targets 
+	 */
+	private void SendCardsToBePlayed(){
+		
+	}
+	
+	/**
+	 * Updates the state of the display and opponents display for the player
+	 */
+	private void handleUpdateBoardState(){
+		
+	}
+	
 	/**
 	 * Gets the hand from the server and displays it to the player
 	 */
 	private void handleGetHand(){
-		List<Card> hand = (List<Card>) get();
-		print("Hand:");
-		for (Card c: hand){
-			print("{" + hand.indexOf(c) + ") - " + c.getCardName());
-		}
+		CardsInHand = (List<Card>) get();
+		printHand();
 	}			
 
+	private void printHand(){
+		print("Cards currently in hand:");
+		for (Card c: CardsInHand){
+			print("{" + CardsInHand.indexOf(c) + ") - " + c.getCardName());
+		}
+	}
 	/**
 	 * Gets the player input for tournament colour
 	 * @return Card.CardColour
