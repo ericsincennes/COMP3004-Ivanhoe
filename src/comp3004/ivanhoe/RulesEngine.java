@@ -40,11 +40,11 @@ public class RulesEngine {
 	public synchronized int registerThread(long ID){
 		//is game full?	
 		if(players.containsKey(ID)){
-			//notifyAll();
+			notifyAll();
 			return -1;
 		}
 		else if(numPlayers >= expectedPlayers){
-			//notifyAll();
+			notifyAll();
 			return -1;
 		}
 
@@ -129,7 +129,7 @@ public class RulesEngine {
 			for(int i =0; i < 8; i++){
 				drawCard(p.getid());
 			}
-		}		
+		}
 	}
 
 	/**

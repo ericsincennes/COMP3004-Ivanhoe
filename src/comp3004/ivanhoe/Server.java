@@ -5,7 +5,9 @@ import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import comp3004.ivanhoe.Card.CardColour;
 import comp3004.ivanhoe.testcases.Log;
+import comp3004.ivanhoe.Optcodes;
 
 public class Server{
 
@@ -15,6 +17,7 @@ public class Server{
 	private ServerSocket 	listeningSocket;
 	//private Log			log = new Log(this.getClass().getName(), "ServerLog");
 	private RulesEngine		rules;
+
 	
 	public Server(){
 		Scanner in = new Scanner(System.in);
@@ -52,12 +55,10 @@ public class Server{
 
 				Player p = new Player(clientSocket);
 				p.start();
-				/*
 				if(count == 0){
 					listeningSocket.close();
 					isAcceptingConnections = false;
 				}
-				*/
 			}
 		} catch(IOException e){
 			error(getTimestamp() + ": Server socket unable to connect to port" + port);
@@ -117,8 +118,20 @@ public class Server{
 		}
 
 		public void run(){
+			
+			//Wait for other playes to connect before starting
+			while(isAcceptingConnections){
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			//Register Thread with the rules engine
 			int b = rules.registerThread(threadID);
 			
+			//if game full close connection
 			if(b != -1){ 
 				send(b); 
 			} else {
@@ -129,9 +142,11 @@ public class Server{
 				//Get first tournament colour from client
 				if(threadID == rules.chooseFirstTournament()){
 					print("Thread " + threadID + ": getting tournamane colour from client");
-					send("Enter Tournament Colour");
-					String o = (String) get();
-					//rules.initializeTournamentColour(colour);
+					send(Optcodes.ClientFirstTournament);	
+					
+					CardColour o = (CardColour) get(); //get colour from client
+					rules.initializeTournamentColour(o); 
+					rules.dealHand(); //deal the hands
 				}
 				
 			}
