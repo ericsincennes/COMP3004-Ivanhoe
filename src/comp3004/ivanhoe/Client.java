@@ -70,9 +70,8 @@ public class Client {
 	private void handleGetHand(){
 		List<Card> hand = (List<Card>) get();
 		print("Hand:");
-		
 		for (Card c: hand){
-			print(c.getCardName());
+			print("{" + hand.indexOf(c) + ") - " + c.getCardName());
 		}
 	}			
 
