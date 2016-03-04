@@ -28,7 +28,7 @@ public class RulesEngine {
 		deck.testDeck();
 	}
 	
-	public List<Player> getPlayerList(){
+	public synchronized List<Player> getPlayerList(){
 		return playersList;
 	}
 	
@@ -56,6 +56,23 @@ public class RulesEngine {
 		return numPlayers;
 	}
 
+	public boolean isTournamentRunning(){
+		if(!colourChosen){
+			int count = 0;
+			for(Player p : playersList){
+				if(p.getPlaying()){
+					count++;
+				}
+			}
+			if(count > 1){
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 	/**
 	 * Choose who starts the first tournament
@@ -124,6 +141,7 @@ public class RulesEngine {
 		colourChosen = true;
 		return true;
 	}
+	
 	
 	/**
 	 * Initializing gamestate for a tournament if no tournament is started
