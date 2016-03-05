@@ -56,19 +56,18 @@ public class RulesEngine {
 		return numPlayers;
 	}
 
+	/**
+	 * Checks if a tournament is running.
+	 */
 	public boolean isTournamentRunning(){
-		if(!colourChosen){
-			int count = 0;
-			for(Player p : playersList){
-				if(p.getPlaying()){
-					count++;
-				}
+		int count = 0;
+		for(Player p : playersList){
+			if(p.getPlaying()){
+				count++;
 			}
-			if(count > 1){
-				return false;
-			} else {
-				return true;
-			}
+		}
+		if(count > 1) {
+			return true;
 		}
 		return false;
 	}
