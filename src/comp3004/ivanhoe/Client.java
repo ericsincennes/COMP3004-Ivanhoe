@@ -69,17 +69,31 @@ public class Client {
 			case Optcodes.ClientGetCardsToBePlayed:
 				sendCardsToBePlayed();
 				break;
+			case Optcodes.ClientGetPlayerList:
+				getPlayersList();
+				break;
 			default: new Exception("Unexpected Value");
 				break;
 			}
 		}
 	}
 	
+	private void getPlayersList() {
+		PlayersList = (List<Long>) get();
+	}
+	
+	private void handleGetHand(){
+		CardsInHand = (List<Card>) get();
+	}
 	/**
 	 * Prints the Players Display and the display of all other players playiing
 	 */
-	private void printBoardState(){
+	private void printBoardState(long id, List<Card> board){
+		print("Player " + id + "'s Board:");
 		
+		for (Card c: board) {
+			print("{" + (board.indexOf(c)+1) + ") - " + c.getCardName());
+		}
 	}
 	
 	/**
@@ -107,15 +121,19 @@ public class Client {
 	 */
 	private void handleUpdateBoardState(){
 		//calls printboard state and get hand
-		printBoardState();
-		handleGetHand();
+		BoardState = (ArrayList<List<Card>>) get();
+		
+		for (int i = PlayersList.size(); i > 0; i--) {
+			printBoardState(PlayersList.get(i), BoardState.get(i));
+		}
+		
+		printHand();
 	}
 	
 	/**
 	 * Gets the hand from the server and displays it to the player
 	 */
-	private void handleGetHand(){
-		CardsInHand = (List<Card>) get();
+	private void printHand(){
 		print("Cards currently in hand:");
 		for (Card c: CardsInHand){
 			print("{" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName());
