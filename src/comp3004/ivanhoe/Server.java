@@ -141,6 +141,29 @@ public class Server{
 			*/
 		
 			while(isRunning){
+				if (rules.getPlayerList().get(0).getID() != threadID) {
+					try {
+						Thread.sleep(100);
+						continue;
+					}
+					catch (InterruptedException ie) {
+						ie.printStackTrace();
+						continue;
+					}
+				}
+				
+				if (rules.isTournamentRunning()) {
+					rules.startTurn(threadID);
+					if (rules.isColourChosen()) {
+						
+					}
+					else {
+						//choose colour
+					}
+				}
+				else {
+					rules.initTournament();
+				}
 					
 			}
 		}
@@ -183,11 +206,18 @@ public class Server{
 		
 		private void sendPlayersList() {
 			int me_index = 0;
-			for (me_index = 0; me_index < rules.getPlayerList().size(); me_index++) {
+			int listSize = rules.getPlayerList().size();
+			List<Long> playerIDs = new ArrayList<Long>();
+			for (; me_index < listSize; me_index++) {
 				if (rules.getPlayerList().get(me_index).getID() == threadID) {
 					break;
 				}
 			}
+			for (int i=0; i < listSize; i++) {
+				playerIDs.add(rules.getPlayerList().get((me_index+i)%listSize).getID());
+			}
+			send("Optcode for sending players list");
+			send(playerIDs);
 			
 		}
 		

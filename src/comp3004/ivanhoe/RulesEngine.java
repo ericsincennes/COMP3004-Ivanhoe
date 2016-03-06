@@ -36,6 +36,10 @@ public class RulesEngine {
 		return highestScore;
 	}
 	
+	public boolean isColourChosen() {
+		return isTournamentRunning() && colourChosen;
+	}
+	
 	/**
 	 * Registers a player with the Rules engine
 	 * @param ID this.currentThread.getID() of the player thread
