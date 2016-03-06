@@ -81,15 +81,28 @@ public class Client {
 	 * Gets input of what cards are goint to be sent to the server to be played
 	 * If card is an action card then gets input of the card's targets 
 	 */
-	private void SendCardsToBePlayed(){
+	private void sendCardsToBePlayed(){
+		Scanner in = new Scanner(System.in);
+		int choice = -1;
 		
+		do {
+			choice = in.nextInt();
+			if (choice < 1 || choice > CardsInHand.size()) {
+				print("Choose a number corresponding to a card in your hand");
+			}
+		} while (choice < 1 || choice > CardsInHand.size());
+		
+		send(CardsInHand.get((choice-1)));
+		in.close();
 	}
 	
 	/**
 	 * Updates the state of the display and opponents display for the player
 	 */
 	private void handleUpdateBoardState(){
-		
+		//calls printboard state and get hand
+		printBoardState();
+		handleGetHand();
 	}
 	
 	/**
@@ -97,21 +110,19 @@ public class Client {
 	 */
 	private void handleGetHand(){
 		CardsInHand = (List<Card>) get();
-		printHand();
-	}			
-
-	private void printHand(){
 		print("Cards currently in hand:");
 		for (Card c: CardsInHand){
-			print("{" + CardsInHand.indexOf(c) + ") - " + c.getCardName());
+			print("{" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName());
 		}
-	}
+		print("Choose a card to play or withdraw");
+	}			
+
 	/**
 	 * Gets the player input for tournament colour
 	 * @return Card.CardColour
 	 */
 	private void handleGetTournamentColour(){
-		Scanner i = new Scanner(System.in);
+		Scanner in = new Scanner(System.in);
 		int choice = -1;
 
 		print("Choose the color of the tournement");
@@ -122,11 +133,11 @@ public class Client {
 		print("{5) - Yellow");
 
 		do{
-			choice = i.nextInt();
+			choice = in.nextInt();
 			if (choice < 1 || choice > 5){
 				print("Please choose a number between 1 and 5");
 			}
-		} while (choice > 0 || choice < 6);
+		} while (choice < 1 || choice > 5);
 
 		switch (choice) {
 			case 1: send(Card.CardColour.Purple);
@@ -142,7 +153,7 @@ public class Client {
 			default:
 					break;
 		}
-		i.close();
+		in.close();
 	}
 
 	/**
