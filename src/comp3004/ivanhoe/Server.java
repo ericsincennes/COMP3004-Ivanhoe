@@ -248,7 +248,7 @@ public class Server{
 		 * @return CardColour
 		 */
 		private CardColour GetTournamentColourFromClient(){
-			print("Thread " + threadID + ": getting tournamane colour from client");
+			print("Thread " + threadID + ": getting tournament colour from client");
 			send(Optcodes.ClientGetColourChoice);
 			
 			CardColour o = (CardColour) get(); //get colour from client
