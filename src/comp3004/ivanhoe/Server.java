@@ -53,7 +53,7 @@ public class Server{
 
 				count--;
 
-				Player p = new Player(clientSocket);
+				PlayerThread p = new PlayerThread(clientSocket);
 				p.start();
 				if(count == 0){
 					listeningSocket.close();
@@ -94,7 +94,7 @@ public class Server{
 		System.err.println(s);
 	}
 
-	class Player extends Thread {
+	class PlayerThread extends Thread {
 
 		private Socket client;
 		private int port;
@@ -104,7 +104,7 @@ public class Server{
 		private ObjectInputStream in;
 		private long threadID = Thread.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
 
-		public Player(Socket c){
+		public PlayerThread(Socket c){
 			client = c;
 			port = c.getPort();
 			addr = c.getInetAddress();
@@ -139,13 +139,37 @@ public class Server{
 				play rest of turn
 				end turn or withdraw
 			*/
-
-			
-			//Wait for other playes to connect before starting
-			while(isAcceptingConnections){
-
+		
+			while(isRunning){
+					
 			}
+		}
 
+		
+		
+		/**
+		 * Gets the displays for all players and sends it to the client
+		 * Currently does not send ActionCards in the display
+		 */
+		private void updateClientBoardState(){
+			ArrayList<List<Card>> board = new ArrayList<List<Card>>();
+			List<Card> nonActionCards = rules.getPlayerById(threadID).getDisplay().getCards();
+			//List<Card> actionCards = rules.getPlayerById(threadID).getDisplay().getActionCards();
+			
+			board.add(nonActionCards);
+			
+			for( Player p : rules.getPlayerList()){
+				board.add(p.getDisplay().getCards());
+			}
+			
+			send(Optcodes.ClientupdateBoardState);
+			send(board);
+		}
+
+		/**
+		 * Sends the thread id representing the player in the rules engine to the player
+		 */
+		private void sendPlayerId(){
 			//Register Thread with the rules engine
 			int b = rules.registerThread(threadID);
 
@@ -155,28 +179,30 @@ public class Server{
 			} else {
 				isRunning = false;
 			}
-
-			while(isRunning){
-				//check if tournament has started;
-				//
-
-				//Get first tournament colour from client
-				if(threadID == rules.getPlayerList().get(0).getid()){
-					print("Thread " + threadID + ": getting tournamane colour from client");
-					send(Optcodes.ClientFirstTournament);
-
-					CardColour o = (CardColour) get(); //get colour from client
-					rules.initializeTournamentColour(o); 
-				} else {
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
 		}
-
+		
+		/**
+		 * Gets the hand from the Player class and sends it to the client
+		 */
+		private void SendClientHand(){
+			print("Thread " + threadID + ": Sending hand to client");
+			List<Card> hand = rules.getPlayerById(threadID).getHand().getHand();
+			send(Optcodes.ClientGetHand);
+			send(hand);
+		}
+		
+		/**
+		 * Gets the tournament colour from the client
+		 * @return CardColour
+		 */
+		private CardColour GetTournamentColourFromClient(){
+			print("Thread " + threadID + ": getting tournamane colour from client");
+			send(Optcodes.ClientGetColourChoice);
+			
+			CardColour o = (CardColour) get(); //get colour from client
+			return o;
+		}
+		
 		/**
 		 * Gets an object from the client
 		 * Does not verify the typeOf an object
