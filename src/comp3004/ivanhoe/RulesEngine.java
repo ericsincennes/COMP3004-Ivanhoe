@@ -98,7 +98,7 @@ public class RulesEngine {
 	 * @param id - id of player
 	 * @return boolean
 	 */
-	private boolean canStartTournament(long id){
+	public boolean canStartTournament(long id){
 		for(Card c:  getPlayerById(id).getHand().getHand()){
 			if(c.getCardType() == CardType.Colour || c.getCardType() == CardType.Supporter){
 				if(TournamentColour == CardColour.Purple 
@@ -118,7 +118,7 @@ public class RulesEngine {
 	 * @param colour - colour player wants to set tournament to
 	 * @return boolean
 	 */
-	private boolean canStartTournament(long id, CardColour colour){
+	public boolean canStartTournament(long id, CardColour colour){
 		for(Card c:  getPlayerById(id).getHand().getHand()){
 			if(c.getCardType() == CardType.Colour && ((ColourCard)c).getColour() == colour || c.getCardType() == CardType.Supporter){
 				if(TournamentColour == CardColour.Purple 
@@ -134,10 +134,11 @@ public class RulesEngine {
 	
 	/**
 	 * initialize the tournament colour, should only be called if a tournament can be started
+	 * @param id ID of player initializing tournament colour
 	 * @param colour CardColour
 	 * @return Boolean
 	 */
-	public boolean initializeTournamentColour(CardColour colour){
+	public boolean initializeTournamentColour(long id, CardColour colour){
 		if (!canStartTournament(playersList.get(0).getID(),colour)) {
 			colourChosen = false;
 			return false;
@@ -150,6 +151,12 @@ public class RulesEngine {
 		return true;
 	}
 	
+	/**
+	 * A player has failed to start a tournament, so we go to next player
+	 */
+	public void failInitTournamentColour() {
+		Collections.rotate(playersList, -1);
+	}
 	
 	/**
 	 * Initializing gamestate for a tournament if no tournament is started
@@ -166,6 +173,7 @@ public class RulesEngine {
 		}
 		colourChosen = false;
 	}
+	
 	
 	/**
 	 * Deals a hand of 8 cards to each player

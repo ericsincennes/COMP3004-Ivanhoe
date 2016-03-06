@@ -159,6 +159,18 @@ public class Server{
 					}
 					else {
 						//choose colour
+						if (rules.canStartTournament(threadID)) {
+							CardColour c;
+							c = GetTournamentColourFromClient();
+							while(!rules.initializeTournamentColour(threadID, c)) {
+								//send some message about bad colour input
+								c = GetTournamentColourFromClient();
+							}	
+						}
+						else {
+							rules.failInitTournamentColour();
+						}
+						
 					}
 				}
 				else {

@@ -29,7 +29,7 @@ public class RulesEngineTest {
 		rules.initTournament();
 		assertEquals(8, rules.getPlayerById(1).getHandSize());
 		assertEquals(8, rules.getPlayerById(2).getHandSize());
-		rules.initializeTournamentColour(CardColour.Blue);
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
 		assertEquals(CardColour.Blue, rules.getPlayerById(1).getDisplay().getColour());
 		
 	}
@@ -108,7 +108,7 @@ public class RulesEngineTest {
 		
 		//withdrawing with maiden should return own ID, so player can lose point
 		rules.initTournament();
-		rules.initializeTournamentColour(CardColour.Blue);
+		rules.initializeTournamentColour(rules.getPlayerList().get(0).getID(), CardColour.Blue);
 		assertEquals(rules.getPlayerList().get(0), p3);
 		rules.startTurn(p3.getID());
 		p3.addCard(new SupporterCard(6));
@@ -119,7 +119,7 @@ public class RulesEngineTest {
 	@Test
 	public void tournamentTest(){
 		rules.chooseFirstTournament();
-		rules.initializeTournamentColour(CardColour.Purple);
+		rules.initializeTournamentColour(rules.getPlayerList().get(0).getID(), CardColour.Purple);
 		rules.dealHand();
 		Player p;
 		int turn = 0;
