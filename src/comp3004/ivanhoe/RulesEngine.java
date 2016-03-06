@@ -291,19 +291,37 @@ public class RulesEngine {
 	
 	//nested rules engine action card handler
 	//assuming one player target
-	public void actionHandler(Card card, Player caster,  Player target){
+	public void actionHandler(Card card, Player caster,  Object... target){
 		Card taken;
+		Player opponent = null;
+		String chosen = null;
+		CardColour colour = null;
+		int cardValue = 0;
+		for (int i = 0; i < target.length; i++) {
+			if (target[i] instanceof Long) {
+				opponent = players.get(target[i]);
+			} else if (target[i] instanceof String) {
+				chosen = (String) target[i];
+			} else if (target[i] instanceof CardColour) {
+				colour = (CardColour) target[i];
+			}
+		}
+
 		switch(card.getCardName()){
 		case "Unhorse":
 			if (TournamentColor == CardColour.Purple) {
-				//set color to red blue or yellow
-				//d-rank
+				TournamentColor = colour;
 			}
 			break;
 		case "Change Weapon":
 			if (!(TournamentColor == CardColour.Purple) || !(TournamentColor == CardColour.Green)) {
-				//set color to red blue or yellow
-				//d-rank
+				if (TournamentColor == CardColour.Yellow && colour != CardColour.Yellow) {
+					TournamentColor = colour;
+				} else if (TournamentColor == CardColour.Red && colour != CardColour.Red) {
+					TournamentColor = colour;
+				} else if (TournamentColor == CardColour.Blue && colour != CardColour.Blue) {
+					TournamentColor = colour;
+				}
 			}
 			break;
 		case "Drop Weapon":
@@ -312,42 +330,64 @@ public class RulesEngine {
 			}
 			break;
 		case "Break Lance":
-			target.getDisplay().removeColour(CardColour.Purple);
+			if (target[0] instanceof Player){
+				((Player) target[0]).getDisplay().removeColour(CardColour.Purple);
+			}
 			break;
 		case "Riposte":
-			taken = target.getDisplay().getLastPlayed();
-			target.getDisplay().remove(taken.getCardName());
+			taken = opponent.getDisplay().getLastPlayed();
+			opponent.getDisplay().remove(taken.getCardName());
 			caster.getDisplay().addCard(taken);
 			break;
 		case "Dodge":
-			//todo
-			//b-rank
+			opponent.getDisplay().remove(chosen);
 			break;
 		case "Retreat":
 			//todo
+			caster.getDisplay().remove(chosen);
+			//need add by name method in hand
+			//caster.getHand().add(chosen);
 			//c-rank
 			break;
 		case "Knock Down":
-			taken = target.getHand().getCardbyIndex(0);//placeholder for random
-			target.getHand().remove(taken.getCardName());
+			taken = opponent.getHand().getCardbyIndex(0);//placeholder for random
+			opponent.getHand().remove(taken.getCardName());
 			caster.getHand().add(taken);
 			break;
 		case "Outmaneuver":
-			//for each opponent 
-			//taken = .getDisplay().getLastPlayed();
-			//  get.Display().remove(taken.getCardName());
+			for(Player p : playersList){
+				if (p != caster) {
+					taken =	p.getDisplay().getLastPlayed();
+					p.getDisplay().remove(taken.getCardName());
+				}
+			}
 			break;
 		case "Charge":
-			//todo
-			//b-rank
+			for(Player p : playersList){
+				if (p.getDisplay().lowestValue() > cardValue) {
+					cardValue = p.getDisplay().lowestValue();
+				}
+			}
+			
+			for(Player p : playersList){
+				p.getDisplay().removeValue(cardValue);
+			}
 			break;
 		case "Countercharge":
-			//todo
-			//b-rank
+			for(Player p : playersList){
+				if (p.getDisplay().highestValue() > cardValue) {
+					cardValue = p.getDisplay().highestValue();
+				}
+			}
+			
+			for(Player p : playersList){
+				p.getDisplay().removeValue(cardValue);
+			}
 			break;
 		case "Disgrace":
-			//for all players
-			caster.getDisplay().removeColour(CardColour.White);
+			for(Player p : playersList){
+				p.getDisplay().removeColour(CardColour.White);
+			}
 			break;
 		case "Adapt":
 			//todo

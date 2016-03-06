@@ -137,6 +137,15 @@ public class PointsBoard {
 		return v;
 	}
 	
+	public int lowestValue() {
+		int v = 8;
+		for (Card c : cardsPlayed) {
+			if (((ColourCard) c).getValue() < v) {
+				v = ((ColourCard) c).getValue();
+			}
+		}
+		return v;
+	}
 	/**
 	 * Remove card at index
 	 * @param index index of card to be removed
