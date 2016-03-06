@@ -64,8 +64,11 @@ public class Client {
 			case Optcodes.ClientupdateBoardState:
 				handleUpdateBoardState();
 				break;
+			case Optcodes.ClientGetCardsToBePlayed:
+				sendCardsToBePlayed();
+				break;
 			default: new Exception("Unexpected Value");
-
+				break;
 			}
 		}
 	}
