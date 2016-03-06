@@ -5,7 +5,9 @@ import java.util.List;
 
 public class ActionCard extends Card {
 	
-	public enum TargetType{	Untargeted, TargetPlayers, TargetCards, Ivanhoe }
+	public enum TargetType{	
+		Untargeted, TargetPlayers, TargetCards, Ivanhoe 
+	}
 	
 	TargetType targetting;
 	List<Object> targetList;
