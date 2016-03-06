@@ -335,6 +335,7 @@ public class RulesEngine {
 			}
 			break;
 		case "Riposte":
+			//to fix
 			taken = opponent.getDisplay().getLastPlayed();
 			opponent.getDisplay().remove(taken.getCardName());
 			caster.getDisplay().addCard(taken);
@@ -350,6 +351,7 @@ public class RulesEngine {
 			//c-rank
 			break;
 		case "Knock Down":
+			//to fix
 			taken = opponent.getHand().getCardbyIndex(0);//placeholder for random
 			opponent.getHand().remove(taken.getCardName());
 			caster.getHand().add(taken);
