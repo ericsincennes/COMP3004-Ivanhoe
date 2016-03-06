@@ -101,6 +101,7 @@ public class Client {
 	
 	/**
 	 * Updates the state of the display and opponents display for the player
+	 * Should print displays and hand together as both will be updated on action
 	 */
 	private void handleUpdateBoardState(){
 		//calls printboard state and get hand
