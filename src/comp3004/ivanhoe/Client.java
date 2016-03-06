@@ -55,7 +55,7 @@ public class Client {
 			int optcode = (int) get();
 
 			switch(optcode) {
-			case Optcodes.ClientFirstTournament:
+			case Optcodes.ClientGetColourChoice:
 				handleGetTournamentColour();
 				break;
 			case Optcodes.ClientGetHand:
