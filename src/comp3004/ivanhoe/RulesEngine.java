@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import comp3004.ivanhoe.Card.CardColour;
 import comp3004.ivanhoe.Card.CardType;
@@ -301,10 +302,12 @@ public class RulesEngine {
 	//assuming one player target
 	public void actionHandler(Card card, Player caster,  Object... target){
 		Card taken;
+		Random rand = new Random();
 		Player opponent = null;
 		String chosen = null;
 		CardColour colour = null;
 		int cardValue = 0;
+		
 		for (int i = 0; i < target.length; i++) {
 			if (target[i] instanceof Long) {
 				opponent = players.get(target[i]);
@@ -346,6 +349,7 @@ public class RulesEngine {
 			//to fix
 			taken = opponent.getDisplay().getLastPlayed();
 			opponent.getDisplay().remove(taken.getCardName());
+			//need to remove the card from cardsPlayed list in deck
 			caster.getDisplay().addCard(taken);
 			break;
 		case "Dodge":
@@ -356,11 +360,12 @@ public class RulesEngine {
 			caster.getDisplay().remove(chosen);
 			//need add by name method in hand
 			//caster.getHand().add(chosen);
+			//need to remove the card from playedCards list in deck
 			//c-rank
 			break;
 		case "Knock Down":
-			//to fix
-			taken = opponent.getHand().getCardbyIndex(0);//placeholder for random
+			int r = rand.nextInt(opponent.getHandSize() + 1);
+			taken = opponent.getHand().getCardbyIndex(r);
 			opponent.getHand().remove(taken.getCardName());
 			caster.getHand().add(taken);
 			break;
