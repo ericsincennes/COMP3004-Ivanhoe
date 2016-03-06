@@ -12,7 +12,7 @@ public class Player {
 	private PointsBoard display;
 	private HashMap<CardColour, Integer> tokens;
 	private long id;
-	private boolean isPlaying = true;
+	private boolean isPlaying = false;
 	
 	public Player(){
 		tokens = new HashMap<CardColour,Integer>();

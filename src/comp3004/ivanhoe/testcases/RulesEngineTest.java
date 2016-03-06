@@ -24,44 +24,36 @@ public class RulesEngineTest {
 	}
 	
 	@Test
-	public void choosefirstTournement(){
-		long a = rules.chooseFirstTournament();
-		assertTrue(a >= 1 && a <= 2);
-	}
-	
-	@Test
-	public void InitTourneyColours(){
-		choosefirstTournement();
-		
+	public void tournamentSetup() {
+		assertFalse(rules.isTournamentRunning());
+		rules.initTournament();
+		assertEquals(8, rules.getPlayerById(1).getHandSize());
+		assertEquals(8, rules.getPlayerById(2).getHandSize());
 		rules.initializeTournamentColour(CardColour.Blue);
 		assertEquals(CardColour.Blue, rules.getPlayerById(1).getDisplay().getColour());
+		
 	}
 	
-	@Test
-	public void dealHand(){
-		rules.dealHand();
-		assertEquals(8, rules.getPlayerById(2).getHandSize());
-	}
-		
+	
+	
 	public void validatePlay(){
-		rules.initializeTournamentColour(CardColour.Blue);
+		tournamentSetup();
 		rules.getPlayerById(1).addCard(new ColourCard(CardColour.Blue, 4));
 		assertTrue(rules.validatePlay("Blue 4", (long) 1));
 	}
 	
 	@Test
 	public void playCard(){
+		tournamentSetup();
 		Player p = rules.getPlayerById(2);
-		rules.initializeTournamentColour(CardColour.Blue);
+
 		p.addCard(new ColourCard(CardColour.Blue, 4));
 		assertTrue(rules.playCard("Blue 4", p.getid()));
 	}
 	 
 	@Test
 	public void playTurn(){
-		rules.chooseFirstTournament();
-		rules.initializeTournamentColour(CardColour.Red);
-		rules.dealHand();
+		tournamentSetup();
 		Player p;
 		
 		p = rules.getPlayerList().get(0);
@@ -83,7 +75,7 @@ public class RulesEngineTest {
 	}
 	
 	@Test
-	public void tournementTest(){
+	public void tournamentTest(){
 		rules.chooseFirstTournament();
 		rules.initializeTournamentColour(CardColour.Purple);
 		rules.dealHand();
