@@ -1,13 +1,14 @@
 package comp3004.ivanhoe;
 
-public class ActionCard extends Card {
+public abstract class ActionCard extends Card {
 	
-	public enum ActionType{	Type1, Type2, Type3, Type4 }
+	public enum ActionType{	Untargeted, TargetOne, TargetMultiple, Ivanhoe }
 	
+	ActionType ActionCardType;
+	Object[] target;
 	
 	public ActionCard(String name) {
 		cardName = name;
 		cardType = (name.equals("Ivanhoe")) ? CardType.Ivanhoe : CardType.Action;
-		
 	}
 }
