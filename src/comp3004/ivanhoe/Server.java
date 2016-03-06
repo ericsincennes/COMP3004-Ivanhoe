@@ -228,7 +228,7 @@ public class Server{
 			for (int i=0; i < listSize; i++) {
 				playerIDs.add(rules.getPlayerList().get((me_index+i)%listSize).getID());
 			}
-			send("Optcode for sending players list");
+			send(Optcodes.ClientGetPlayerList);
 			send(playerIDs);
 			
 		}
