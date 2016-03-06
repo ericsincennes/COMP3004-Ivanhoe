@@ -94,7 +94,8 @@ public class Player {
 	 */
 	public void playActionCard(String cardname){
 		Card card = hand.getCardByName(cardname);
-		
+		display.addCard(card);
+		display.remove(card.getCardName());
 	}
 	
 	public int getHandSize(){
