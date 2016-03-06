@@ -17,6 +17,8 @@ public class Client {
 	ObjectOutputStream out;
 	int playerNum = -1;
 	List<Card> CardsInHand;	//ArrayList of current hand
+	List<Long> PlayersList;
+	ArrayList<List<Card>> BoardState;
 
 	public static void main(String[] args){
 		new Client();
