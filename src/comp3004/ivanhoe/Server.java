@@ -181,6 +181,16 @@ public class Server{
 			}
 		}
 		
+		private void sendPlayersList() {
+			int me_index = 0;
+			for (me_index = 0; me_index < rules.getPlayerList().size(); me_index++) {
+				if (rules.getPlayerList().get(me_index).getID() == threadID) {
+					break;
+				}
+			}
+			
+		}
+		
 		/**
 		 * Gets the hand from the Player class and sends it to the client
 		 */

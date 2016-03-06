@@ -85,7 +85,7 @@ public class RulesEngine {
 		Collections.shuffle(playersList);
 		//notifyAll();
 		activePlayer = 0;
-		return playersList.get(0).getid();
+		return playersList.get(0).getID();
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class RulesEngine {
 	 * @return Boolean
 	 */
 	public boolean initializeTournamentColour(CardColour colour){
-		if (!canStartTournament(playersList.get(0).getid(),colour)) {
+		if (!canStartTournament(playersList.get(0).getID(),colour)) {
 			colourChosen = false;
 			return false;
 		}
@@ -154,7 +154,7 @@ public class RulesEngine {
 		
 		for(Player p : playersList){
 			for(int i = 0; i < 8; i++){
-				drawCard(p.getid());
+				drawCard(p.getID());
 			}
 			p.setPlaying(true);
 		}
@@ -167,7 +167,7 @@ public class RulesEngine {
 	public void dealHand(){ //up for being replaced by initTournament
 		for(Player p : playersList){
 			for(int i =0; i < 8; i++){
-				drawCard(p.getid());
+				drawCard(p.getID());
 			}
 		}
 	}
@@ -228,7 +228,7 @@ public class RulesEngine {
 			for(Player x : playersList){
 				if(x.getPlaying()){
 					Collections.rotate(playersList, -1*playersList.indexOf(x)); //might need to change where this gets done
-					return x.getid();											//due to server synchro issues
+					return x.getID();											//due to server synchro issues
 				} 
 			} 
 		}

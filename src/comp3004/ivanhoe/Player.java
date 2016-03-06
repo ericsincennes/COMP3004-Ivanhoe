@@ -110,7 +110,7 @@ public class Player {
 	 * Returns the thread ID that the player class is associated with
 	 * @return long ID
 	 */
-	public long getid(){
+	public long getID(){
 		return id;
 	}
 	
