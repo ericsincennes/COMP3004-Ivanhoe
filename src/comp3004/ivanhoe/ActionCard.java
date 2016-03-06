@@ -1,14 +1,26 @@
 package comp3004.ivanhoe;
 
-public abstract class ActionCard extends Card {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ActionCard extends Card {
 	
-	public enum ActionType{	Untargeted, TargetOne, TargetMultiple, Ivanhoe }
+	public enum TargetType{	Untargeted, TargetPlayers, TargetCards, Ivanhoe }
 	
-	ActionType ActionCardType;
-	Object[] target;
+	TargetType targetting;
+	List<Object> targetList;
 	
-	public ActionCard(String name) {
+	public ActionCard(String name, TargetType tType, Object... targets) {
 		cardName = name;
 		cardType = (name.equals("Ivanhoe")) ? CardType.Ivanhoe : CardType.Action;
+		targetting = tType;
+		targetList = new ArrayList<Object>();
+		for (Object t : targets) {
+			targetList.add(t);
+		}
+	}
+	
+	public TargetType getTargetType() {
+		return targetting;
 	}
 }
