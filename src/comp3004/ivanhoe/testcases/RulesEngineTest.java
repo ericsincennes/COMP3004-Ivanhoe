@@ -103,7 +103,7 @@ public class RulesEngineTest {
 				if(p.getHandSize() == 0){
 					Long a = rules.withdrawPlayer(p.getid());
 					if(a != null){
-						rules.getPlayerById(a).recieveToken(rules.getTournamentColor());
+						rules.getPlayerById(a).recieveToken(rules.getTournamentColour());
 					}
 				}
 			}while(p.getPlaying() && (!rules.endTurn(p.getid())));

@@ -13,7 +13,7 @@ public class RulesEngine {
 	private HashMap<Long, Player> players;
 	private List<Player> playersList;
 	private int numPlayers = 0, expectedPlayers;
-	private Card.CardColour TournamentColor = null;
+	private Card.CardColour TournamentColour = null;
 	private Deck deck, discard;
 	private boolean colourChosen = false;
 	private int highestScore = 0;
@@ -92,10 +92,10 @@ public class RulesEngine {
 	private boolean canStartTournament(long id){
 		for(Card c:  getPlayerById(id).getHand().getHand()){
 			if(c.getCardType() == CardType.Colour || c.getCardType() == CardType.Supporter){
-				if(TournamentColor == CardColour.Purple 
+				if(TournamentColour == CardColour.Purple 
 						&& ((ColourCard) c).getColour() != CardColour.Purple){
 					return true;
-				} else if(TournamentColor != CardColour.Purple ) {
+				} else if(TournamentColour != CardColour.Purple ) {
 					return true;
 				}
 			}
@@ -112,10 +112,10 @@ public class RulesEngine {
 	private boolean canStartTournament(long id, CardColour colour){
 		for(Card c:  getPlayerById(id).getHand().getHand()){
 			if(c.getCardType() == CardType.Colour && ((ColourCard)c).getColour() == colour || c.getCardType() == CardType.Supporter){
-				if(TournamentColor == CardColour.Purple 
+				if(TournamentColour == CardColour.Purple 
 						&& ((ColourCard) c).getColour() != CardColour.Purple){
 					return true;
-				} else if(TournamentColor != CardColour.Purple ) {
+				} else if(TournamentColour != CardColour.Purple ) {
 					return true;
 				}
 			}
@@ -136,7 +136,7 @@ public class RulesEngine {
 		for(Player p : playersList){
 			p.getDisplay().setColour(colour);
 		}
-		TournamentColor = colour;
+		TournamentColour = colour;
 		colourChosen = true;
 		return true;
 	}
@@ -273,7 +273,7 @@ public class RulesEngine {
 			c = p.getCardByName(card);
 			//if card is colour card
 			if(c.getCardType() == CardType.Colour &&
-					((ColourCard)c).getColour() == TournamentColor){
+					((ColourCard)c).getColour() == TournamentColour){
 				return true;
 
 				//Support cards don't care about tournament colour
@@ -309,24 +309,24 @@ public class RulesEngine {
 
 		switch(card.getCardName()){
 		case "Unhorse":
-			if (TournamentColor == CardColour.Purple) {
-				TournamentColor = colour;
+			if (TournamentColour == CardColour.Purple) {
+				TournamentColour = colour;
 			}
 			break;
 		case "Change Weapon":
-			if (!(TournamentColor == CardColour.Purple) || !(TournamentColor == CardColour.Green)) {
-				if (TournamentColor == CardColour.Yellow && colour != CardColour.Yellow) {
-					TournamentColor = colour;
-				} else if (TournamentColor == CardColour.Red && colour != CardColour.Red) {
-					TournamentColor = colour;
-				} else if (TournamentColor == CardColour.Blue && colour != CardColour.Blue) {
-					TournamentColor = colour;
+			if (!(TournamentColour == CardColour.Purple) || !(TournamentColour == CardColour.Green)) {
+				if (TournamentColour == CardColour.Yellow && colour != CardColour.Yellow) {
+					TournamentColour = colour;
+				} else if (TournamentColour == CardColour.Red && colour != CardColour.Red) {
+					TournamentColour = colour;
+				} else if (TournamentColour == CardColour.Blue && colour != CardColour.Blue) {
+					TournamentColour = colour;
 				}
 			}
 			break;
 		case "Drop Weapon":
-			if (!(TournamentColor == CardColour.Purple)) {
-				TournamentColor = CardColour.Green;
+			if (!(TournamentColour == CardColour.Purple)) {
+				TournamentColour = CardColour.Green;
 			}
 			break;
 		case "Break Lance":
@@ -335,6 +335,7 @@ public class RulesEngine {
 			}
 			break;
 		case "Riposte":
+			//to fix
 			taken = opponent.getDisplay().getLastPlayed();
 			opponent.getDisplay().remove(taken.getCardName());
 			caster.getDisplay().addCard(taken);
@@ -350,6 +351,7 @@ public class RulesEngine {
 			//c-rank
 			break;
 		case "Knock Down":
+			//to fix
 			taken = opponent.getHand().getCardbyIndex(0);//placeholder for random
 			opponent.getHand().remove(taken.getCardName());
 			caster.getHand().add(taken);
@@ -476,8 +478,8 @@ public class RulesEngine {
 		return null;
 	}
 	
-	public Card.CardColour getTournamentColor() {
-		return TournamentColor;
+	public Card.CardColour getTournamentColour() {
+		return TournamentColour;
 	}
 
 }
