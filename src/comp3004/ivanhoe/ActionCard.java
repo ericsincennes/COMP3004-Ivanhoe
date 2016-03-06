@@ -23,4 +23,8 @@ public class ActionCard extends Card {
 	public TargetType getTargetType() {
 		return targetting;
 	}
+	
+	public List<Object> getTargetList() {
+		return targetList;
+	}
 }
