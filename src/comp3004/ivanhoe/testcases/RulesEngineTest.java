@@ -53,8 +53,9 @@ public class RulesEngineTest {
 	@Test
 	public void playTurn(){
 		tournamentSetup();
-		Player p;
+		Player p, p2;
 		p = rules.getPlayerList().get(0);
+		p2 = rules.getPlayerList().get(1);
 		//System.out.println(p.getid());
 		rules.startTurn(p.getid()); //draw card
 		assertEquals(p.getHandSize(), 9);
@@ -65,6 +66,7 @@ public class RulesEngineTest {
 		//turn 2 - testing end turn checks after plays have already been made
 		p = rules.getPlayerList().get(0);
 		//System.out.println(p.getid());
+		assertEquals(p, p2);
 		assertTrue(rules.playCard("Squire", p.getid()));
 		assertFalse(rules.endTurn(p.getid()));
 		assertTrue(rules.playCard("Squire", p.getid()));
@@ -82,8 +84,26 @@ public class RulesEngineTest {
 		
 		rules.startTurn(rules.getPlayerList().get(0).getid());
 		rules.playCard("Squire", rules.getPlayerList().get(0).getid());
-		rules.withdrawPlayer(p1.getid());
+		assertEquals(rules.withdrawPlayer(p1.getid()), null);
+		assertEquals(rules.getHighestScore(),0);
 		
+		assertEquals(rules.getPlayerList().get(0), p2);
+		rules.startTurn(rules.getPlayerList().get(0).getid());
+		rules.playCard("Squire", rules.getPlayerList().get(0).getid());
+		rules.endTurn(rules.getPlayerList().get(0).getid());
+		
+		assertEquals(rules.getPlayerList().get(0), p3);
+		rules.startTurn(rules.getPlayerList().get(0).getid());
+		rules.playCard("Squire", rules.getPlayerList().get(0).getid());
+		rules.playCard("Squire", rules.getPlayerList().get(0).getid());
+		rules.endTurn(rules.getPlayerList().get(0).getid());
+		
+		assertEquals(rules.getPlayerList().get(0), p1);
+		assertFalse(rules.startTurn(rules.getPlayerList().get(0).getid()));
+		
+		assertEquals(rules.getPlayerList().get(0), p2);
+		rules.startTurn(rules.getPlayerList().get(0).getid());
+		assertEquals((long) p3.getid(), (long) rules.withdrawPlayer(p2.getid()));
 	}
 	
 	@Test

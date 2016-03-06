@@ -32,6 +32,10 @@ public class RulesEngine {
 		return playersList;
 	}
 	
+	public int getHighestScore() {
+		return highestScore;
+	}
+	
 	/**
 	 * Registers a player with the Rules engine
 	 * @param ID this.currentThread.getID() of the player thread
