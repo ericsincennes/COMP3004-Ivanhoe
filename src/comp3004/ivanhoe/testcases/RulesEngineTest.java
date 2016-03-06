@@ -15,12 +15,12 @@ public class RulesEngineTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		rules = new RulesEngine(2);
+		rules = new RulesEngine(3);
 		rules.registerThread(1);
 		rules.registerThread(2);
-		//e.registerThread(3);
-		//e.registerThread(4);
-		//e.registerThread(5);
+		rules.registerThread(3);
+		//rules.registerThread(4);
+		//rules.registerThread(5);
 	}
 	
 	@Test
@@ -33,9 +33,8 @@ public class RulesEngineTest {
 		assertEquals(CardColour.Blue, rules.getPlayerById(1).getDisplay().getColour());
 		
 	}
-	
-	
-	
+		
+	@Test
 	public void validatePlay(){
 		tournamentSetup();
 		rules.getPlayerById(1).addCard(new ColourCard(CardColour.Blue, 4));
@@ -55,7 +54,6 @@ public class RulesEngineTest {
 	public void playTurn(){
 		tournamentSetup();
 		Player p;
-		
 		p = rules.getPlayerList().get(0);
 		//System.out.println(p.getid());
 		rules.startTurn(p.getid()); //draw card
@@ -71,6 +69,20 @@ public class RulesEngineTest {
 		assertFalse(rules.endTurn(p.getid()));
 		assertTrue(rules.playCard("Squire", p.getid()));
 		assertTrue(rules.endTurn(p.getid()));
+		
+	}
+	
+	@Test
+	public void withdrawTest() {
+		tournamentSetup();
+		Player p1, p2, p3;
+		p1 = rules.getPlayerList().get(0);
+		p2 = rules.getPlayerList().get(1);
+		p3 = rules.getPlayerList().get(2);
+		
+		rules.startTurn(rules.getPlayerList().get(0).getid());
+		rules.playCard("Squire", rules.getPlayerList().get(0).getid());
+		rules.withdrawPlayer(p1.getid());
 		
 	}
 	
