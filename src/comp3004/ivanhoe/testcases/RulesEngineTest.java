@@ -82,28 +82,38 @@ public class RulesEngineTest {
 		p2 = rules.getPlayerList().get(1);
 		p3 = rules.getPlayerList().get(2);
 		
+		//withdraw should not set a high score
 		rules.startTurn(rules.getPlayerList().get(0).getID());
 		rules.playCard("Squire", rules.getPlayerList().get(0).getID());
 		assertEquals(rules.withdrawPlayer(p1.getID()), null);
 		assertEquals(rules.getHighestScore(),0);
 		
+		//withdrawn player should be skipped over
 		assertEquals(rules.getPlayerList().get(0), p2);
 		rules.startTurn(rules.getPlayerList().get(0).getID());
 		rules.playCard("Squire", rules.getPlayerList().get(0).getID());
 		rules.endTurn(rules.getPlayerList().get(0).getID());
-		
 		assertEquals(rules.getPlayerList().get(0), p3);
 		rules.startTurn(rules.getPlayerList().get(0).getID());
 		rules.playCard("Squire", rules.getPlayerList().get(0).getID());
 		rules.playCard("Squire", rules.getPlayerList().get(0).getID());
 		rules.endTurn(rules.getPlayerList().get(0).getID());
-		
 		assertEquals(rules.getPlayerList().get(0), p1);
 		assertFalse(rules.startTurn(rules.getPlayerList().get(0).getID()));
 		
+		//withdrawing should return the winner
 		assertEquals(rules.getPlayerList().get(0), p2);
 		rules.startTurn(rules.getPlayerList().get(0).getID());
-		assertEquals((long) p3.getID(), (long) rules.withdrawPlayer(p2.getID()));
+		assertEquals(p3.getID(), (long) rules.withdrawPlayer(p2.getID()));
+		
+		//withdrawing with maiden should return own ID, so player can lose point
+		rules.initTournament();
+		rules.initializeTournamentColour(CardColour.Blue);
+		assertEquals(rules.getPlayerList().get(0), p3);
+		rules.startTurn(p3.getID());
+		p3.addCard(new SupporterCard(6));
+		rules.playCard("Maiden", p3.getID());
+		assertEquals(rules.withdrawPlayer(p3.getID()),Long.valueOf(-1));
 	}
 	
 	@Test

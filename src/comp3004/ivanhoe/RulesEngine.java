@@ -153,10 +153,11 @@ public class RulesEngine {
 	
 	/**
 	 * Initializing gamestate for a tournament if no tournament is started
-	 * @param colour 
 	 */
 	public void initTournament(){
-		
+		if (isTournamentRunning()) {
+			return;
+		}
 		for(Player p : playersList){
 			for(int i = 0; i < 8; i++){
 				drawCard(p.getID());
@@ -215,6 +216,8 @@ public class RulesEngine {
 		//Maiden check
 		if(p.getDisplay().contains("Maiden")){
 			//TODO: take token from player
+			Long retval = (long) -1;
+			return retval;
 		}
 		
 		p.getDisplay().clearBoard();
