@@ -52,19 +52,19 @@ public class Server{
 
 				count--;
 				threads.add(new PlayerThread(clientSocket));
-				
+
 				if(count == 0){
 					listeningSocket.close();
 					isAcceptingConnections = false;
 					break;
 				}
 			}
-			
+
 			print(getTimestamp() +": Expected number of clients connected. Starting Game");
 			for(PlayerThread p : threads){
 				p.start();
 			}
-			
+
 		} catch(IOException e){
 			error(getTimestamp() + ": Server socket unable to connect to port" + port);
 			e.printStackTrace();
@@ -143,18 +143,18 @@ public class Server{
 				endif
 				play rest of turn
 				end turn or withdraw
-			*/
-			
+			 */
+
 			//log.logmsg(threadID + ": Main loop started");
 			print(threadID + "");
 			int b = rules.registerThread(threadID);
-			
+
 			//Send player their player number
 			send(b);
-			
+
 			print(threadID + ": isRunning");
 			while(isRunning){
-				
+
 				if (rules.getPlayerList().get(0).getID() != threadID) {
 					try {
 						//updateClientBoardState();
@@ -166,39 +166,38 @@ public class Server{
 						continue;
 					}
 				}
-				
+
 				if (rules.isTournamentRunning()) {
 					//Start client turn and draw a card
 					rules.startTurn(threadID);
-					
+
 					//Is the tournament running AND not first turn in tournament
 					if (rules.isColourChosen()) {
 						//Send updated hand to client
 						SendClientHand();
-						
+
 						//get what cards the client wants to play
 						int cardIndex = getCardsToBePlayed();
 						while(cardIndex != -3){ //while not endturn optcode
 							cardIndex = getCardsToBePlayed();
-							
+
 							if(cardIndex == -2){ //Client withdrawing
 								if (rules.withdrawPlayer(threadID)) {
 									CardColour c = GetTournamentColourFromClient();
 									rules.getPlayerById(threadID).removeToken(c); //may need validation
 								}
 								long winner = rules.withdrawCleanup(threadID); //now its winner's turn
-								
+
 								cardIndex = -3;
 							} else if(cardIndex == -3) { //end turn optcode received
 								rules.endTurn(threadID);
 								cardIndex = -3;
-							} else { //play the card
+							} else if(cardIndex != -1){
 								rules.playCard(cardIndex, threadID);
 								SendClientHand();
 								updateClientBoardState();
 							}
 						}
-						
 					}
 					else {
 						//choose colour
@@ -213,7 +212,7 @@ public class Server{
 						else {
 							rules.failInitTournamentColour();
 						}
-						
+
 					}
 				}
 				else {
@@ -229,8 +228,8 @@ public class Server{
 			}
 		}
 
-		
-		
+
+
 		/**
 		 * Gets the displays for all players and sends it to the client
 		 * Currently does not send ActionCards in the display
@@ -239,19 +238,19 @@ public class Server{
 			ArrayList<List<Card>> board = new ArrayList<List<Card>>();
 			List<Card> nonActionCards = rules.getPlayerById(threadID).getDisplay().getCards();
 			//List<Card> actionCards = rules.getPlayerById(threadID).getDisplay().getActionCards();
-			
+
 			board.add(nonActionCards);
-			
+
 			for( Player p : rules.getPlayerList()){
 				if(p.getID() != threadID){
 					board.add(p.getDisplay().getCards());
 				}
 			}
-			
+
 			send(Optcodes.ClientupdateBoardState);
 			send(board);
 		}
-		
+
 		/**
 		 * Checks if the client sent the withdraw optcode
 		 * @param opt Integer
@@ -263,13 +262,14 @@ public class Server{
 			}
 			return false;
 		}
-		
+
 		/**
 		 * Get the index of the card to be played and plays the card
 		 */
 		private int getCardsToBePlayed(){
 			send(Optcodes.ClientGetCardsToBePlayed);
 			int index = (int) get();
+			String cardname = "";
 
 			if(isClientWithdrawing(index)){ //Client withdraws
 				return -2;
@@ -277,17 +277,23 @@ public class Server{
 			if (index == Optcodes.ClientEndTurn){ //client calls end turn
 				return -3;
 			}
-			
-			String cardname = rules.getPlayerById(threadID).getHand().getCardbyIndex(index).getCardName();
-			
-			//if client sent a card
-			if(rules.validatePlay(cardname, threadID)){
-				send(Optcodes.SuccessfulCardPlay);
-				return index;
-			} else {
-				send(Optcodes.InvalidCard);
-				return -1;
+
+			if(index < rules.getPlayerById(threadID).getHandSize()){
+				cardname = rules.getPlayerById(threadID).getHand().getCardbyIndex(index).getCardName();
 			}
+
+
+			//if client sent a card
+			if(cardname != ""){
+				if(rules.validatePlay(cardname, threadID)){
+					send(Optcodes.SuccessfulCardPlay);
+					return index;
+				} else {
+					send(Optcodes.InvalidCard);
+					return -1;
+				}
+			}
+			return -1;
 		}
 
 		/**
@@ -304,7 +310,7 @@ public class Server{
 				isRunning = false;
 			}
 		}
-		
+
 		private void sendPlayersList() {
 			int me_index = 0;
 			int listSize = rules.getPlayerList().size();
@@ -319,9 +325,9 @@ public class Server{
 			}
 			send(Optcodes.ClientGetPlayerList);
 			send(playerIDs);
-			
+
 		}
-		
+
 		/**
 		 * Gets the hand from the Player class and sends it to the client
 		 */
@@ -331,7 +337,7 @@ public class Server{
 			send(Optcodes.ClientGetHand);
 			send(hand);
 		}
-		
+
 		/**
 		 * Gets the tournament colour from the client
 		 * @return CardColour
@@ -340,27 +346,27 @@ public class Server{
 			print("Thread " + threadID + ": getting tournament colour from client");
 			send(Optcodes.ClientGetColourChoice);
 			CardColour colour = null;
-			
+
 			int o = (int) get(); //get colour from client
-			
+
 			switch (o) {
 			case 1: colour = Card.CardColour.Purple;
-					break;
+			break;
 			case 2: colour = Card.CardColour.Green;
-					break;
+			break;
 			case 3: colour = Card.CardColour.Red;
-					break;
+			break;
 			case 4: colour = Card.CardColour.Blue;
-					break;
+			break;
 			case 5: colour = Card.CardColour.Yellow;
-					break;
+			break;
 			default:
-					break;
-		}
-			
+				break;
+			}
+
 			return colour;
 		}
-		
+
 		/**
 		 * Gets an object from the client
 		 * Does not verify the typeOf an object
