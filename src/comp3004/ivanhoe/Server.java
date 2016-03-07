@@ -194,11 +194,29 @@ public class Server{
 			board.add(nonActionCards);
 			
 			for( Player p : rules.getPlayerList()){
-				board.add(p.getDisplay().getCards());
+				if(p.getID() != threadID){
+					board.add(p.getDisplay().getCards());
+				}
 			}
 			
 			send(Optcodes.ClientupdateBoardState);
 			send(board);
+		}
+		
+		
+		
+		/**
+		 * Get the index of the card to be played and plays the card
+		 */
+		private void getCardsToBePlayed(){
+			send(Optcodes.ClientGetCardsToBePlayed);
+			int index = (int) get();
+			
+			if(rules.playCard(index, threadID)){
+				send(Optcodes.SucessfulCardPlay);
+			} else {
+				send(Optcodes.InvalidCard);
+			}
 		}
 
 		/**

@@ -6,6 +6,12 @@ public class Optcodes {
 	public static final int ClientupdateBoardState 	= 102;
 	public static final int ClientGetCardsToBePlayed= 103;
 	public static final int ClientGetColourChoice 	= 104;
+	public static final int ClientGetPlayerList		= 105;
+	public static final int ClientEndTurn			= 106;
+	public static final int ClientWithdraw			= 107;
+	
+	public static final int InvalidCard				= 301;
+	public static final int SucessfulCardPlay		= 302;
 	
 	//Client to Server Opt codes
 	public static final int ServerSendColourChoice 	= 201;
