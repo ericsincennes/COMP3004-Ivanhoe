@@ -228,17 +228,12 @@ public class RulesEngine {
 	public boolean withdrawPlayer(Long id){
 		Player p = getPlayerById(id);
 		p.setPlaying(false);
+		boolean hasMaiden = p.getDisplay().contains("Maiden");
 		List<Card> toDiscard = p.getDisplay().clearBoard();
 		for (Card c : toDiscard) {
 			deck.addToDiscard(c);
 		}
-		
-		//Maiden check
-		if(p.getDisplay().contains("Maiden")){
-			//TODO: take token from player
-			return true;
-		}
-		return false;
+		return hasMaiden;
 	}
 	
 	/**

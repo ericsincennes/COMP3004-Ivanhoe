@@ -60,7 +60,9 @@ public class RulesEngineTest {
 	public void playCard(){
 		tournamentSetup();
 		Player p = rules.getPlayerById(2);
-
+		
+		p.addCard(new ColourCard(CardColour.Red, 3));
+		assertFalse(rules.playCard(p.getHandSize()-1, p.getID())); //colour restriction
 		p.addCard(new ColourCard(CardColour.Blue, 4));
 		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
 	}
@@ -85,7 +87,9 @@ public class RulesEngineTest {
 		assertEquals(p, p2);
 		assertTrue(rules.playCard(0, p.getID()));
 		assertFalse(rules.endTurn(p.getID()));
-		assertTrue(rules.playCard(0, p.getID()));
+		p.addCard(new ColourCard(CardColour.Blue, 3));
+		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
+		assertEquals(p.getDisplay().calculatePoints(), 5);
 		assertTrue(rules.endTurn(p.getID()));
 		
 	}
@@ -101,7 +105,8 @@ public class RulesEngineTest {
 		//withdraw should not set a high score
 		rules.startTurn(rules.getPlayerList().get(0).getID());
 		rules.playCard(0, rules.getPlayerList().get(0).getID());
-		assertEquals(rules.withdrawPlayer(p1.getID()), null);
+		assertFalse(rules.withdrawPlayer(p1.getID()));
+		assertTrue(rules.withdrawCleanup(p1.getID())<0); //no winner
 		assertEquals(rules.getHighestScore(),0);
 		
 		//withdrawn player should be skipped over
@@ -120,7 +125,8 @@ public class RulesEngineTest {
 		//withdrawing should return the winner
 		assertEquals(rules.getPlayerList().get(0), p2);
 		rules.startTurn(rules.getPlayerList().get(0).getID());
-		//assertEquals(p3.getID(), (long) rules.withdrawPlayer(p2.getID()));
+		assertFalse(rules.withdrawPlayer(p2.getID()));
+		assertEquals(p3.getID(), rules.withdrawCleanup(p2.getID()));
 		
 		//withdrawing with maiden should return own ID, so player can lose point
 		rules.initTournament();
@@ -129,7 +135,9 @@ public class RulesEngineTest {
 		rules.startTurn(p3.getID());
 		p3.addCard(new SupporterCard(6));
 		rules.playCard(p3.getHandSize()-1, p3.getID());
-		assertEquals(rules.withdrawPlayer(p3.getID()),Long.valueOf(-1));
+		assertEquals(p3.getDisplay().getLastPlayed().getCardName(), "Maiden");
+		assertTrue(rules.withdrawPlayer(p3.getID()));
+		
 	}
 	
 	@Test
@@ -170,9 +178,10 @@ public class RulesEngineTest {
 		p = rules.getPlayerList().get(0);
 		assertEquals(p.getID(), p2.getID()); //check player turn order
 		rules.startTurn(p.getID());
-		//Long winner = rules.withdrawPlayer(p.getID());
-		//assertEquals(winner, Long.valueOf(p1.getID()));
-		
+		rules.withdrawPlayer(p.getID());
+		Long winner = rules.withdrawCleanup(p.getID());
+		assertEquals(winner, Long.valueOf(p1.getID()));
+	
 		p = rules.getPlayerList().get(0);
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
