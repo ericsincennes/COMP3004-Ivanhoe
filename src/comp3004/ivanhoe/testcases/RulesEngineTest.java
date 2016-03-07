@@ -26,7 +26,7 @@ public class RulesEngineTest {
 	
 	@Test
 	public void tournamentSetup() {
-		//rules.chooseFirstTournament();
+		rules.chooseFirstTournament();
 		assertFalse(rules.isTournamentRunning());
 		rules.initTournament();
 		assertEquals(8, rules.getPlayerById(1).getHandSize());
@@ -60,11 +60,13 @@ public class RulesEngineTest {
 	public void playCard(){
 		tournamentSetup();
 		Player p = rules.getPlayerById(2);
-		
+		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
+		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Squire"); //playing supporter card
 		p.addCard(new ColourCard(CardColour.Red, 3));
 		assertFalse(rules.playCard(p.getHandSize()-1, p.getID())); //colour restriction
 		p.addCard(new ColourCard(CardColour.Blue, 4));
 		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
+		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Blue 4"); //playing on colour
 	}
 	 
 	@Test
@@ -141,7 +143,7 @@ public class RulesEngineTest {
 	}
 	
 	@Test
-	public void oneTournamentTest(){
+	public void oneTournamentTest(){ //also blue tournament
 		tournamentSetup();
 		Player p1 = rules.getPlayerList().get(0);
 		Player p2 = rules.getPlayerList().get(1);
@@ -175,6 +177,57 @@ public class RulesEngineTest {
 		rules.playCard(0, p.getID());
 		rules.playCard(0, p.getID());
 		assertTrue(rules.endTurn(p.getID()));
+		assertEquals(rules.getHighestScore(), 8); // 1 squire + 3 squire = 8 pts
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p2.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.withdrawPlayer(p.getID());
+		Long winner = rules.withdrawCleanup(p.getID());
+		assertEquals(winner, Long.valueOf(p1.getID()));
+	
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
+		p.recieveToken(rules.getTournamentColour());
+		assertEquals(p.getTokenCount(),1);
+	}
+	
+	@Test
+	public void greenTournamentTest() {
+		tournamentSetup();
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Green);
+		Player p1 = rules.getPlayerList().get(0);
+		Player p2 = rules.getPlayerList().get(1);
+		Player p3 = rules.getPlayerList().get(2);
+		Player p;
+		
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p1.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.playCard(0, p.getID());
+		rules.endTurn(p.getID());
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p2.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.playCard(0, p.getID());
+		rules.playCard(0, p.getID());
+		rules.endTurn(p.getID());
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p3.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.withdrawPlayer(p.getID());
+		rules.withdrawCleanup(p.getID());
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p1.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.playCard(0, p.getID());
+		rules.playCard(0, p.getID());
+		assertTrue(rules.endTurn(p.getID()));
+		assertEquals(rules.getHighestScore(), 3); //green tourney, so squires should be 1 each. 1+2 = 3 pts
 		
 		p = rules.getPlayerList().get(0);
 		assertEquals(p.getID(), p2.getID()); //check player turn order

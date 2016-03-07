@@ -77,4 +77,11 @@ public class PlayerTests {
 		int i = p.getTokenCount();
 		assertTrue(i != 0);
 	}
+	
+	@Test
+	public void receiveMultiTokensOfSameColour() {
+		p.recieveToken(CardColour.Blue);
+		p.recieveToken(CardColour.Blue);
+		assertTrue(p.getTokenCount() == 1);
+	}
 }

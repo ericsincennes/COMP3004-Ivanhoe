@@ -97,7 +97,11 @@ public class RulesEngine {
 	public synchronized long chooseFirstTournament(){
 		Collections.shuffle(playersList);
 		//notifyAll();
-		activePlayer = 0;
+		for(Player p : playersList){
+			for(int i = 0; i < 8; i++){
+				drawCard(p.getID());
+			}
+		}
 		return playersList.get(0).getID();
 	}
 
@@ -174,9 +178,6 @@ public class RulesEngine {
 			return;
 		}
 		for(Player p : playersList){
-			for(int i = 0; i < 8; i++){
-				drawCard(p.getID());
-			}
 			p.setPlaying(true);
 		}
 		colourChosen = false;
