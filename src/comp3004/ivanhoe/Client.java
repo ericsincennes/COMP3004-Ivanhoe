@@ -19,7 +19,8 @@ public class Client {
 	List<Card> CardsInHand;	//ArrayList of current hand
 	List<Long> PlayersList;
 	ArrayList<List<Card>> BoardState;
-
+	Scanner scan = new Scanner(System.in);
+	
 	public static void main(String[] args){
 		new Client();
 	}
@@ -62,6 +63,7 @@ public class Client {
 				break;
 			case Optcodes.ClientGetHand:
 				handleGetHand();
+				printHand();
 				break;
 			case Optcodes.ClientupdateBoardState:
 				handleUpdateBoardState();
@@ -102,18 +104,16 @@ public class Client {
 	 * If card is an action card then gets input of the card's targets 
 	 */
 	private void sendCardsToBePlayed(){
-		Scanner in = new Scanner(System.in);
-		int choice = -1;
+		int choice = 0;
 		
 		do {
-			choice = in.nextInt();
+			choice = scan.nextInt();
 			if (choice < 1 || choice > CardsInHand.size()) {
 				print("Choose a number corresponding to a card in your hand");
 			}
 		} while (choice < 1 || choice > CardsInHand.size());
 		
-		send(CardsInHand.get((choice-1)));
-		in.close();
+		send(choice-1);
 	}
 	
 	/**
@@ -146,7 +146,6 @@ public class Client {
 	 * @return Card.CardColour
 	 */
 	private void handleGetTournamentColour(){
-		Scanner in = new Scanner(System.in);
 		int choice = -1;
 
 		print("Choose the color of the tournement");
@@ -157,7 +156,7 @@ public class Client {
 		print("{5) - Yellow");
 
 		do{
-			choice = in.nextInt();
+			choice = scan.nextInt();
 			if (choice < 1 || choice > 5){
 				print("Please choose a number between 1 and 5");
 			}
@@ -177,7 +176,6 @@ public class Client {
 			default:
 					break;
 		}
-		in.close();
 	}
 
 	/**

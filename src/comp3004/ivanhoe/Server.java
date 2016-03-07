@@ -158,7 +158,8 @@ public class Server{
 				
 				if (rules.getPlayerList().get(0).getID() != threadID) {
 					try {
-						Thread.sleep(1000);
+						updateClientBoardState();
+						Thread.sleep(2000);
 						continue;
 					}
 					catch (InterruptedException ie) {
@@ -190,6 +191,7 @@ public class Server{
 								cardIndex = -3;
 							} else { //play the card
 								rules.playCard(cardIndex, threadID);
+								SendClientHand();
 								updateClientBoardState();
 							}
 						}
