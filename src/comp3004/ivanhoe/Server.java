@@ -150,14 +150,15 @@ public class Server{
 			int b = rules.registerThread(threadID);
 			print(b+"");
 			
+			//Send player their player number
+			send(b);
+			
 			print(threadID + ": isRunning");
 			while(isRunning){
 				
 				if (rules.getPlayerList().get(0).getID() != threadID) {
 					try {
-						print(threadID + ": before sleep");
-						Thread.sleep(20000);
-						print(threadID + ": after sleep");
+						Thread.sleep(1000);
 						continue;
 					}
 					catch (InterruptedException ie) {
@@ -325,9 +326,26 @@ public class Server{
 		private CardColour GetTournamentColourFromClient(){
 			print("Thread " + threadID + ": getting tournament colour from client");
 			send(Optcodes.ClientGetColourChoice);
+			CardColour colour = null;
 			
-			CardColour o = (CardColour) get(); //get colour from client
-			return o;
+			int o = (int) get(); //get colour from client
+			
+			switch (o) {
+			case 1: colour = Card.CardColour.Purple;
+					break;
+			case 2: colour = Card.CardColour.Green;
+					break;
+			case 3: colour = Card.CardColour.Red;
+					break;
+			case 4: colour = Card.CardColour.Blue;
+					break;
+			case 5: colour = Card.CardColour.Yellow;
+					break;
+			default:
+					break;
+		}
+			
+			return colour;
 		}
 		
 		/**
