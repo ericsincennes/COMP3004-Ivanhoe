@@ -158,7 +158,7 @@ public class Server{
 				
 				if (rules.getPlayerList().get(0).getID() != threadID) {
 					try {
-						updateClientBoardState();
+						//updateClientBoardState();
 						Thread.sleep(2000);
 						continue;
 					}
