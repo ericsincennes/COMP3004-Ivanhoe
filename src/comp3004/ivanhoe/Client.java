@@ -63,6 +63,7 @@ public class Client {
 				break;
 			case Optcodes.ClientGetHand:
 				handleGetHand();
+				printHand();
 				break;
 			case Optcodes.ClientupdateBoardState:
 				handleUpdateBoardState();
