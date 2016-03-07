@@ -166,6 +166,7 @@ public class RulesEngineTest {
 		assertEquals(p.getID(), p3.getID()); //check player turn order
 		rules.startTurn(p.getID());
 		rules.withdrawPlayer(p.getID());
+		rules.withdrawCleanup(p.getID());
 		
 		p = rules.getPlayerList().get(0);
 		assertEquals(p.getID(), p1.getID()); //check player turn order
@@ -185,6 +186,7 @@ public class RulesEngineTest {
 		p = rules.getPlayerList().get(0);
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
+		assertEquals(p.getTokenCount(),1);
 	}
 	
 }
