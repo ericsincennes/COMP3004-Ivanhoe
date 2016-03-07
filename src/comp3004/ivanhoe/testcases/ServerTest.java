@@ -4,20 +4,17 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
+import org.junit.Before;
 import org.junit.Test;
 import comp3004.ivanhoe.*;
 
 public class ServerTest {
-
-	@Test
-	public void StartServer() {	
-		String LogDirectory = (System.getProperty("user.dir") + "/src/Logs/");
-		Server s = new Server();
-		File f = new File(LogDirectory + "ServerLog");
-		
-		assertTrue(f.exists());
+	Server s;
+	
+	@Before
+	public void setUp(){
+		s = new Server();
 	}
-
 
 	@Test
 	public void ConnectOneClient(){

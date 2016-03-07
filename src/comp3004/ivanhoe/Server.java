@@ -15,13 +15,12 @@ public class Server{
 	private int 			numplayers;
 	private boolean 		isAcceptingConnections = true;
 	private ServerSocket 	listeningSocket;
-	//private Log			log = new Log(this.getClass().getName(), "ServerLog");
+	//private Log				log = new Log(this.getClass().getName(), "ServerLog");
 	private RulesEngine		rules;
 
 
 	public Server(){
 		Scanner in = new Scanner(System.in);
-		int count = numplayers;
 
 		while (port == 0){
 			print("Enter port to listen on");
@@ -34,7 +33,7 @@ public class Server{
 		}
 		in.close();
 		rules = new RulesEngine(numplayers);
-		connectAndRecieve(count);
+		connectAndRecieve(numplayers);
 	}
 
 	private void connectAndRecieve(int count){
@@ -57,9 +56,11 @@ public class Server{
 				if(count == 0){
 					listeningSocket.close();
 					isAcceptingConnections = false;
+					break;
 				}
 			}
 			
+			print(getTimestamp() +": Expected number of clients connected. Starting Game");
 			for(PlayerThread p : threads){
 				p.start();
 			}
@@ -106,7 +107,7 @@ public class Server{
 		private boolean isRunning = true;
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
-		private long threadID = Thread.currentThread().getId();	//used to identify the individual threads in the rules/logic engine
+		private long threadID = getId(); //used to identify the individual threads in the rules/logic engine
 
 		public PlayerThread(Socket c){
 			client = c;
@@ -143,14 +144,20 @@ public class Server{
 				play rest of turn
 				end turn or withdraw
 			*/
-		
-			rules.registerThread(threadID);
 			
+			//log.logmsg(threadID + ": Main loop started");
+			print(threadID+"");
+			int b = rules.registerThread(threadID);
+			print(b+"");
+			
+			print(threadID + ": isRunning");
 			while(isRunning){
+				
 				if (rules.getPlayerList().get(0).getID() != threadID) {
-					updateClientBoardState();
 					try {
-						wait(100);
+						print(threadID + ": before sleep");
+						Thread.sleep(20000);
+						print(threadID + ": after sleep");
 						continue;
 					}
 					catch (InterruptedException ie) {
