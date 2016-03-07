@@ -183,8 +183,12 @@ public class Server{
 							cardIndex = getCardsToBePlayed();
 							
 							if(cardIndex == -2){ //Client withdrawing
-								rules.withdrawPlayer(threadID);
-								rules.endTurn(threadID);
+								if (rules.withdrawPlayer(threadID)) {
+									CardColour c = GetTournamentColourFromClient();
+									rules.getPlayerById(threadID).removeToken(c); //may need validation
+								}
+								long winner = rules.withdrawCleanup(threadID); //now its winner's turn
+								
 								cardIndex = -3;
 							} else if(cardIndex == -3) { //end turn optcode received
 								rules.endTurn(threadID);
@@ -214,6 +218,13 @@ public class Server{
 					}
 				}
 				else {
+					if (rules.getPlayerById(threadID).getPlaying()) { //then you are winner of previous tourney
+						CardColour c = GetTournamentColourFromClient();
+						while(!rules.giveToken(threadID, c)) {
+							//send some message about bad colour input
+							c = GetTournamentColourFromClient();
+						}
+					}
 					rules.initTournament();
 				}
 			}
