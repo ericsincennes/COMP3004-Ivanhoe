@@ -67,6 +67,7 @@ public class Client {
 				handleUpdateBoardState();
 				break;
 			case Optcodes.ClientGetCardsToBePlayed:
+				print("Choose a card to play or withdraw");
 				sendCardsToBePlayed();
 				break;
 			case Optcodes.ClientGetPlayerList:
@@ -92,7 +93,7 @@ public class Client {
 		print("Player " + id + "'s Board:");
 		
 		for (Card c: board) {
-			print("{" + (board.indexOf(c)+1) + ") - " + c.getCardName());
+			print("{" + (board.indexOf(c)+1) + ") - " + c.getCardName() + "\n");
 		}
 	}
 	
@@ -136,9 +137,8 @@ public class Client {
 	private void printHand(){
 		print("Cards currently in hand:");
 		for (Card c: CardsInHand){
-			print("{" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName());
+			print("{" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + "\n");
 		}
-		print("Choose a card to play or withdraw");
 	}			
 
 	/**
