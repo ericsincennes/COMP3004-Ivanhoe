@@ -34,10 +34,6 @@ public class Player {
 		return isPlaying;
 	}
 	
-	public Card getCardByName(String s){
-		return hand.getCardByName(s);
-	}
-	
 	public void removeCard(String s) {
 		hand.remove(s);
 	}

@@ -259,7 +259,7 @@ public class RulesEngine {
 	 */
 	public boolean playCard(String cardname, Long id){
 		Player p = players.get(id);
-		Card c = p.getCardByName(cardname);
+		Card c = p.getHand().getCardByName(cardname);
 		boolean b = validatePlay(cardname, id);
 		if(b){
 			p.playColourCard(cardname);
@@ -290,7 +290,7 @@ public class RulesEngine {
 		//System.out.println("ValidatePlay Card " + card + " ID " + id); //testing
 		//if card in player hand
 		if(p.hasInHand(card)){
-			c = p.getCardByName(card);
+			c = p.getHand().getCardByName(card);
 			//if card is colour card
 			if(c.getCardType() == CardType.Colour &&
 					((ColourCard)c).getColour() == TournamentColour){
