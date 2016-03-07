@@ -223,40 +223,53 @@ public class RulesEngine {
 	/**
 	 * Removes  the player from the tournament
 	 * @param id
+	 * @return if a maiden is removed or not
 	 */
-	public Long withdrawPlayer(Long id){
+	public boolean withdrawPlayer(Long id){
 		Player p = getPlayerById(id);
 		p.setPlaying(false);
-		int count = 0;
+		List<Card> toDiscard = p.getDisplay().clearBoard();
+		for (Card c : toDiscard) {
+			deck.addToDiscard(c);
+		}
 		
 		//Maiden check
 		if(p.getDisplay().contains("Maiden")){
 			//TODO: take token from player
-			Long retval = (long) -1;
-			return retval;
+			return true;
 		}
-		
-		p.getDisplay().clearBoard();
-		Collections.rotate(playersList, -1);
-		
-		//check how many players left
-		for(Player a : playersList){
-			if(a.getPlaying()){
-				count++;
-			}
+		return false;
+	}
+	
+	/**
+	 * Does cleanup checks and position changes after withdrawing
+	 * @return winner's ID, and puts them in pos 0 of player list
+	 */
+	public long withdrawCleanup(long id) {
+		Player p = getPlayerById(id);
+
+		if (isTournamentRunning()) {
+			Collections.rotate(playersList, -1);
+			return -1;
 		}
-		
-		//If only 1 player remains
-		if(count == 1){
-			//notify remaining player of winning
+		else {
 			for(Player x : playersList){
 				if(x.getPlaying()){
 					Collections.rotate(playersList, -1*playersList.indexOf(x)); //might need to change where this gets done
 					return x.getID();											//due to server synchro issues
 				} 
-			} 
+			}
+			return -1;
 		}
-		return null;
+	}
+	
+	public boolean giveToken(long id, CardColour c) {
+		Player p = getPlayerById(id);
+		if (TournamentColour.equals(CardColour.Purple) || c.equals(TournamentColour)) {
+			p.recieveToken(c);
+			return true;
+		}
+		return false;
 	}
 
 	/**

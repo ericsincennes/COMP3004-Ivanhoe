@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import comp3004.ivanhoe.*;
+import comp3004.ivanhoe.ActionCard.TargetType;
 import comp3004.ivanhoe.Card.CardColour;
 
 public class RulesEngineTest {
@@ -25,12 +26,26 @@ public class RulesEngineTest {
 	
 	@Test
 	public void tournamentSetup() {
+		//rules.chooseFirstTournament();
 		assertFalse(rules.isTournamentRunning());
 		rules.initTournament();
 		assertEquals(8, rules.getPlayerById(1).getHandSize());
 		assertEquals(8, rules.getPlayerById(2).getHandSize());
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
 		assertEquals(CardColour.Blue, rules.getPlayerById(1).getDisplay().getColour());
+	}
+	
+	@Test
+	public void cantStartTournament() {
+		assertFalse(rules.isTournamentRunning());
+		rules.initTournament();
+		Player nextPlayer = rules.getPlayerList().get(1);
+		rules.getPlayerList().get(0).getHand().discardHand();
+		rules.getPlayerList().get(0).addCard(new ActionCard("Unhorse", TargetType.Untargeted));
+		assertFalse(rules.canStartTournament(rules.getPlayerList().get(0).getID()));
+		assertEquals(rules.getPlayerList().get(0).getHand().getNumCards(),1);
+		rules.failInitTournamentColour();
+		assertEquals(nextPlayer, rules.getPlayerList().get(0));
 		
 	}
 		
@@ -59,6 +74,7 @@ public class RulesEngineTest {
 		//System.out.println(p.getid());
 		rules.startTurn(p.getID()); //draw card
 		assertEquals(p.getHandSize(), 9);
+		assertFalse(rules.canEndTurn(p.getID()));
 		assertTrue(rules.playCard(0, p.getID()));
 		assertEquals(p.getDisplay().calculatePoints(), 2);
 		assertTrue(rules.endTurn(p.getID()));
@@ -117,31 +133,49 @@ public class RulesEngineTest {
 	}
 	
 	@Test
-	public void tournamentTest(){
-		rules.chooseFirstTournament();
-		rules.initializeTournamentColour(rules.getPlayerList().get(0).getID(), CardColour.Purple);
-		rules.dealHand();
+	public void oneTournamentTest(){
+		tournamentSetup();
+		Player p1 = rules.getPlayerList().get(0);
+		Player p2 = rules.getPlayerList().get(1);
+		Player p3 = rules.getPlayerList().get(2);
 		Player p;
-		int turn = 0;
 		
-		while(turn < 20){
-			p = rules.getPlayerList().get(0);
-			rules.startTurn(p.getID());
-			
-			do{
-				rules.playCard(0, p.getID());
-				if(p.getHandSize() == 0){
-					Long a = rules.withdrawPlayer(p.getID());
-					if(a != null){
-						rules.getPlayerById(a).recieveToken(rules.getTournamentColour());
-					}
-				}
-			}while(p.getPlaying() && (!rules.endTurn(p.getID())));
-			
-			rules.endTurn(p.getID());
-			
-			turn++;
-		}
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p1.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.playCard(0, p.getID());
+		rules.endTurn(p.getID());
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p2.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.playCard(0, p.getID());
+		rules.playCard(0, p.getID());
+		rules.endTurn(p.getID());
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p3.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.withdrawPlayer(p.getID());
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p1.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.playCard(0, p.getID());
+		rules.playCard(0, p.getID());
+		rules.playCard(0, p.getID());
+		assertTrue(rules.endTurn(p.getID()));
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p2.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		Long winner = rules.withdrawPlayer(p.getID());
+		assertEquals(winner, Long.valueOf(p1.getID()));
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
+		p.recieveToken(rules.getTournamentColour());
 	}
 	
 }
