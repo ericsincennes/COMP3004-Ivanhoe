@@ -140,8 +140,11 @@ public class Server{
 				end turn or withdraw
 			*/
 		
+			rules.registerThread(threadID);
+			
 			while(isRunning){
 				if (rules.getPlayerList().get(0).getID() != threadID) {
+					updateClientBoardState();
 					try {
 						Thread.sleep(100);
 						continue;
