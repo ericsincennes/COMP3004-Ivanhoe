@@ -43,7 +43,7 @@ public class Server{
 			print(getTimestamp() + ": server listening on port " + port);
 			//log.logmsg(getTimestamp() + " : server listening on port " + port);
 			listeningSocket = new ServerSocket(port);
-
+			ArrayList<PlayerThread> threads = new ArrayList<PlayerThread>();
 			while(isAcceptingConnections){
 
 				Socket clientSocket = listeningSocket.accept();
@@ -52,14 +52,18 @@ public class Server{
 				//log.logmsg(getTimestamp() + ": New client connected from address " + clientSocket.getInetAddress() + " on port " +clientSocket.getPort());
 
 				count--;
-
-				PlayerThread p = new PlayerThread(clientSocket);
-				p.start();
+				threads.add(new PlayerThread(clientSocket));
+				
 				if(count == 0){
 					listeningSocket.close();
 					isAcceptingConnections = false;
 				}
 			}
+			
+			for(PlayerThread p : threads){
+				p.start();
+			}
+			
 		} catch(IOException e){
 			error(getTimestamp() + ": Server socket unable to connect to port" + port);
 			e.printStackTrace();
