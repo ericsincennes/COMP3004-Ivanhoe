@@ -1,6 +1,8 @@
 package comp3004.ivanhoe;
 
-public abstract class Card {
+import java.io.Serializable;
+
+public abstract class Card implements Serializable{
 	
 	public enum CardType {
 	    Colour, Supporter, Action, Ivanhoe

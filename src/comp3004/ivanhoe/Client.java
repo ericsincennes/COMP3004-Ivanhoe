@@ -164,15 +164,15 @@ public class Client {
 		} while (choice < 1 || choice > 5);
 
 		switch (choice) {
-			case 1: send(Card.CardColour.Purple);
+			case 1: send(1);
 					break;
-			case 2: send(Card.CardColour.Green);
+			case 2: send(2);
 					break;
-			case 3: send(Card.CardColour.Red);
+			case 3: send(3);
 					break;
-			case 4: send(Card.CardColour.Blue);
+			case 4: send(4);
 					break;
-			case 5: send(Card.CardColour.Yellow);
+			case 5: send(5);
 					break;
 			default:
 					break;
