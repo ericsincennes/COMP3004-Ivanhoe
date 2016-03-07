@@ -37,6 +37,7 @@ public class RulesEngine {
 	}
 	
 	public synchronized List<Player> getPlayerList(){
+		notifyAll();
 		return playersList;
 	}
 	
@@ -264,18 +265,21 @@ public class RulesEngine {
 	 * @param id player id
 	 * @return boolean
 	 */
-	public boolean playCard(int posinhand, Long id){
+	public synchronized boolean playCard(int posinhand, Long id){
 		Player p = players.get(id);
 		Card c = p.getHand().getCardbyIndex(posinhand);
-		if (c == null) { 
+		if (c == null) {
+			notifyAll();
 			return false; 
 		}
 		boolean b = validatePlay(c.getCardName(), id);
 		if(b){
 			p.playColourCard(posinhand);
+			notifyAll();
 			return true;
 		} else if(c != null && c.cardType == CardType.Action){
 			p.playActionCard(posinhand);
+			notifyAll();
 			return true;
 		}
 		return false;

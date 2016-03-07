@@ -146,7 +146,7 @@ public class Server{
 				if (rules.getPlayerList().get(0).getID() != threadID) {
 					updateClientBoardState();
 					try {
-						Thread.sleep(100);
+						wait(100);
 						continue;
 					}
 					catch (InterruptedException ie) {
@@ -202,7 +202,6 @@ public class Server{
 				else {
 					rules.initTournament();
 				}
-					
 			}
 		}
 
