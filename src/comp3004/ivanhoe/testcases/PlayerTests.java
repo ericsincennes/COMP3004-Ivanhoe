@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import comp3004.ivanhoe.ColourCard;
 import comp3004.ivanhoe.Player;
+import comp3004.ivanhoe.SupporterCard;
 import comp3004.ivanhoe.Card;
 import comp3004.ivanhoe.Card.CardColour;
 
@@ -28,12 +29,19 @@ public class PlayerTests {
 	
 	@Test
 	public void playColourCardtoBoard(){
+		p.addCard(new SupporterCard(6));
 		p.addCard(new ColourCard(CardColour.Blue, 2));
 		p.getDisplay().setColour(CardColour.Blue);
-		p.playColourCard("Blue 2");
+		p.playColourCard(1);
 		Card q = p.getDisplay().getLastPlayed();
 		assertEquals("Blue 2", q.getCardName());
+		
+		p.playColourCard(0);
+		Card r = p.getDisplay().getLastPlayed();
+		assertEquals("Maiden", r.getCardName());
 	}
+	
+	
 	
 	@Test
 	public void recievePurpleToken(){

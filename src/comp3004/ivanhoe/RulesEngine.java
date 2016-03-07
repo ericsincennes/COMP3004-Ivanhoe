@@ -26,7 +26,14 @@ public class RulesEngine {
 		playersList = new ArrayList<Player>();
 		discard = Deck.createDiscard();
 		deck = Deck.createDeck(discard);
-		deck.testDeck();
+		deck.ivanhoeDeck();
+	}
+	
+	public static RulesEngine testRuleEngine(int i) {
+		RulesEngine test = new RulesEngine(i);
+		test.deck = Deck.createDeck(test.discard);
+		test.deck.testDeck();
+		return test;
 	}
 	
 	public synchronized List<Player> getPlayerList(){
@@ -257,17 +264,18 @@ public class RulesEngine {
 	 * @param id player id
 	 * @return boolean
 	 */
-	public boolean playCard(String cardname, Long id){
+	public boolean playCard(int posinhand, Long id){
 		Player p = players.get(id);
-		Card c = p.getHand().getCardByName(cardname);
-		boolean b = validatePlay(cardname, id);
+		Card c = p.getHand().getCardbyIndex(posinhand);
+		if (c == null) { 
+			return false; 
+		}
+		boolean b = validatePlay(c.getCardName(), id);
 		if(b){
-			p.playColourCard(cardname);
-			p.removeCard(cardname);
+			p.playColourCard(posinhand);
 			return true;
 		} else if(c != null && c.cardType == CardType.Action){
-			p.playActionCard(cardname);
-			p.removeCard(cardname);
+			p.playActionCard(posinhand);
 			return true;
 		}
 		return false;

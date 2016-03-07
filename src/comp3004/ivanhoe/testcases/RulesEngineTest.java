@@ -15,7 +15,7 @@ public class RulesEngineTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		rules = new RulesEngine(3);
+		rules = RulesEngine.testRuleEngine(3);
 		rules.registerThread(1);
 		rules.registerThread(2);
 		rules.registerThread(3);
@@ -47,7 +47,7 @@ public class RulesEngineTest {
 		Player p = rules.getPlayerById(2);
 
 		p.addCard(new ColourCard(CardColour.Blue, 4));
-		assertTrue(rules.playCard("Blue 4", p.getID()));
+		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
 	}
 	 
 	@Test
@@ -59,7 +59,7 @@ public class RulesEngineTest {
 		//System.out.println(p.getid());
 		rules.startTurn(p.getID()); //draw card
 		assertEquals(p.getHandSize(), 9);
-		assertTrue(rules.playCard("Squire", p.getID()));
+		assertTrue(rules.playCard(0, p.getID()));
 		assertEquals(p.getDisplay().calculatePoints(), 2);
 		assertTrue(rules.endTurn(p.getID()));
 		
@@ -67,9 +67,9 @@ public class RulesEngineTest {
 		p = rules.getPlayerList().get(0);
 		//System.out.println(p.getid());
 		assertEquals(p, p2);
-		assertTrue(rules.playCard("Squire", p.getID()));
+		assertTrue(rules.playCard(0, p.getID()));
 		assertFalse(rules.endTurn(p.getID()));
-		assertTrue(rules.playCard("Squire", p.getID()));
+		assertTrue(rules.playCard(0, p.getID()));
 		assertTrue(rules.endTurn(p.getID()));
 		
 	}
@@ -84,19 +84,19 @@ public class RulesEngineTest {
 		
 		//withdraw should not set a high score
 		rules.startTurn(rules.getPlayerList().get(0).getID());
-		rules.playCard("Squire", rules.getPlayerList().get(0).getID());
+		rules.playCard(0, rules.getPlayerList().get(0).getID());
 		assertEquals(rules.withdrawPlayer(p1.getID()), null);
 		assertEquals(rules.getHighestScore(),0);
 		
 		//withdrawn player should be skipped over
 		assertEquals(rules.getPlayerList().get(0), p2);
 		rules.startTurn(rules.getPlayerList().get(0).getID());
-		rules.playCard("Squire", rules.getPlayerList().get(0).getID());
+		rules.playCard(0, rules.getPlayerList().get(0).getID());
 		rules.endTurn(rules.getPlayerList().get(0).getID());
 		assertEquals(rules.getPlayerList().get(0), p3);
 		rules.startTurn(rules.getPlayerList().get(0).getID());
-		rules.playCard("Squire", rules.getPlayerList().get(0).getID());
-		rules.playCard("Squire", rules.getPlayerList().get(0).getID());
+		rules.playCard(0, rules.getPlayerList().get(0).getID());
+		rules.playCard(0, rules.getPlayerList().get(0).getID());
 		rules.endTurn(rules.getPlayerList().get(0).getID());
 		assertEquals(rules.getPlayerList().get(0), p1);
 		assertFalse(rules.startTurn(rules.getPlayerList().get(0).getID()));
@@ -112,7 +112,7 @@ public class RulesEngineTest {
 		assertEquals(rules.getPlayerList().get(0), p3);
 		rules.startTurn(p3.getID());
 		p3.addCard(new SupporterCard(6));
-		rules.playCard("Maiden", p3.getID());
+		rules.playCard(p3.getHandSize()-1, p3.getID());
 		assertEquals(rules.withdrawPlayer(p3.getID()),Long.valueOf(-1));
 	}
 	
@@ -129,7 +129,7 @@ public class RulesEngineTest {
 			rules.startTurn(p.getID());
 			
 			do{
-				rules.playCard("Squire", p.getID());
+				rules.playCard(0, p.getID());
 				if(p.getHandSize() == 0){
 					Long a = rules.withdrawPlayer(p.getID());
 					if(a != null){

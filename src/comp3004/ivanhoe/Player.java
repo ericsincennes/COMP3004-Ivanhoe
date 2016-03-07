@@ -74,24 +74,27 @@ public class Player {
 	
 	/**
 	 * Adds a Color card to the display
-	 * @param cardname name of card
+	 * @param position of card in hand
 	 */
-	public void playColourCard(String cardname){
-		Card c = hand.getCardByName(cardname);
+	public void playColourCard(int posinhand){
+		Card c = hand.getCardbyIndex(posinhand);
 		if(c.cardType == CardType.Colour || c.cardType == CardType.Supporter){
 			display.addCard(c);
+			getHand().removeByIndex(posinhand);
 		}
 	}
 	
 	/**
 	 * Plays the Action card to the discard pile and causes the effect
-	 * @param cardname
+	 * @param position of card in hand
 	 * @param id
 	 */
-	public void playActionCard(String cardname){
-		Card card = hand.getCardByName(cardname);
-		display.addCard(card);
-		display.remove(card.getCardName());
+	public void playActionCard(int posinhand){
+		Card card = hand.getCardbyIndex(posinhand);
+		if (card.getCardName().equals("Shield") || card.getCardName().equals("Stunned")) {
+			display.addCard(card);
+			getHand().removeByIndex(posinhand);
+		}
 	}
 	
 	public int getHandSize(){

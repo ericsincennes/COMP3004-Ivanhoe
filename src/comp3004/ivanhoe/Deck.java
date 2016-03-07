@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import comp3004.ivanhoe.ActionCard.TargetType;
 import comp3004.ivanhoe.Card.CardColour;
 
 public class Deck {
@@ -73,6 +74,8 @@ public class Deck {
 		for(int i =0; i < 4; i++){
 			cards.add(new SupporterCard(6));
 		}
+		
+		cards.add(new ActionCard("Unhorse", TargetType.Untargeted));
 		
 		shuffle();
 	}
