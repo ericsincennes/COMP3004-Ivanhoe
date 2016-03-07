@@ -47,6 +47,12 @@ public class PointsBoardTest {
 		testBoard.setColour(CardColour.Red);
 		testBoard.addCard(new ColourCard(CardColour.Red, 4));
 		assertEquals(testBoard.getLastPlayed().getCardName(), "Red 4");
+		
+		//adding maiden test
+		testBoard.addCard(new SupporterCard(6)); 
+		assertEquals(testBoard.getLastPlayed().getCardName(), "Maiden");
+		assertFalse(testBoard.addCard(new SupporterCard(6)));
+		
 	}
 	
 	@Test
