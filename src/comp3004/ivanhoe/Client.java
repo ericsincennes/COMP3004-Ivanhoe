@@ -19,6 +19,7 @@ public class Client {
 	List<Card> CardsInHand;	//ArrayList of current hand
 	List<Long> PlayersList;
 	ArrayList<List<Card>> BoardState;
+	Scanner scan = new Scanner(System.in);
 
 	public static void main(String[] args){
 		new Client();
@@ -67,7 +68,7 @@ public class Client {
 				handleUpdateBoardState();
 				break;
 			case Optcodes.ClientGetCardsToBePlayed:
-				print("Choose a card to play or withdraw");
+				print("Choose a card to play, type 99 to withdraw, or type 66 to end turn.");
 				sendCardsToBePlayed();
 				break;
 			case Optcodes.ClientGetPlayerList:
@@ -78,6 +79,8 @@ public class Client {
 				break;
 			case Optcodes.SuccessfulCardPlay:
 				print("Card was played successfully");
+				break;
+			case Optcodes.ClientWithdraw:
 				break;
 			default: new Exception("Unexpected Value");
 				break;
@@ -109,18 +112,22 @@ public class Client {
 	 * If card is an action card then gets input of the card's targets 
 	 */
 	private void sendCardsToBePlayed(){
-		Scanner in = new Scanner(System.in);
-		int choice = -1;
+		int choice = 0;
 		
 		do {
-			choice = in.nextInt();
-			if (choice < 1 || choice > CardsInHand.size()) {
+			choice = scan.nextInt();
+			if (choice == 99) {
+				send(Optcodes.ClientWithdraw);
+				break;
+			} else if (choice == 66) {
+				send(Optcodes.ClientEndTurn);
+				break;
+			} else if (choice < 1 || choice > CardsInHand.size()) {
 				print("Choose a number corresponding to a card in your hand");
 			}
 		} while (choice < 1 || choice > CardsInHand.size());
 		
-		send(CardsInHand.get((choice-1)));
-		in.close();
+		send(choice-1);
 	}
 	
 	/**
@@ -154,7 +161,6 @@ public class Client {
 	 * @return Card.CardColour
 	 */
 	private void handleGetTournamentColour(){
-		Scanner in = new Scanner(System.in);
 		int choice = -1;
 
 		print("Choose the color of the tournement");
@@ -165,7 +171,7 @@ public class Client {
 		print("{5) - Yellow");
 
 		do{
-			choice = in.nextInt();
+			choice = scan.nextInt();
 			if (choice < 1 || choice > 5){
 				print("Please choose a number between 1 and 5");
 			}
@@ -185,7 +191,6 @@ public class Client {
 			default:
 					break;
 		}
-		in.close();
 	}
 
 	/**
