@@ -19,8 +19,7 @@ public class Client {
 	List<Card> CardsInHand;	//ArrayList of current hand
 	List<Long> PlayersList;
 	ArrayList<List<Card>> BoardState;
-	Scanner scan = new Scanner(System.in);
-	
+
 	public static void main(String[] args){
 		new Client();
 	}
@@ -63,7 +62,6 @@ public class Client {
 				break;
 			case Optcodes.ClientGetHand:
 				handleGetHand();
-				printHand();
 				break;
 			case Optcodes.ClientupdateBoardState:
 				handleUpdateBoardState();
@@ -74,6 +72,12 @@ public class Client {
 				break;
 			case Optcodes.ClientGetPlayerList:
 				getPlayersList();
+				break;
+			case Optcodes.InvalidCard:
+				print("Card is unable to be played");
+				break;
+			case Optcodes.SuccessfulCardPlay:
+				print("Card was played successfully");
 				break;
 			default: new Exception("Unexpected Value");
 				break;
@@ -95,8 +99,9 @@ public class Client {
 		print("Player " + id + "'s Board:");
 		
 		for (Card c: board) {
-			print("{" + (board.indexOf(c)+1) + ") - " + c.getCardName() + "\n");
+			printlist("{" + (board.indexOf(c)+1) + ") - " + c.getCardName() + ";  ");
 		}
+		print("\n");
 	}
 	
 	/**
@@ -104,16 +109,18 @@ public class Client {
 	 * If card is an action card then gets input of the card's targets 
 	 */
 	private void sendCardsToBePlayed(){
-		int choice = 0;
+		Scanner in = new Scanner(System.in);
+		int choice = -1;
 		
 		do {
-			choice = scan.nextInt();
+			choice = in.nextInt();
 			if (choice < 1 || choice > CardsInHand.size()) {
 				print("Choose a number corresponding to a card in your hand");
 			}
 		} while (choice < 1 || choice > CardsInHand.size());
 		
-		send(choice-1);
+		send(CardsInHand.get((choice-1)));
+		in.close();
 	}
 	
 	/**
@@ -137,8 +144,9 @@ public class Client {
 	private void printHand(){
 		print("Cards currently in hand:");
 		for (Card c: CardsInHand){
-			print("{" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + "\n");
+			printlist("{" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + ";  ");
 		}
+		print("\n");
 	}			
 
 	/**
@@ -146,6 +154,7 @@ public class Client {
 	 * @return Card.CardColour
 	 */
 	private void handleGetTournamentColour(){
+		Scanner in = new Scanner(System.in);
 		int choice = -1;
 
 		print("Choose the color of the tournement");
@@ -156,7 +165,7 @@ public class Client {
 		print("{5) - Yellow");
 
 		do{
-			choice = scan.nextInt();
+			choice = in.nextInt();
 			if (choice < 1 || choice > 5){
 				print("Please choose a number between 1 and 5");
 			}
@@ -176,6 +185,7 @@ public class Client {
 			default:
 					break;
 		}
+		in.close();
 	}
 
 	/**
@@ -210,6 +220,10 @@ public class Client {
 
 	private void print(String s){
 		System.out.println(s);
+	}
+	
+	private void printlist(String s){
+		System.out.print(s);
 	}
 
 	public int getPlayerNum(){

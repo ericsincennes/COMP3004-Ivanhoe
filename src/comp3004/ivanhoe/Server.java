@@ -271,7 +271,7 @@ public class Server{
 			
 			//if client sent a card
 			if(rules.validatePlay(cardname, threadID)){
-				send(Optcodes.SucessfulCardPlay);
+				send(Optcodes.SuccessfulCardPlay);
 				return index;
 			} else {
 				send(Optcodes.InvalidCard);

@@ -11,7 +11,7 @@ public class Optcodes {
 	public static final int ClientWithdraw			= 107;
 	
 	public static final int InvalidCard				= 301;
-	public static final int SucessfulCardPlay		= 302;
+	public static final int SuccessfulCardPlay		= 302;
 	
 	//Client to Server Opt codes
 	public static final int ServerSendColourChoice 	= 201;
