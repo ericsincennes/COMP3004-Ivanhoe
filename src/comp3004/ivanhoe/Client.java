@@ -139,7 +139,7 @@ public class Client {
 		//calls printboard state and get hand
 		BoardState = (ArrayList<List<Card>>) get();
 		
-		for (int i = PlayersList.size()-1; i == 0; i--) {
+		for (int i = BoardState.size()-1; i == 0; i--) {
 			if (BoardState.get(i) != null) {
 				printBoardState(PlayersList.get(i), BoardState.get(i));
 			} else {

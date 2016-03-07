@@ -131,7 +131,7 @@ public class Player {
 	 * @param colour
 	 */
 	public void removeToken(CardColour colour){
-		if(tokens.containsKey(colour)){
+		if(tokens.containsKey(colour) && tokens.get(colour) == 1){
 			tokens.put(colour, 0);
 		}
 	}
