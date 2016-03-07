@@ -181,7 +181,7 @@ public class RulesEngineTest {
 		rules.withdrawPlayer(p.getID());
 		Long winner = rules.withdrawCleanup(p.getID());
 		assertEquals(winner, Long.valueOf(p1.getID()));
-		
+	
 		p = rules.getPlayerList().get(0);
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());

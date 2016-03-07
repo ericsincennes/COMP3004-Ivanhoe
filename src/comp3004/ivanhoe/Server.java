@@ -146,9 +146,8 @@ public class Server{
 			*/
 			
 			//log.logmsg(threadID + ": Main loop started");
-			print(threadID+"");
+			print(threadID + "");
 			int b = rules.registerThread(threadID);
-			print(b+"");
 			
 			//Send player their player number
 			send(b);
@@ -159,7 +158,7 @@ public class Server{
 				if (rules.getPlayerList().get(0).getID() != threadID) {
 					try {
 						//updateClientBoardState();
-						Thread.sleep(2000);
+						Thread.sleep(500);
 						continue;
 					}
 					catch (InterruptedException ie) {
@@ -274,7 +273,8 @@ public class Server{
 
 			if(isClientWithdrawing(index)){ //Client withdraws
 				return -2;
-			} else if (index == Optcodes.ClientEndTurn){ //client calls end turn
+			}
+			if (index == Optcodes.ClientEndTurn){ //client calls end turn
 				return -3;
 			}
 			
