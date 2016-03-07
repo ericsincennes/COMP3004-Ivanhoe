@@ -147,8 +147,6 @@ public class Client {
 				print("\n");
 			}
 		}
-		
-		printHand();
 	}
 	
 	/**

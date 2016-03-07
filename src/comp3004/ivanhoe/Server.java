@@ -177,7 +177,7 @@ public class Server{
 						SendClientHand();
 
 						//get what cards the client wants to play
-						int cardIndex = getCardsToBePlayed();
+						int cardIndex = 0; 
 						while(cardIndex != -3){ //while not endturn optcode
 							cardIndex = getCardsToBePlayed();
 
@@ -187,12 +187,12 @@ public class Server{
 									rules.getPlayerById(threadID).removeToken(c); //may need validation
 								}
 								long winner = rules.withdrawCleanup(threadID); //now its winner's turn
-
 								cardIndex = -3;
+								
 							} else if(cardIndex == -3) { //end turn optcode received
 								rules.endTurn(threadID);
 								cardIndex = -3;
-							} else if(cardIndex != -1){
+							} else {
 								rules.playCard(cardIndex, threadID);
 								SendClientHand();
 								updateClientBoardState();
