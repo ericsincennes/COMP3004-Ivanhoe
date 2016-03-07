@@ -153,8 +153,31 @@ public class Server{
 				}
 				
 				if (rules.isTournamentRunning()) {
+					//Start client turn and draw a card
 					rules.startTurn(threadID);
+					
+					//Is the tournament running AND not first turn in tournament
 					if (rules.isColourChosen()) {
+						//Send updated hand to client
+						SendClientHand();
+						
+						//get what cards the client wants to play
+						int cardIndex = getCardsToBePlayed();
+						while(cardIndex != -3){ //while not endturn optcode
+							cardIndex = getCardsToBePlayed();
+							
+							if(cardIndex == -2){ //Client withdrawing
+								rules.withdrawPlayer(threadID);
+								rules.endTurn(threadID);
+								cardIndex = -3;
+							} else if(cardIndex == -3) { //end turn optcode received
+								rules.endTurn(threadID);
+								cardIndex = -3;
+							} else { //play the card
+								rules.playCard(cardIndex, threadID);
+								updateClientBoardState();
+							}
+						}
 						
 					}
 					else {
@@ -203,19 +226,40 @@ public class Server{
 			send(board);
 		}
 		
-		
+		/**
+		 * Checks if the client sent the withdraw optcode
+		 * @param opt Integer
+		 * @return Boolean
+		 */
+		private boolean isClientWithdrawing(int opt){
+			if(opt == Optcodes.ClientWithdraw){
+				return true;
+			}
+			return false;
+		}
 		
 		/**
 		 * Get the index of the card to be played and plays the card
 		 */
-		private void getCardsToBePlayed(){
+		private int getCardsToBePlayed(){
 			send(Optcodes.ClientGetCardsToBePlayed);
 			int index = (int) get();
+
+			if(isClientWithdrawing(index)){ //Client withdraws
+				return -2;
+			} else if (index == Optcodes.ClientEndTurn){ //client calls end turn
+				return -3;
+			}
 			
-			if(rules.playCard(index, threadID)){
+			String cardname = rules.getPlayerById(threadID).getHand().getCardbyIndex(index).getCardName();
+			
+			//if client sent a card
+			if(rules.validatePlay(cardname, threadID)){
 				send(Optcodes.SucessfulCardPlay);
+				return index;
 			} else {
 				send(Optcodes.InvalidCard);
+				return -1;
 			}
 		}
 
