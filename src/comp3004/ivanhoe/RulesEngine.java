@@ -504,12 +504,26 @@ public class RulesEngine {
 	public void roundCleanup(){
 		for(Player p : playersList){
 			List<Card> toDiscard = p.getDisplay().clearBoard();
-			toDiscard.addAll(p.getHand().discardHand());
 			for (Card c : toDiscard) {
 				deck.addToDiscard(c);
 			}
 		}
 		colourChosen = false;
+	}
+	
+	/**
+	 * checks if there is a winner to the game yet
+	 * @returns the winning player or null if none exist
+	 */
+	public Player gameWinner() {
+		for (Player p : playersList) {
+			if ((numPlayers >=2 && numPlayers <=3 && p.getTokenCount() == 4) ||
+					(numPlayers >=4 && p.getTokenCount() == 5)){
+				return p;
+			}
+			
+		}
+		return null;
 	}
 	
 	/**
