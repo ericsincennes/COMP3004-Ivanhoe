@@ -26,7 +26,7 @@ public class DeckTest {
 	@Test
 	public void addCard() {
 		testDeck.addCard(new SupporterCard(3));
-		assertTrue(testDeck.contains("Squire"));
+		assertTrue(testDeck.contains("Squire 3"));
 	}
 	
 	@Test
@@ -59,8 +59,8 @@ public class DeckTest {
 		testDeck.addToDiscard(new SupporterCard(3));
 		testDeck.addToDiscard(new SupporterCard(3));
 		assertEquals(testDeck.draw().getCardName(),"Maiden");
-		assertEquals(testDeck.draw().getCardName(),"Squire");
-		assertEquals(testDeck.draw().getCardName(),"Squire");
+		assertEquals(testDeck.draw().getCardName(),"Squire 3");
+		assertEquals(testDeck.draw().getCardName(),"Squire 3");
 		assertTrue(testDeck.draw() == null);
 	}
 	
