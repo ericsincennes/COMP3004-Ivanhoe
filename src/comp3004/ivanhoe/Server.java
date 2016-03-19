@@ -274,18 +274,29 @@ public class Server{
 		 * Currently does not send ActionCards in the display
 		 */
 		private void updateClientBoardState(){
+			print("Thread " + threadID + " Sending board state to client");
 			ArrayList<List<Card>> board = new ArrayList<List<Card>>();
 			List<Card> nonActionCards = rules.getPlayerById(threadID).getDisplay().getCards();
 			//List<Card> actionCards = rules.getPlayerById(threadID).getDisplay().getActionCards();
 
 			board.add(nonActionCards);
-
+			
 			for( Player p : rules.getPlayerList()){
 				if(p.getID() != threadID){
 					board.add(p.getDisplay().getCards());
 				}
 			}
-
+			
+			
+			
+			for(List<Card> c : board){
+				System.out.println("List size: " + c.size());
+				for(Card x : c){
+					System.out.println(x.getCardName());
+					System.out.println(x.getCardType());
+				}
+			}
+			
 			send(Optcodes.ClientupdateBoardState);
 			send(board);
 		}
@@ -371,8 +382,14 @@ public class Server{
 		 * Gets the hand from the Player class and sends it to the client
 		 */
 		private void SendClientHand(){
-			print("Thread " + threadID + ": Sending hand to client");
 			List<Card> hand = rules.getPlayerById(threadID).getHand().getHand();
+			
+			System.out.println("Thread " + threadID + " hand");
+			for(Card c : hand){
+				System.out.print(c.getCardName()+ " - ");
+			}
+			System.out.println("");
+			
 			send(Optcodes.ClientGetHand);
 			send(hand);
 		}

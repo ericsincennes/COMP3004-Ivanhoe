@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Scanner;
 
 import comp3004.ivanhoe.Card.CardColour;
@@ -63,7 +64,6 @@ public class Client {
 				break;
 			case Optcodes.ClientGetHand:
 				handleGetHand();
-				printHand();
 				break;
 			case Optcodes.ClientupdateBoardState:
 				handleUpdateBoardState();
@@ -98,6 +98,12 @@ public class Client {
 	
 	private void handleGetHand(){
 		CardsInHand = (List<Card>) get();
+		
+		print("Cards currently in hand:");
+		for (Card c: CardsInHand){
+			printlist("(" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + ".  ");
+		}
+		print("\n");
 	}
 	/**
 	 * Prints the Players Display and the display of all other players playiing
@@ -142,26 +148,15 @@ public class Client {
 		//calls printboard state and get hand
 		BoardState = (ArrayList<List<Card>>) get();
 		
-		for (int i = BoardState.size()-1; i == 0; i--) {
-			if (BoardState.get(i) != null) {
-				printBoardState(PlayersList.get(i), BoardState.get(i));
-			} else {
-				print("Player " + PlayersList.get(i) + "'s Board:");
-				print("\n");
+		for (ListIterator<List<Card>> it = BoardState.listIterator(BoardState.size()); it.hasPrevious();) {
+			List<Card> l = it.previous();
+			System.out.println("Player " + (BoardState.indexOf(l)+1) + "'s board");
+			for(Card c: l){
+				System.out.print(c.getCardName() + " - ");
 			}
+			System.out.println("\n");
 		}
-	}
-	
-	/**
-	 * Gets the hand from the server and displays it to the player
-	 */
-	private void printHand(){
-		print("Cards currently in hand:");
-		for (Card c: CardsInHand){
-			printlist("{" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + ";  ");
-		}
-		print("\n");
-	}			
+	}		
 
 	private void handleTokenChoice(){
 		int choice = -1;
