@@ -209,6 +209,7 @@ public class RulesEngineTest {
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
 		assertEquals(p.getTokenCount(),1);
+		assertFalse(rules.isTournamentRunning());
 		
 		//cleanup
 		int beforecleanupDiscard = rules.getDeck().viewDiscard().size();
@@ -273,6 +274,7 @@ public class RulesEngineTest {
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
 		assertEquals(p.getTokenCount(),1);
+		assertFalse(rules.isTournamentRunning());
 		
 		//cleanup
 		int beforecleanupDiscard = rules.getDeck().viewDiscard().size();
@@ -336,6 +338,7 @@ public class RulesEngineTest {
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
 		assertEquals(p.getTokenCount(),1);
+		assertFalse(rules.isTournamentRunning());
 		
 		//cleanup
 		int beforecleanupDiscard = rules.getDeck().viewDiscard().size();
@@ -399,6 +402,7 @@ public class RulesEngineTest {
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
 		assertEquals(p.getTokenCount(),1);
+		assertFalse(rules.isTournamentRunning());
 		
 		//cleanup
 		int beforecleanupDiscard = rules.getDeck().viewDiscard().size();
@@ -461,6 +465,7 @@ public class RulesEngineTest {
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
 		assertEquals(p.getTokenCount(),1);
+		assertFalse(rules.isTournamentRunning());
 		
 		//cleanup
 		int beforecleanupDiscard = rules.getDeck().viewDiscard().size();
