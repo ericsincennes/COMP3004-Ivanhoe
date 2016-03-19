@@ -64,6 +64,10 @@ public class Deck {
 			cards.add(new ColourCard(CardColour.Yellow, 3));
 		}
 		
+		for (int i=0; i<14; i++) {
+			cards.add(new ColourCard(CardColour.Green, 1));
+		}
+		
 		//Create Squires
 		for(int i=0; i < 8; i++){
 			cards.add(new SupporterCard(2));

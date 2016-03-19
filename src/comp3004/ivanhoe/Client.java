@@ -174,12 +174,13 @@ public class Client {
 		print("{4) - Blue");
 		print("{5) - Yellow");
 
-		do{
+		while (choice == -1) {
 			choice = scan.nextInt();
 			if (choice < 1 || choice > 5){
 				print("Please choose a number between 1 and 5");
-			}
-		} while (choice < 1 || choice > 5);
+				choice = -1;
+			} 
+		}
 
 		switch (choice) {
 			case 1: send(1);
