@@ -67,6 +67,6 @@ public class DeckTest {
 	@Test
 	public void initIvanhoeDeck() {
 		testDeck.ivanhoeDeck();
-		assertTrue(testDeck.getSize() > 60);
+		assertEquals(110,testDeck.getSize());
 	}
 }
