@@ -184,6 +184,7 @@ public class Server{
 						}
 						else {
 							rules.failInitTournamentColour();
+							continue;
 						}
 					}
 					//Send updated hand to client
@@ -211,8 +212,8 @@ public class Server{
 							updateClientBoardState();
 						}
 					}
-
 				}
+				
 				else {
 					if (rules.getPlayerById(threadID).getPlaying()) { //then you are winner of previous tourney
 						CardColour c = GetTournamentColourFromClient();
