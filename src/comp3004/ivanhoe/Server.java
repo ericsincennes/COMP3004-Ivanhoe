@@ -233,12 +233,7 @@ public class Server{
 							//give current tournament colour token
 							rules.giveToken(threadID, rules.getTournamentColour());
 						}
-						
-						CardColour c = GetTournamentColourFromClient();
-						while(!rules.giveToken(threadID, c)) {
-							//send some message about bad colour input
-							c = GetTournamentColourFromClient();
-						}
+
 					}
 					rules.roundCleanup();
 					rules.initTournament();
