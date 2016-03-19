@@ -201,7 +201,7 @@ public class Server{
 						if(cardIndex == -2){ 
 							//Client withdrawing
 							if (rules.withdrawPlayer(threadID)) {
-								CardColour c = GetTournamentColourFromClient();
+								CardColour c = getTokenChoice();
 								rules.getPlayerById(threadID).removeToken(c); //may need validation
 							}
 							//now its winner's turn, they'll get a choice of token when their loop hits code
@@ -215,6 +215,8 @@ public class Server{
 							cardIndex = -3;
 							break;
 						} else if(cardIndex != -1){
+							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
+								rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex));
 							rules.playCard(cardIndex, threadID);
 							SendClientHand();
 							updateClientBoardState();
