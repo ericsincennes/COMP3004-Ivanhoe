@@ -224,6 +224,7 @@ public class Server{
 							c = GetTournamentColourFromClient();
 						}
 					}
+					rules.roundCleanup();
 					rules.initTournament();
 				}
 			}
