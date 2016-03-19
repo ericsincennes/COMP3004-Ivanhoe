@@ -277,14 +277,13 @@ public class Server{
 			if(isClientWithdrawing(index)){ //Client withdraws
 				return -2;
 			}
-			if (index == Optcodes.ClientEndTurn){ //client calls end turn
+			else if (index == Optcodes.ClientEndTurn){ //client calls end turn
 				return -3;
 			}
 
 			if(index < rules.getPlayerById(threadID).getHandSize()){
 				cardname = rules.getPlayerById(threadID).getHand().getCardbyIndex(index).getCardName();
 			}
-
 
 			//if client sent a card
 			if(cardname != ""){

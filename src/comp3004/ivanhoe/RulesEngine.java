@@ -18,7 +18,6 @@ public class RulesEngine {
 	private Deck deck, discard;
 	private boolean colourChosen = false;
 	private int highestScore = 0;
-	private int activePlayer;
 
 	public RulesEngine(int i){
 		expectedPlayers = i;
@@ -41,15 +40,29 @@ public class RulesEngine {
 		return test;
 	}
 	
+	/**
+	 * Returns a list containing all players regardless
+	 * of if they are playing in the current tournament or not
+	 * @return List
+	 */
 	public synchronized List<Player> getPlayerList(){
 		notifyAll();
 		return playersList;
 	}
 	
+	/**
+	 * Returns the highest score recorded by the rules engine for the current tournament
+	 * @return int
+	 */
 	public int getHighestScore() {
 		return highestScore;
 	}
 	
+	/**
+	 * Returns if a colour has been chosen for the current tournament
+	 * to allow for normal play to begin
+	 * @return boolean
+	 */
 	public boolean isColourChosen() {
 		return isTournamentRunning() && colourChosen;
 	}
@@ -553,6 +566,10 @@ public class RulesEngine {
 	
 	public Card.CardColour getTournamentColour() {
 		return TournamentColour;
+	}
+	
+	public Deck getDeck(){
+		return deck;
 	}
 
 }
