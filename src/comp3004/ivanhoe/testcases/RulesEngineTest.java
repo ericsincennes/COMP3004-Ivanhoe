@@ -62,7 +62,7 @@ public class RulesEngineTest {
 		tournamentSetup();
 		Player p = rules.getPlayerById(2);
 		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
-		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Squire"); //playing supporter card
+		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Squire 2"); //playing supporter card
 		p.addCard(new ColourCard(CardColour.Red, 3));
 		assertFalse(rules.playCard(p.getHandSize()-1, p.getID())); //colour restriction
 		p.addCard(new ColourCard(CardColour.Blue, 4));
@@ -209,6 +209,9 @@ public class RulesEngineTest {
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
 		assertEquals(p.getTokenCount(),1);
+		
+		//cleanup
+		rules.roundCleanup();
 	}
 	
 	@Test

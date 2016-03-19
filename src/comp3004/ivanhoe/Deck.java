@@ -26,7 +26,7 @@ public class Deck {
 	}
 	
 	/**
-	 * Initialize a test deck with 80 maidens.
+	 * Initialize a test deck with 80 squire-2s.
 	 */
 	public void testDeck(){
 		for (int i=0;i<80;i++) {

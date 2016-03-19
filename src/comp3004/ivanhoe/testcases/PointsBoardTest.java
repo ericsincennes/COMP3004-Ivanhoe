@@ -41,7 +41,7 @@ public class PointsBoardTest {
 		assertEquals(testBoard.getLastPlayed().getCardType(), CardType.Colour);
 		
 		testBoard.addCard(new SupporterCard(3));
-		assertEquals(testBoard.getLastPlayed().getCardName(), "Squire");
+		assertEquals(testBoard.getLastPlayed().getCardName(), "Squire 3");
 		assertEquals(testBoard.getLastPlayed().getCardType(), CardType.Supporter);
 		
 		testBoard.setColour(CardColour.Red);
@@ -90,7 +90,7 @@ public class PointsBoardTest {
 		testBoard.addCard(new SupporterCard(3));
 		
 		testBoard.remove(1);
-		assertEquals(testBoard.getCard(1).getCardName(), "Squire");
+		assertEquals(testBoard.getCard(1).getCardName(), "Squire 3");
 		assertEquals(testBoard.getCard(1).getCardType(), CardType.Supporter);
 	}
 	

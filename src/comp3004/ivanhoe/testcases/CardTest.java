@@ -56,7 +56,7 @@ public class CardTest {
 	public void SupportCardConstructor() {
 		Card squire = new SupporterCard(3);
 		assertTrue(squire.getCardType() == CardType.Supporter);
-		assertTrue(squire.getCardName() == "Squire");
+		assertTrue(squire.getCardName() == "Squire 3");
 		assertTrue(((SupporterCard)squire).getValue() == 3);
 		Card maiden = new SupporterCard(6);
 		assertTrue(maiden.getCardType() == CardType.Supporter);
