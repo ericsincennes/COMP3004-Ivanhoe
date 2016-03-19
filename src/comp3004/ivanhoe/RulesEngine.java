@@ -29,6 +29,11 @@ public class RulesEngine {
 		deck.ivanhoeDeck();
 	}
 	
+	/**
+	 * Initalizes a testing rules engine. All cards are squires
+	 * @param i number of expected players
+	 * @return RulesEngine
+	 */
 	public static RulesEngine testRuleEngine(int i) {
 		RulesEngine test = new RulesEngine(i);
 		test.deck = Deck.createDeck(test.discard);
