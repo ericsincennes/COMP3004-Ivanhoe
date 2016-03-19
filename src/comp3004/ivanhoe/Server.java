@@ -216,7 +216,7 @@ public class Server{
 							break;
 						} else if(cardIndex != -1){
 							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
-								rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex));
+								rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
 							rules.playCard(cardIndex, threadID);
 							SendClientHand();
 							updateClientBoardState();
