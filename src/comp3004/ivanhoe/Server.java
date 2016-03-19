@@ -61,6 +61,7 @@ public class Server{
 			}
 
 			print(getTimestamp() +": Expected number of clients connected. Starting Game");
+			rules.initFirstTournament();
 			for(PlayerThread p : threads){
 				p.start();
 			}

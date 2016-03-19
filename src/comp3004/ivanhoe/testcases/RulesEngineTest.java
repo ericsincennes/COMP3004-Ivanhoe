@@ -26,7 +26,7 @@ public class RulesEngineTest {
 	
 	@Test
 	public void tournamentSetup() {
-		rules.chooseFirstTournament();
+		rules.initFirstTournament();
 		assertFalse(rules.isTournamentRunning());
 		rules.initTournament();
 		assertEquals(8, rules.getPlayerById(1).getHandSize());

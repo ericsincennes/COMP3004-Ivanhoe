@@ -91,10 +91,10 @@ public class RulesEngine {
 	
 	
 	/**
-	 * Choose who starts the first tournament
+	 * Does startup for the first tournament
 	 * @return player number of the first tournament starter
 	 */
-	public synchronized long chooseFirstTournament(){
+	public synchronized long initFirstTournament(){
 		Collections.shuffle(playersList);
 		//notifyAll();
 		for(Player p : playersList){
