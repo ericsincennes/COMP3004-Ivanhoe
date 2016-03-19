@@ -218,8 +218,8 @@ public class Server{
 							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
 								rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
 							rules.playCard(cardIndex, threadID);
-							SendClientHand();
 							updateClientBoardState();
+							SendClientHand();
 						}
 					}
 				}
@@ -384,7 +384,7 @@ public class Server{
 		 * Gets the hand from the Player class and sends it to the client
 		 */
 		private void SendClientHand(){
-			List<Card> hand = rules.getPlayerById(threadID).getHand().getHand();
+			ArrayList<Card> hand = (ArrayList<Card>) rules.getPlayerById(threadID).getHand().getHand();
 			
 			System.out.println("Thread " + threadID + " hand");
 			for(Card c : hand){

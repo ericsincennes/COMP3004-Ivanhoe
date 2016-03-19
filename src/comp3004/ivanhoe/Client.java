@@ -97,22 +97,12 @@ public class Client {
 	}
 	
 	private void handleGetHand(){
-		CardsInHand = (List<Card>) get();
+		CardsInHand = (ArrayList<Card>) get();
+		 
 		
 		print("Cards currently in hand:");
 		for (Card c: CardsInHand){
-			printlist("(" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + ".  ");
-		}
-		print("\n");
-	}
-	/**
-	 * Prints the Players Display and the display of all other players playiing
-	 */
-	private void printBoardState(long id, List<Card> board){
-		print("Player " + id + "'s Board:");
-		
-		for (Card c: board) {
-			printlist("{" + (board.indexOf(c)+1) + ") - " + c.getCardName() + ";  ");
+			System.out.print("(" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + ".  ");
 		}
 		print("\n");
 	}
