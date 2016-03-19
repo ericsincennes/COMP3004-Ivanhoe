@@ -172,6 +172,7 @@ public class Server{
 					//Start client turn and draw a card
 					rules.startTurn(threadID);
 					SendClientHand();
+					sendPlayersList();
 					//Is the tournament running AND not first turn in tournament
 					if (!rules.isColourChosen()) {
 						//choose colour
@@ -325,6 +326,7 @@ public class Server{
 			for (int i=0; i < listSize; i++) {
 				playerIDs.add(rules.getPlayerList().get((me_index+i)%listSize).getID());
 			}
+			print("Thread " + threadID + ": Sending playerlist to client");
 			send(Optcodes.ClientGetPlayerList);
 			send(playerIDs);
 
