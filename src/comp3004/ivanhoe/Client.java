@@ -166,7 +166,7 @@ public class Client {
 	private void handleTokenChoice(){
 		int choice = -1;
 
-		print("Choose the color of the tournement");
+		print("Choose the colour of the token you want");
 		print("{1) - Purple");
 		print("{2) - Green");
 		print("{3) - Red");
