@@ -278,7 +278,14 @@ public class RulesEngine {
 	 */
 	public synchronized boolean playCard(int posinhand, Long id){
 		Player p = players.get(id);
-		Card c = p.getHand().getCardbyIndex(posinhand);
+		Card c;
+		
+		if(posinhand > -1 && posinhand < p.getHandSize()){
+			c = p.getHand().getCardbyIndex(posinhand);
+		} else {
+			return false;
+		}
+		
 		if (c == null) {
 			notifyAll();
 			return false; 
