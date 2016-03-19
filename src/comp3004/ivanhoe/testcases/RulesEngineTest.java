@@ -211,7 +211,17 @@ public class RulesEngineTest {
 		assertEquals(p.getTokenCount(),1);
 		
 		//cleanup
+		int beforecleanupDiscard = rules.getDeck().viewDiscard().size();
 		rules.roundCleanup();
+		assertFalse(rules.isColourChosen());
+		assertEquals(0, p1.getDisplay().getCards().size());
+		assertEquals(0, p1.getDisplay().getActionCards().size());
+		assertEquals(0, p2.getDisplay().getCards().size());
+		assertEquals(0, p2.getDisplay().getActionCards().size());
+		assertEquals(0, p3.getDisplay().getCards().size());
+		assertEquals(0, p3.getDisplay().getActionCards().size());
+		assertTrue(rules.getDeck().viewDiscard().size() > beforecleanupDiscard);
+		
 	}
 	
 	@Test
@@ -263,6 +273,18 @@ public class RulesEngineTest {
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
 		assertEquals(p.getTokenCount(),1);
+		
+		//cleanup
+		int beforecleanupDiscard = rules.getDeck().viewDiscard().size();
+		rules.roundCleanup();
+		assertFalse(rules.isColourChosen());
+		assertEquals(0, p1.getDisplay().getCards().size());
+		assertEquals(0, p1.getDisplay().getActionCards().size());
+		assertEquals(0, p2.getDisplay().getCards().size());
+		assertEquals(0, p2.getDisplay().getActionCards().size());
+		assertEquals(0, p3.getDisplay().getCards().size());
+		assertEquals(0, p3.getDisplay().getActionCards().size());
+		assertTrue(rules.getDeck().viewDiscard().size() > beforecleanupDiscard);
 	}
 	
 	@Test
@@ -314,6 +336,18 @@ public class RulesEngineTest {
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
 		assertEquals(p.getTokenCount(),1);
+		
+		//cleanup
+		int beforecleanupDiscard = rules.getDeck().viewDiscard().size();
+		rules.roundCleanup();
+		assertFalse(rules.isColourChosen());
+		assertEquals(0, p1.getDisplay().getCards().size());
+		assertEquals(0, p1.getDisplay().getActionCards().size());
+		assertEquals(0, p2.getDisplay().getCards().size());
+		assertEquals(0, p2.getDisplay().getActionCards().size());
+		assertEquals(0, p3.getDisplay().getCards().size());
+		assertEquals(0, p3.getDisplay().getActionCards().size());
+		assertTrue(rules.getDeck().viewDiscard().size() > beforecleanupDiscard);
 	}
 	
 	@Test
@@ -365,6 +399,18 @@ public class RulesEngineTest {
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
 		assertEquals(p.getTokenCount(),1);
+		
+		//cleanup
+		int beforecleanupDiscard = rules.getDeck().viewDiscard().size();
+		rules.roundCleanup();
+		assertFalse(rules.isColourChosen());
+		assertEquals(0, p1.getDisplay().getCards().size());
+		assertEquals(0, p1.getDisplay().getActionCards().size());
+		assertEquals(0, p2.getDisplay().getCards().size());
+		assertEquals(0, p2.getDisplay().getActionCards().size());
+		assertEquals(0, p3.getDisplay().getCards().size());
+		assertEquals(0, p3.getDisplay().getActionCards().size());
+		assertTrue(rules.getDeck().viewDiscard().size() > beforecleanupDiscard);
 	}
 	
 	@Test
@@ -415,6 +461,18 @@ public class RulesEngineTest {
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
 		p.recieveToken(rules.getTournamentColour());
 		assertEquals(p.getTokenCount(),1);
+		
+		//cleanup
+		int beforecleanupDiscard = rules.getDeck().viewDiscard().size();
+		rules.roundCleanup();
+		assertFalse(rules.isColourChosen());
+		assertEquals(0, p1.getDisplay().getCards().size());
+		assertEquals(0, p1.getDisplay().getActionCards().size());
+		assertEquals(0, p2.getDisplay().getCards().size());
+		assertEquals(0, p2.getDisplay().getActionCards().size());
+		assertEquals(0, p3.getDisplay().getCards().size());
+		assertEquals(0, p3.getDisplay().getActionCards().size());
+		assertTrue(rules.getDeck().viewDiscard().size() > beforecleanupDiscard);
 	}
 	
 }
