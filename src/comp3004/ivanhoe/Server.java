@@ -384,7 +384,8 @@ public class Server{
 		 * Gets the hand from the Player class and sends it to the client
 		 */
 		private void SendClientHand(){
-			ArrayList<Card> hand = (ArrayList<Card>) rules.getPlayerById(threadID).getHand().getHand();
+			List<Card> hand = new ArrayList<Card>();
+			hand.addAll(rules.getPlayerById(threadID).getHand().getHand());
 			
 			System.out.println("Thread " + threadID + " hand");
 			for(Card c : hand){
