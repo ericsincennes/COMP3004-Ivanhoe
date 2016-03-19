@@ -31,6 +31,7 @@ public class RulesEngineTest {
 		rules.initTournament();
 		assertEquals(8, rules.getPlayerById(1).getHandSize());
 		assertEquals(8, rules.getPlayerById(2).getHandSize());
+		assertEquals(8, rules.getPlayerById(3).getHandSize());
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
 		assertEquals(CardColour.Blue, rules.getPlayerById(1).getDisplay().getColour());
 	}

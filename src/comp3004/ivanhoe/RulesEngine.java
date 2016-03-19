@@ -52,7 +52,7 @@ public class RulesEngine {
 	/**
 	 * Registers a player with the Rules engine
 	 * @param ID this.currentThread.getID() of the player thread
-	 * @return boolean of success
+	 * @return player number, as in order they joined game
 	 */
 	public synchronized int registerThread(long ID){
 		//is game full?	
@@ -187,7 +187,7 @@ public class RulesEngine {
 	/**
 	 * Deals a hand of 8 cards to each player
 	 */
-	public void dealHand(){ //up for being replaced by initTournament
+	public void dealHand(){ //up for being replaced by initFirstTournament
 		for(Player p : playersList){
 			for(int i =0; i < 8; i++){
 				drawCard(p.getID());

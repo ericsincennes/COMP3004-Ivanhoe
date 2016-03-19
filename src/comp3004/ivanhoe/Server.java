@@ -109,12 +109,13 @@ public class Server{
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
 		private long threadID = getId(); //used to identify the individual threads in the rules/logic engine
+		private int playerNum;
 
 		public PlayerThread(Socket c){
 			client = c;
 			port = c.getPort();
 			addr = c.getInetAddress();
-
+			playerNum = rules.registerThread(threadID);
 			try {
 				out = new ObjectOutputStream(client.getOutputStream());
 				in = new ObjectInputStream(client.getInputStream());
@@ -148,10 +149,9 @@ public class Server{
 
 			//log.logmsg(threadID + ": Main loop started");
 			print(threadID + "");
-			int b = rules.registerThread(threadID);
 
 			//Send player their player number
-			send(b);
+			send(playerNum);
 
 			print(threadID + ": isRunning");
 			while(isRunning){
