@@ -56,6 +56,15 @@ public class Player {
 	}
 	
 	/**
+	 * Returns the tokens in the players possession
+	 * @return hashmap
+	 */
+	public HashMap<CardColour, Integer> getTokens() {
+		HashMap<CardColour, Integer> ans = new HashMap<CardColour, Integer>(tokens);
+		return ans;
+	}
+	
+	/**
 	 * Checks if the card is in the players hand
 	 * @param s name of card
 	 * @return boolean

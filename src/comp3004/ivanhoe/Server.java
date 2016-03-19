@@ -172,34 +172,7 @@ public class Server{
 					rules.startTurn(threadID);
 
 					//Is the tournament running AND not first turn in tournament
-					if (rules.isColourChosen()) {
-						//Send updated hand to client
-						SendClientHand();
-
-						//get what cards the client wants to play
-						int cardIndex = getCardsToBePlayed();
-						while(cardIndex != -3){ //while not endturn optcode
-							cardIndex = getCardsToBePlayed();
-
-							if(cardIndex == -2){ //Client withdrawing
-								if (rules.withdrawPlayer(threadID)) {
-									CardColour c = GetTournamentColourFromClient();
-									rules.getPlayerById(threadID).removeToken(c); //may need validation
-								}
-								long winner = rules.withdrawCleanup(threadID); //now its winner's turn
-
-								cardIndex = -3;
-							} else if(cardIndex == -3) { //end turn optcode received
-								rules.endTurn(threadID);
-								cardIndex = -3;
-							} else if(cardIndex != -1){
-								rules.playCard(cardIndex, threadID);
-								SendClientHand();
-								updateClientBoardState();
-							}
-						}
-					}
-					else {
+					if (!rules.isColourChosen()) {
 						//choose colour
 						if (rules.canStartTournament(threadID)) {
 							CardColour c;
@@ -212,8 +185,33 @@ public class Server{
 						else {
 							rules.failInitTournamentColour();
 						}
-
 					}
+					//Send updated hand to client
+					SendClientHand();
+
+					//get what cards the client wants to play
+					int cardIndex = getCardsToBePlayed();
+					while(cardIndex != -3){ //while not endturn optcode
+						cardIndex = getCardsToBePlayed();
+
+						if(cardIndex == -2){ //Client withdrawing
+							if (rules.withdrawPlayer(threadID)) {
+								CardColour c = GetTournamentColourFromClient();
+								rules.getPlayerById(threadID).removeToken(c); //may need validation
+							}
+							long winner = rules.withdrawCleanup(threadID); //now its winner's turn, they'll get a choice of token when their loop hits code
+							
+							cardIndex = -3;
+						} else if(cardIndex == -3) { //end turn optcode received
+							rules.endTurn(threadID);
+							cardIndex = -3;
+						} else if(cardIndex != -1){
+							rules.playCard(cardIndex, threadID);
+							SendClientHand();
+							updateClientBoardState();
+						}
+					}
+
 				}
 				else {
 					if (rules.getPlayerById(threadID).getPlaying()) { //then you are winner of previous tourney
