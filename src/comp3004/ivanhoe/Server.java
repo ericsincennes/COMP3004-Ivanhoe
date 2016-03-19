@@ -184,6 +184,7 @@ public class Server{
 						}
 						else {
 							rules.failInitTournamentColour();
+							//TODO tell client it cant start tournament
 							continue;
 						}
 					}
