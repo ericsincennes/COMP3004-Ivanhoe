@@ -161,8 +161,7 @@ public class Server{
 						//updateClientBoardState();
 						Thread.sleep(500);
 						continue;
-					}
-					catch (InterruptedException ie) {
+					} catch (InterruptedException ie) {
 						ie.printStackTrace();
 						continue;
 					}
@@ -183,10 +182,9 @@ public class Server{
 								//send some message about bad colour input
 								c = GetTournamentColourFromClient();
 							}	
-						}
-						else {
+						} else {
 							rules.failInitTournamentColour();
-							//TODO tell client it cant start tournament
+							//TODO tell client it can't start tournament
 							continue;
 						}
 					}
@@ -194,21 +192,28 @@ public class Server{
 					SendClientHand();
 
 					//get what cards the client wants to play
-					int cardIndex = getCardsToBePlayed();
-					while(cardIndex != -3){ //while not endturn optcode
+					int cardIndex = -1;
+					
+					while(cardIndex != -3){
+						//while not end turn optcode
 						cardIndex = getCardsToBePlayed();
-
-						if(cardIndex == -2){ //Client withdrawing
+						
+						if(cardIndex == -2){ 
+							//Client withdrawing
 							if (rules.withdrawPlayer(threadID)) {
 								CardColour c = GetTournamentColourFromClient();
 								rules.getPlayerById(threadID).removeToken(c); //may need validation
 							}
-							long winner = rules.withdrawCleanup(threadID); //now its winner's turn, they'll get a choice of token when their loop hits code
-							
+							//now its winner's turn, they'll get a choice of token when their loop hits code
+							long winner = rules.withdrawCleanup(threadID);
+							//exit loop
 							cardIndex = -3;
-						} else if(cardIndex == -3) { //end turn optcode received
+							break;
+						} else if(cardIndex == -3) { 
+							//end turn optcode received
 							rules.endTurn(threadID);
 							cardIndex = -3;
+							break;
 						} else if(cardIndex != -1){
 							rules.playCard(cardIndex, threadID);
 							SendClientHand();
@@ -218,6 +223,7 @@ public class Server{
 				}
 				
 				else {
+					//if tournament is not running
 					if (rules.getPlayerById(threadID).getPlaying()) { //then you are winner of previous tourney
 						CardColour c = GetTournamentColourFromClient();
 						while(!rules.giveToken(threadID, c)) {
