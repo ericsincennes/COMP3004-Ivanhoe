@@ -225,6 +225,15 @@ public class Server{
 				else {
 					//if tournament is not running
 					if (rules.getPlayerById(threadID).getPlaying()) { //then you are winner of previous tourney
+						if(rules.getTournamentColour() == CardColour.Purple){
+							//if purple tournament give token of choice
+							CardColour c = getTokenChoice();
+							rules.giveToken(threadID, c);
+						} else {
+							//give current tournament colour token
+							rules.giveToken(threadID, rules.getTournamentColour());
+						}
+						
 						CardColour c = GetTournamentColourFromClient();
 						while(!rules.giveToken(threadID, c)) {
 							//send some message about bad colour input
@@ -237,7 +246,33 @@ public class Server{
 			}
 		}
 
+		/**
+		 * Gets the token colour choice from the player if they win a purple tournament
+		 * @return CardColour
+		 */
+		private CardColour getTokenChoice(){
+			send(Optcodes.ClientGetTokenChoice);
+			int o = (int) get();
+			CardColour colour = null;
+			
+			switch (o) {
+			case 1: colour = Card.CardColour.Purple;
+			break;
+			case 2: colour = Card.CardColour.Green;
+			break;
+			case 3: colour = Card.CardColour.Red;
+			break;
+			case 4: colour = Card.CardColour.Blue;
+			break;
+			case 5: colour = Card.CardColour.Yellow;
+			break;
+			default:
+				break;
+			}
 
+			return colour;
+			
+		}
 
 		/**
 		 * Gets the displays for all players and sends it to the client

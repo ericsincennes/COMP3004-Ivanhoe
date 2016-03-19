@@ -83,6 +83,9 @@ public class Client {
 				break;
 			case Optcodes.ClientWithdraw:
 				break;
+			case Optcodes.ClientGetTokenChoice:
+				 handleTokenChoice();
+				 break;
 			default: new Exception("Unexpected Value");
 				break;
 			}
@@ -160,6 +163,40 @@ public class Client {
 		print("\n");
 	}			
 
+	private void handleTokenChoice(){
+		int choice = -1;
+
+		print("Choose the color of the tournement");
+		print("{1) - Purple");
+		print("{2) - Green");
+		print("{3) - Red");
+		print("{4) - Blue");
+		print("{5) - Yellow");
+
+		while (choice == -1) {
+			choice = scan.nextInt();
+			if (choice < 1 || choice > 5){
+				print("Please choose a number between 1 and 5");
+				choice = -1;
+			} 
+		}
+
+		switch (choice) {
+			case 1: send(1);
+					break;
+			case 2: send(2);
+					break;
+			case 3: send(3);
+					break;
+			case 4: send(4);
+					break;
+			case 5: send(5);
+					break;
+			default:
+					break;
+		}
+	}
+	
 	/**
 	 * Gets the player input for tournament colour
 	 * @return Card.CardColour
