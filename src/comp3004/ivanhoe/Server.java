@@ -155,6 +155,16 @@ public class Server{
 
 			print(threadID + ": isRunning");
 			while(isRunning){
+				
+				if (rules.gameWinner() != null) {
+					if (rules.gameWinner().getID() == threadID) {
+						//send winner msg to client
+					}
+					else {
+						//send lose msg to client
+					}
+					break; //or possibly ask to start again?
+				}
 
 				if (rules.getPlayerList().get(0).getID() != threadID) {
 					try {
