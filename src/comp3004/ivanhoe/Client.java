@@ -98,8 +98,7 @@ public class Client {
 	
 	private void handleGetHand(){
 		CardsInHand = (ArrayList<Card>) get();
-		 
-		
+
 		print("Cards currently in hand:");
 		for (Card c: CardsInHand){
 			System.out.print("(" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + ".  ");
