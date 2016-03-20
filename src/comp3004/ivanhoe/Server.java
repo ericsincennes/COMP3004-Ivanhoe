@@ -191,6 +191,7 @@ public class Server{
 							while(!rules.initializeTournamentColour(threadID, c)) {
 								//send some message about bad colour input
 								c = GetTournamentColourFromClient();
+								sendColour(c);
 							}	
 						} else {
 							rules.failInitTournamentColour();
@@ -228,6 +229,7 @@ public class Server{
 							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
 								rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
 							rules.playCard(cardIndex, threadID);
+							sendPoints();
 							updateClientBoardState();
 							SendClientHand();
 						}
@@ -324,6 +326,20 @@ public class Server{
 			}
 			return false;
 		}
+		
+		private void sendPoints() {
+			List<Integer> points = new ArrayList<Integer>();
+			points.add(rules.getPlayerById(threadID).getDisplay().calculatePoints());
+			
+			for( Player p : rules.getPlayerList()){
+				if(p.getID() != threadID){
+					points.add(p.getDisplay().calculatePoints());
+				}
+			}
+			
+			send(Optcodes.ClientGetPoints);
+			send(points);
+		}
 
 		/**
 		 * Get the index of the card to be played and plays the card
@@ -405,6 +421,11 @@ public class Server{
 			
 			send(Optcodes.ClientGetHand);
 			send(hand);
+		}
+		
+		private void sendColour(CardColour c) {
+			send(Optcodes.TournamentColour);
+			send(c);
 		}
 
 		/**

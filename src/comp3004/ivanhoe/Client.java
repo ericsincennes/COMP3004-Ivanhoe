@@ -19,8 +19,10 @@ public class Client {
 	int playerNum = -1;
 	List<Card> CardsInHand;	//ArrayList of current hand
 	List<Long> PlayersList;
+	List<Integer> PointsList;
 	ArrayList<List<Card>> BoardState;
 	Scanner scan = new Scanner(System.in);
+	CardColour colour;
 
 	public static void main(String[] args){
 		new Client();
@@ -90,6 +92,10 @@ public class Client {
 			case Optcodes.ClientGetTokenChoice:
 				 handleTokenChoice();
 				 break;
+			case Optcodes.TournamentColour:
+				 setColour();
+			case Optcodes.ClientGetPoints:
+				 getPoints();
 			default: new Exception("Unexpected Value");
 				break;
 			}
@@ -100,10 +106,18 @@ public class Client {
 		PlayersList = (List<Long>) get();
 	}
 	
+	private void setColour() {
+		colour = (CardColour) get();
+	}
+	
+	private void getPoints() {
+		PointsList = (List<Integer>) get();
+	}
+	
 	private void handleGetHand(){
 		CardsInHand = (ArrayList<Card>) get();
 		 
-		
+		print("Tournament Colour: " + colour);
 		print("Cards currently in hand:");
 		for (Card c: CardsInHand){
 			System.out.print("(" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + ".  ");
@@ -144,7 +158,7 @@ public class Client {
 		
 		for (ListIterator<List<Card>> it = BoardState.listIterator(BoardState.size()); it.hasPrevious();) {
 			List<Card> l = it.previous();
-			System.out.println("Player " + (BoardState.indexOf(l)+1) + "'s board");
+			System.out.println("Player " + (BoardState.indexOf(l)+1) + "'s board	-	Points: " + PointsList.get(BoardState.indexOf(l)));
 			for(Card c: l){
 				System.out.print(c.getCardName() + " - ");
 			}
