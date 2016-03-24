@@ -155,11 +155,6 @@ public class Server{
 
 			print(threadID + ": isRunning");
 			while(isRunning){
-				//try getting something
-				Object startread = get();
-				if (startread != null) {
-					print("Read something extra at start of game loop: " + startread.toString());
-				}
 				if (rules.gameWinner() != null) {
 					if (rules.gameWinner().getID() == threadID) {
 						//send winner msg to client
