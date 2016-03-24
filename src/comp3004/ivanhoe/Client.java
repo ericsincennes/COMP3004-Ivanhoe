@@ -22,7 +22,7 @@ public class Client {
 	List<Integer> PointsList;
 	ArrayList<List<Card>> BoardState;
 	Scanner scan = new Scanner(System.in);
-	CardColour colour;
+	String colour;
 
 	public static void main(String[] args){
 		new Client();
@@ -107,7 +107,7 @@ public class Client {
 	}
 	
 	private void setColour() {
-		colour = (CardColour) get();
+		colour = (String) get();
 	}
 	
 	private void getPoints() {

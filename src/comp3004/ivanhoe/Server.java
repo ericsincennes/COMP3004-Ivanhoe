@@ -195,7 +195,7 @@ public class Server{
 							while(!rules.initializeTournamentColour(threadID, c)) {
 								//send some message about bad colour input
 								c = GetTournamentColourFromClient();
-								sendColour(c);
+								sendColour(c.name());
 							}	
 						} else {
 							rules.failInitTournamentColour();
@@ -427,7 +427,7 @@ public class Server{
 			send(hand);
 		}
 		
-		private void sendColour(CardColour c) {
+		private void sendColour(String c) {
 			send(Optcodes.TournamentColour);
 			send(c);
 		}
