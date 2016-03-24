@@ -187,6 +187,7 @@ public class Server{
 						if (rules.canStartTournament(threadID)) {
 							CardColour c;
 							c = GetTournamentColourFromClient();
+							print("Got tourney colour |" + c + "| from thread " + threadID + ".");
 							while(!rules.initializeTournamentColour(threadID, c)) {
 								//send some message about bad colour input
 								c = GetTournamentColourFromClient();
