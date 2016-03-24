@@ -22,11 +22,11 @@ public class Server{
 
 	public Server(){
 		Scanner in = new Scanner(System.in);
-
+		/*
 		while (port == 0){
 			print("Enter port to listen on");
 			port = in.nextInt();
-		}
+		}*/port = 2244;
 
 		while(numplayers < 2 || numplayers > 5){
 			print("Enter number of players to play (between 2 and 5)");
@@ -156,7 +156,6 @@ public class Server{
 
 			print(threadID + ": isRunning");
 			while(isRunning){
-				
 				if (rules.gameWinner() != null) {
 					if (rules.gameWinner().getID() == threadID) {
 						//send winner msg to client
@@ -189,10 +188,12 @@ public class Server{
 						if (rules.canStartTournament(threadID)) {
 							CardColour c;
 							c = GetTournamentColourFromClient();
+							print("Got tourney colour |" + c + "| from thread " + threadID + ".");
 							while(!rules.initializeTournamentColour(threadID, c)) {
 								//send some message about bad colour input
 								c = GetTournamentColourFromClient();
 							}	
+							sendColour(c);
 						} else {
 							rules.failInitTournamentColour();
 							//TODO tell client it can't start tournament
@@ -211,6 +212,7 @@ public class Server{
 						
 						if(cardIndex == -2){ 
 							//Client withdrawing
+							print("Got withdraw from thread " + threadID + ".");
 							if (rules.withdrawPlayer(threadID)) {
 								CardColour c = getTokenChoice();
 								rules.getPlayerById(threadID).removeToken(c); //may need validation
@@ -222,6 +224,7 @@ public class Server{
 							break;
 						} else if(cardIndex == -3) { 
 							//end turn optcode received
+							print("Got end turn from thread " + threadID + ".");
 							rules.endTurn(threadID);
 							cardIndex = -3;
 							break;
@@ -234,6 +237,7 @@ public class Server{
 							}
 							
 							rules.playCard(cardIndex, threadID);
+							sendPoints();
 							updateClientBoardState();
 							SendClientHand();
 						}
@@ -246,6 +250,7 @@ public class Server{
 						if(rules.getTournamentColour() == CardColour.Purple){
 							//if purple tournament give token of choice
 							CardColour c = getTokenChoice();
+							print("Got token of colour " + c + " from thread " + threadID + ".");
 							rules.giveToken(threadID, c);
 						} else {
 							//give current tournament colour token
@@ -292,7 +297,6 @@ public class Server{
 			default:
 				break;
 			}
-
 			return colour;
 			
 		}
@@ -339,6 +343,20 @@ public class Server{
 				return true;
 			}
 			return false;
+		}
+		
+		private void sendPoints() {
+			List<Integer> points = new ArrayList<Integer>();
+			points.add(rules.getPlayerById(threadID).getDisplay().calculatePoints());
+			
+			for( Player p : rules.getPlayerList()){
+				if(p.getID() != threadID){
+					points.add(p.getDisplay().calculatePoints());
+				}
+			}
+			
+			send(Optcodes.ClientGetPoints);
+			send(points);
 		}
 
 		/**
@@ -422,6 +440,11 @@ public class Server{
 			send(Optcodes.ClientGetHand);
 			send(hand);
 		}
+		
+		private void sendColour(CardColour c) {
+			send(Optcodes.TournamentColour);
+			send(c);
+		}
 
 		/**
 		 * Gets the tournament colour from the client
@@ -474,6 +497,8 @@ public class Server{
 		 */
 		private boolean send(Object o){
 			try {
+				String callerClassName = new Exception().getStackTrace()[0].getClassName();
+				print(callerClassName + " sending an " + o.getClass().getName() + " " + o.toString());
 				out.writeObject(o);
 				out.flush();
 			} catch (IOException e) {

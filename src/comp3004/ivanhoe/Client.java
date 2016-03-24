@@ -20,8 +20,10 @@ public class Client {
 	int playerNum = -1;
 	List<Card> CardsInHand;	//ArrayList of current hand
 	List<Long> PlayersList;
+	List<Integer> PointsList;
 	ArrayList<List<Card>> BoardState;
 	Scanner scan = new Scanner(System.in);
+	String colour;
 
 	public static void main(String[] args){
 		new Client();
@@ -61,7 +63,9 @@ public class Client {
 		playerNum = (int) get();	//get player number from server
 
 		while(true){
-			int optcode = (int) get();
+			Object o = get();
+			print("getting optcode from server " + o.getClass().getName() + " " + o.toString());
+			int optcode = (int) o;
 
 			switch(optcode) {
 			case Optcodes.ClientGetColourChoice:
@@ -93,6 +97,13 @@ public class Client {
 				 break;
 			case Optcodes.ClientGetActionCardTarget:
 				getActionCardTargets();
+				break;
+			case Optcodes.TournamentColour:
+				 setColour();
+				 break;
+			case Optcodes.ClientGetPoints:
+				 getPoints();
+				 break;
 			default: new Exception("Unexpected Value");
 				break;
 			}
@@ -114,12 +125,31 @@ public class Client {
 	}
 	
 	private void getPlayersList() {
-		PlayersList = (List<Long>) get();
+		Object o = get(); 
+		print("getPlayersList() getting " + o.getClass().getName() + " " + o.toString());
+		PlayersList = (List<Long>) o;
+	}
+	
+	private void setColour() {
+		Object o = get();
+		print("setColour() getting " + o.getClass().getName() + " " + o.toString());
+		colour = ((CardColour) o).name();
+	}
+	
+	private void getPoints() {
+		Object o = get();
+		print("getPoints() getting " + o.getClass().getName() + " " + o.toString());
+		PointsList = (List<Integer>) o;
+		
 	}
 	
 	private void handleGetHand(){
-		CardsInHand = (ArrayList<Card>) get();
+		Object o = get();
+		print("handleGetHand() getting " + o.getClass().getName() + " " + o.toString());
+		CardsInHand = (ArrayList<Card>) o;
 
+		 
+		print("Tournament Colour: " + colour);
 		print("Cards currently in hand:");
 		for (Card c: CardsInHand){
 			System.out.print("(" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + ".  ");
@@ -160,7 +190,7 @@ public class Client {
 		
 		for (ListIterator<List<Card>> it = BoardState.listIterator(BoardState.size()); it.hasPrevious();) {
 			List<Card> l = it.previous();
-			System.out.println("Player " + (BoardState.indexOf(l)+1) + "'s board");
+			System.out.println("Player " + (BoardState.indexOf(l)+1) + "'s board	-	Points: " + PointsList.get(BoardState.indexOf(l)));
 			for(Card c: l){
 				System.out.print(c.getCardName() + " - ");
 			}
@@ -186,20 +216,7 @@ public class Client {
 			} 
 		}
 
-		switch (choice) {
-			case 1: send(1);
-					break;
-			case 2: send(2);
-					break;
-			case 3: send(3);
-					break;
-			case 4: send(4);
-					break;
-			case 5: send(5);
-					break;
-			default:
-					break;
-		}
+		send(choice);
 	}
 	
 	/**
@@ -224,20 +241,7 @@ public class Client {
 			} 
 		}
 
-		switch (choice) {
-			case 1: send(1);
-					break;
-			case 2: send(2);
-					break;
-			case 3: send(3);
-					break;
-			case 4: send(4);
-					break;
-			case 5: send(5);
-					break;
-			default:
-					break;
-		}
+		send(choice);
 	}
 
 	/**
