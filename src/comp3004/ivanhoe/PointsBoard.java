@@ -149,30 +149,36 @@ public class PointsBoard {
 	/**
 	 * Remove card at index
 	 * @param index index of card to be removed
+	 * @return card removed or null if no card removed
 	 */
-	public void remove(int index) {
+	public Card remove(int index) {
 		if (cardsPlayed.size() <= 1) {
-			return;
+			return null;
 		}
-		cardsPlayed.remove(index);
+		Card ret = cardsPlayed.remove(index);
 		score = calculatePoints();
+		return ret;
 	}
 	
 	/**
 	 * Remove card by name
 	 * @param cardName String
+	 
 	 */
-	public void remove(String cardName) {
+	public Card remove(String cardName) {
 		if (cardsPlayed.size() <= 1) {
-			return;
+			return null;
 		}
+		Card ret = null;
 		for (ListIterator<Card> it = cardsPlayed.listIterator(cardsPlayed.size()); it.hasPrevious();) {
-			if (cardName == it.previous().getCardName()) {
+			ret = it.previous();
+			if (cardName == ret.getCardName()) {
 				it.remove();
 				break;
 			}
 		}
 		score = calculatePoints();
+		return ret;
 	}
 	
 	/**
