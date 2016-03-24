@@ -469,6 +469,7 @@ public class Server{
 			case 5: colour = Card.CardColour.Yellow;
 			break;
 			default:
+				print("GetTournamentColourFromClient got #" + o + " from client.");
 				break;
 			}
 

@@ -149,6 +149,10 @@ public class RulesEngine {
 	 * @return boolean
 	 */
 	public boolean canStartTournament(long id, CardColour colour){
+		if (TournamentColour == CardColour.Purple 
+						&& (colour == CardColour.Purple)) {
+			return false;
+		}
 		for(Card c:  getPlayerById(id).getHand().getHand()){
 			if(c.getCardType() == CardType.Colour && ((ColourCard)c).getColour() == colour || c.getCardType() == CardType.Supporter){
 				if(TournamentColour == CardColour.Purple 
