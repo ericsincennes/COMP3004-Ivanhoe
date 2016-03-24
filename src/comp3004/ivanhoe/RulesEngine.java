@@ -297,23 +297,28 @@ public class RulesEngine {
 	public synchronized boolean playCard(int posinhand, Long id){
 		Player p = players.get(id);
 		Card c;
-		
+		//Check if the card is in the players hand
 		if(posinhand > -1 && posinhand < p.getHandSize()){
 			c = p.getHand().getCardbyIndex(posinhand);
 		} else {
 			return false;
 		}
-		
+		//Null checker
 		if (c == null) {
 			notifyAll();
 			return false; 
 		}
+		//Validate play
 		boolean b = validatePlay(c.getCardName(), id);
+		
 		if(b){
+			//if card is a valid colour card
 			p.playColourCard(posinhand);
 			notifyAll();
 			return true;
 		} else if(c != null && c.cardType == CardType.Action){
+			//if card is an action card
+			
 			p.playActionCard(posinhand);
 			notifyAll();
 			return true;

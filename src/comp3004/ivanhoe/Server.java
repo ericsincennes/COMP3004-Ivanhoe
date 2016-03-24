@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import comp3004.ivanhoe.Card.CardColour;
+import comp3004.ivanhoe.Card.CardType;
 import comp3004.ivanhoe.testcases.Log;
 import comp3004.ivanhoe.Optcodes;
 
@@ -227,6 +228,11 @@ public class Server{
 						} else if(cardIndex != -1){
 							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
 								rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
+							if(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardType() == CardType.Action){
+								//if the card to play is an action card
+								getActionCardTargets(cardIndex);
+							}
+							
 							rules.playCard(cardIndex, threadID);
 							updateClientBoardState();
 							SendClientHand();
@@ -252,7 +258,17 @@ public class Server{
 				}
 			}
 		}
-
+		
+		private ArrayList<String> getActionCardTargets(int index){
+			ArrayList<String> targets;
+			
+			//send the client the index of the card to get the info for
+			send(index);
+			
+			targets = (ArrayList<String>) get();
+			return targets;
+		}
+		
 		/**
 		 * Gets the token colour choice from the player if they win a purple tournament
 		 * @return CardColour

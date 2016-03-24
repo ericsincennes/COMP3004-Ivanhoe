@@ -10,6 +10,8 @@ public class Optcodes {
 	public static final int ClientEndTurn			= 106;
 	public static final int ClientWithdraw			= 107;
 	public static final int ClientGetTokenChoice	= 108;
+	public static final int ClientGetActionCardTarget = 109;
+	
 	
 	public static final int InvalidCard				= 301;
 	public static final int SuccessfulCardPlay		= 302;

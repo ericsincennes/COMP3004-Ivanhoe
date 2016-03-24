@@ -10,6 +10,7 @@ import java.util.ListIterator;
 import java.util.Scanner;
 
 import comp3004.ivanhoe.Card.CardColour;
+import comp3004.ivanhoe.Card.CardType;
 import comp3004.ivanhoe.Optcodes;
 
 public class Client {
@@ -90,9 +91,25 @@ public class Client {
 			case Optcodes.ClientGetTokenChoice:
 				 handleTokenChoice();
 				 break;
+			case Optcodes.ClientGetActionCardTarget:
+				getActionCardTargets();
 			default: new Exception("Unexpected Value");
 				break;
 			}
+		}
+	}
+	
+	/**
+	 * Gets the target for action cards
+	 */
+	private void getActionCardTargets(){
+		ArrayList<String> targets = new ArrayList<String>();
+		//get index of card to get data for from server
+		int index = (Integer) get();
+		Card c = CardsInHand.get(index);
+		
+		if(c.getCardType() == CardType.Action){
+			
 		}
 	}
 	

@@ -83,22 +83,22 @@ public class Deck {
 		cards.add(new ActionCard("Change Weapon", TargetType.Untargeted));
 		cards.add(new ActionCard("Drop Weapon", TargetType.Untargeted));
 		cards.add(new ActionCard("Shield", TargetType.Untargeted));
-		cards.add(new ActionCard("Stun", TargetType.Untargeted));
-		cards.add(new ActionCard("Ivanhoe", TargetType.Untargeted));
-		cards.add(new ActionCard("Break Lance", TargetType.Untargeted));
-		cards.add(new ActionCard("Riposte", TargetType.Untargeted));
-		cards.add(new ActionCard("Riposte", TargetType.Untargeted));
-		cards.add(new ActionCard("Riposte", TargetType.Untargeted));
-		cards.add(new ActionCard("Dodge", TargetType.Untargeted));
-		cards.add(new ActionCard("Retreat", TargetType.Untargeted));
-		cards.add(new ActionCard("Knock Down", TargetType.Untargeted));
-		cards.add(new ActionCard("Knock Down", TargetType.Untargeted));
-		cards.add(new ActionCard("Outmaneuver", TargetType.Untargeted));
-		cards.add(new ActionCard("Charge", TargetType.Untargeted));
-		cards.add(new ActionCard("Countercharge", TargetType.Untargeted));
-		cards.add(new ActionCard("Disgrace", TargetType.Untargeted));
-		cards.add(new ActionCard("Adapt", TargetType.Untargeted));
-		cards.add(new ActionCard("Outwit", TargetType.Untargeted));
+		cards.add(new ActionCard("Stun", TargetType.TargetPlayers));
+		cards.add(new ActionCard("Ivanhoe", TargetType.Ivanhoe));
+		cards.add(new ActionCard("Break Lance", TargetType.TargetPlayers));
+		cards.add(new ActionCard("Riposte", TargetType.TargetPlayers));
+		cards.add(new ActionCard("Riposte", TargetType.TargetPlayers));
+		cards.add(new ActionCard("Riposte", TargetType.TargetPlayers));
+		cards.add(new ActionCard("Dodge", TargetType.TargetPlayers));
+		cards.add(new ActionCard("Retreat", TargetType.TargetPlayers));
+		cards.add(new ActionCard("Knock Down", TargetType.TargetPlayers));
+		cards.add(new ActionCard("Knock Down", TargetType.TargetPlayers));
+		cards.add(new ActionCard("Outmaneuver", TargetType.TargetCards));
+		cards.add(new ActionCard("Charge", TargetType.TargetCards));
+		cards.add(new ActionCard("Countercharge", TargetType.TargetCards));
+		cards.add(new ActionCard("Disgrace", TargetType.TargetCards));
+		cards.add(new ActionCard("Adapt", TargetType.TargetCards));
+		cards.add(new ActionCard("Outwit", TargetType.TargetPlayers));
 		
 		shuffle();
 	}
