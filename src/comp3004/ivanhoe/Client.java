@@ -184,20 +184,7 @@ public class Client {
 			} 
 		}
 
-		switch (choice) {
-			case 1: send(1);
-					break;
-			case 2: send(2);
-					break;
-			case 3: send(3);
-					break;
-			case 4: send(4);
-					break;
-			case 5: send(5);
-					break;
-			default:
-					break;
-		}
+		send(choice);
 	}
 	
 	/**
