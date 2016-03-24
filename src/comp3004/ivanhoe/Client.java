@@ -107,7 +107,10 @@ public class Client {
 	}
 	
 	private void setColour() {
-		colour = (String) get();
+		String tmp = (String) get();
+		if (tmp == null) print("why is colou null");
+		colour = tmp;
+		print("tourney color " + tmp);
 	}
 	
 	private void getPoints() {

@@ -191,8 +191,8 @@ public class Server{
 							while(!rules.initializeTournamentColour(threadID, c)) {
 								//send some message about bad colour input
 								c = GetTournamentColourFromClient();
-								sendColour(c.name());
 							}	
+							sendColour(c.name());
 						} else {
 							rules.failInitTournamentColour();
 							//TODO tell client it can't start tournament
