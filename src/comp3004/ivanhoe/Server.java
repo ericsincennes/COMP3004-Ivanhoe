@@ -21,11 +21,11 @@ public class Server{
 
 	public Server(){
 		Scanner in = new Scanner(System.in);
-
+		/*
 		while (port == 0){
 			print("Enter port to listen on");
 			port = in.nextInt();
-		}
+		}*/port = 2244;
 
 		while(numplayers < 2 || numplayers > 5){
 			print("Enter number of players to play (between 2 and 5)");
@@ -192,7 +192,7 @@ public class Server{
 								//send some message about bad colour input
 								c = GetTournamentColourFromClient();
 							}	
-							sendColour(c.name());
+							sendColour(c);
 						} else {
 							rules.failInitTournamentColour();
 							//TODO tell client it can't start tournament
@@ -425,7 +425,7 @@ public class Server{
 			send(hand);
 		}
 		
-		private void sendColour(String c) {
+		private void sendColour(CardColour c) {
 			send(Optcodes.TournamentColour);
 			send(c);
 		}
@@ -481,6 +481,8 @@ public class Server{
 		 */
 		private boolean send(Object o){
 			try {
+				String callerClassName = new Exception().getStackTrace()[0].getClassName();
+				print(callerClassName + " sending an " + o.getClass().getName() + " " + o.toString());
 				out.writeObject(o);
 				out.flush();
 			} catch (IOException e) {

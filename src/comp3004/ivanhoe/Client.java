@@ -62,7 +62,9 @@ public class Client {
 		playerNum = (int) get();	//get player number from server
 
 		while(true){
-			int optcode = (int) get();
+			Object o = get();
+			print("getting optcode from server " + o.getClass().getName() + " " + o.toString());
+			int optcode = (int) o;
 
 			switch(optcode) {
 			case Optcodes.ClientGetColourChoice:
@@ -94,8 +96,10 @@ public class Client {
 				 break;
 			case Optcodes.TournamentColour:
 				 setColour();
+				 break;
 			case Optcodes.ClientGetPoints:
 				 getPoints();
+				 break;
 			default: new Exception("Unexpected Value");
 				break;
 			}
@@ -103,22 +107,28 @@ public class Client {
 	}
 	
 	private void getPlayersList() {
-		PlayersList = (List<Long>) get();
+		Object o = get(); 
+		print("getPlayersList() getting " + o.getClass().getName() + " " + o.toString());
+		PlayersList = (List<Long>) o;
 	}
 	
 	private void setColour() {
-		String tmp = (String) get();
-		if (tmp == null) print("why is colou null");
-		colour = tmp;
-		print("tourney color " + tmp);
+		Object o = get();
+		print("setColour() getting " + o.getClass().getName() + " " + o.toString());
+		colour = ((CardColour) o).name();
 	}
 	
 	private void getPoints() {
-		PointsList = (List<Integer>) get();
+		Object o = get();
+		print("getPoints() getting " + o.getClass().getName() + " " + o.toString());
+		PointsList = (List<Integer>) o;
+		
 	}
 	
 	private void handleGetHand(){
-		CardsInHand = (ArrayList<Card>) get();
+		Object o = get();
+		print("handleGetHand() getting " + o.getClass().getName() + " " + o.toString());
+		CardsInHand = (ArrayList<Card>) o;
 		 
 		print("Tournament Colour: " + colour);
 		print("Cards currently in hand:");
