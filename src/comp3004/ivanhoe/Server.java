@@ -210,6 +210,7 @@ public class Server{
 						
 						if(cardIndex == -2){ 
 							//Client withdrawing
+							print("Got withdraw from thread " + threadID + ".");
 							if (rules.withdrawPlayer(threadID)) {
 								CardColour c = getTokenChoice();
 								rules.getPlayerById(threadID).removeToken(c); //may need validation
@@ -221,6 +222,7 @@ public class Server{
 							break;
 						} else if(cardIndex == -3) { 
 							//end turn optcode received
+							print("Got end turn from thread " + threadID + ".");
 							rules.endTurn(threadID);
 							cardIndex = -3;
 							break;
@@ -241,6 +243,7 @@ public class Server{
 						if(rules.getTournamentColour() == CardColour.Purple){
 							//if purple tournament give token of choice
 							CardColour c = getTokenChoice();
+							print("Got token of colour " + c + " from thread " + threadID + ".");
 							rules.giveToken(threadID, c);
 						} else {
 							//give current tournament colour token
@@ -277,7 +280,6 @@ public class Server{
 			default:
 				break;
 			}
-
 			return colour;
 			
 		}
