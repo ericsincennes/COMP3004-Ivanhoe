@@ -373,22 +373,24 @@ public class RulesEngine {
 		int cardValue = 0;
 		
 		for (int i = 0; i < target.length; i++) {
-			if (target[i] instanceof Long) {
+			if (target[i].getClass().equals(Long.class)) {
 				opponent = players.get(target[i]);
-			} else if (target[i] instanceof String) {
+			} else if (target[i].getClass().equals(String.class)) {
 				chosen = (String) target[i];
-			} else if (target[i] instanceof CardColour) {
+			} else if (target[i].getClass().equals(CardColour.class)) {
 				colour = (CardColour) target[i];
 			}
 		}
 
 		switch(card.getCardName()){
 		case "Unhorse":
+			//color changes from purple to red, blue or yellow
 			if (TournamentColour == CardColour.Purple) {
 				TournamentColour = colour;
 			}
 			break;
 		case "Change Weapon":
+			// color changes from red, blue or yellow to a different one of these colors
 			if (!(TournamentColour == CardColour.Purple) || !(TournamentColour == CardColour.Green)) {
 				if (TournamentColour == CardColour.Yellow && colour != CardColour.Yellow) {
 					TournamentColour = colour;
@@ -400,32 +402,33 @@ public class RulesEngine {
 			}
 			break;
 		case "Drop Weapon":
+			//color changes from red, blue or yellow to green
 			if (!(TournamentColour == CardColour.Purple)) {
 				TournamentColour = CardColour.Green;
 			}
 			break;
 		case "Break Lance":
+			//Force one opponent to discard all purple cards from his display
 			if (target[0] instanceof Player){
 				((Player) target[0]).getDisplay().removeColour(CardColour.Purple);
 			}
 			break;
 		case "Riposte":
-			//to fix
+			//take card from opponent display
 			taken = opponent.getDisplay().getLastPlayed();
 			opponent.getDisplay().remove(taken.getCardName());
 			//need to remove the card from cardsPlayed list in deck
 			caster.getDisplay().addCard(taken);
 			break;
 		case "Dodge":
+			//Discard any one card from any one opponent’s display.
 			opponent.getDisplay().remove(chosen);
 			break;
 		case "Retreat":
-			//todo
-			caster.getDisplay().remove(chosen);
-			//need add by name method in hand
-			//caster.getHand().add(chosen);
+			//Take any one card from your own display back into your hand
+			//Card c = caster.getDisplay().remove(chosen);
+			//caster.getHand().add(c);
 			//need to remove the card from playedCards list in deck
-			//c-rank
 			break;
 		case "Knock Down":
 			int r = rand.nextInt(opponent.getHandSize() + 1);

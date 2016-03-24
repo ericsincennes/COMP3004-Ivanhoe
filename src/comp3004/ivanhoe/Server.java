@@ -232,8 +232,17 @@ public class Server{
 							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
 								rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
 							if(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardType() == CardType.Action){
+								//TODO Finish this
 								//if the card to play is an action card
-								getActionCardTargets(cardIndex);
+								//getActionCardTargets(cardIndex);
+								//Send targets to RulesEngine to validate
+									//rules.actionHandler(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex), )
+								//If valid: 
+									//then play
+									//send points
+									//update all boards
+									//send hand
+								//else send invalid play optcode
 							}
 							
 							rules.playCard(cardIndex, threadID);

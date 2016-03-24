@@ -114,6 +114,7 @@ public class Client {
 	 * Gets the target for action cards
 	 */
 	private void getActionCardTargets(){
+		//TODO Finish this
 		ArrayList<String> targets = new ArrayList<String>();
 		//get index of card to get data for from server
 		int index = (Integer) get();
