@@ -9,7 +9,6 @@ import org.junit.Test;
 import comp3004.ivanhoe.Card;
 import comp3004.ivanhoe.Card.*;
 import comp3004.ivanhoe.ActionCard;
-import comp3004.ivanhoe.ActionCard.TargetType;
 import comp3004.ivanhoe.ColourCard;
 import comp3004.ivanhoe.SupporterCard;
 
@@ -66,12 +65,10 @@ public class CardTest {
 	
 	@Test
 	public void ActionCardConstructor() {
-		Card unhorse = new ActionCard("Unhorse",TargetType.Untargeted);
-		assertTrue(unhorse.getCardType() == CardType.Action);
+		Card unhorse = new ActionCard("Unhorse");
 		assertTrue(unhorse.getCardName() == "Unhorse");
 		
-		Card ivanhoe = new ActionCard("Ivanhoe",TargetType.Ivanhoe,"P1","Unhorse");
-		assertTrue(ivanhoe.getCardType() == CardType.Ivanhoe);
+		Card ivanhoe = new ActionCard("Ivanhoe");
 		assertTrue(ivanhoe.getCardName() == "Ivanhoe");
 	}
 

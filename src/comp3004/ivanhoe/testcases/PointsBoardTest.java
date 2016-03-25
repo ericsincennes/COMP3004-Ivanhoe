@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import comp3004.ivanhoe.*;
-import comp3004.ivanhoe.ActionCard.TargetType;
+import comp3004.ivanhoe.ActionCard;
 import comp3004.ivanhoe.Card.*;
 
 public class PointsBoardTest {
@@ -57,13 +57,11 @@ public class PointsBoardTest {
 	
 	@Test
 	public void playActionCard() {
-		testBoard.addCard(new ActionCard("Shield", TargetType.Untargeted));
-		testBoard.addCard(new ActionCard("Stun", TargetType.TargetPlayers));
+		testBoard.addCard(new ActionCard("Shield"));
+		testBoard.addCard(new ActionCard("Stun"));
 		
 		assertEquals(testBoard.getActionCards().get(0).getCardName(), "Shield");
-		assertEquals(testBoard.getActionCards().get(0).getCardType(), CardType.Action);
 		assertEquals(testBoard.getActionCards().get(1).getCardName(), "Stun");
-		assertEquals(testBoard.getActionCards().get(1).getCardType(), CardType.Action);
 	}
 	
 	@Test

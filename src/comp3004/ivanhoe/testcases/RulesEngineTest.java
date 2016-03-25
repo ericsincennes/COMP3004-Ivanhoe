@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import comp3004.ivanhoe.*;
-import comp3004.ivanhoe.ActionCard.TargetType;
+import comp3004.ivanhoe.ActionCard;
 import comp3004.ivanhoe.Card.CardColour;
 
 public class RulesEngineTest {
@@ -42,7 +42,7 @@ public class RulesEngineTest {
 		rules.initTournament();
 		Player nextPlayer = rules.getPlayerList().get(1);
 		rules.getPlayerList().get(0).getHand().discardHand();
-		rules.getPlayerList().get(0).addCard(new ActionCard("Unhorse", TargetType.Untargeted));
+		rules.getPlayerList().get(0).addCard(new ActionCard("Unhorse"));
 		assertFalse(rules.canStartTournament(rules.getPlayerList().get(0).getID()));
 		assertEquals(rules.getPlayerList().get(0).getHand().getNumCards(),1);
 		rules.failInitTournamentColour();

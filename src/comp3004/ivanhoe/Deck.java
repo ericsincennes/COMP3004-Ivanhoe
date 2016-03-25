@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import comp3004.ivanhoe.ActionCard.TargetType;
+import comp3004.ivanhoe.ActionCard;
 import comp3004.ivanhoe.Card.CardColour;
 
 public class Deck {
@@ -79,26 +79,26 @@ public class Deck {
 			cards.add(new SupporterCard(6));
 		}
 		
-		cards.add(new ActionCard("Unhorse", TargetType.Untargeted));
-		cards.add(new ActionCard("Change Weapon", TargetType.Untargeted));
-		cards.add(new ActionCard("Drop Weapon", TargetType.Untargeted));
-		cards.add(new ActionCard("Shield", TargetType.Untargeted));
-		cards.add(new ActionCard("Stun", TargetType.TargetPlayers));
-		cards.add(new ActionCard("Ivanhoe", TargetType.Ivanhoe));
-		cards.add(new ActionCard("Break Lance", TargetType.TargetPlayers));
-		cards.add(new ActionCard("Riposte", TargetType.TargetPlayers));
-		cards.add(new ActionCard("Riposte", TargetType.TargetPlayers));
-		cards.add(new ActionCard("Riposte", TargetType.TargetPlayers));
-		cards.add(new ActionCard("Dodge", TargetType.TargetPlayers));
-		cards.add(new ActionCard("Retreat", TargetType.TargetPlayers));
-		cards.add(new ActionCard("Knock Down", TargetType.TargetPlayers));
-		cards.add(new ActionCard("Knock Down", TargetType.TargetPlayers));
-		cards.add(new ActionCard("Outmaneuver", TargetType.TargetCards));
-		cards.add(new ActionCard("Charge", TargetType.TargetCards));
-		cards.add(new ActionCard("Countercharge", TargetType.TargetCards));
-		cards.add(new ActionCard("Disgrace", TargetType.TargetCards));
-		cards.add(new ActionCard("Adapt", TargetType.TargetCards));
-		cards.add(new ActionCard("Outwit", TargetType.TargetPlayers));
+		cards.add(new ActionCard("Unhorse"));
+		cards.add(new ActionCard("Change Weapon"));
+		cards.add(new ActionCard("Drop Weapon"));
+		cards.add(new ActionCard("Shield"));
+		cards.add(new ActionCard("Stun"));
+		cards.add(new ActionCard("Ivanhoe"));
+		cards.add(new ActionCard("Break Lance"));
+		cards.add(new ActionCard("Riposte"));
+		cards.add(new ActionCard("Riposte"));
+		cards.add(new ActionCard("Riposte"));
+		cards.add(new ActionCard("Dodge"));
+		cards.add(new ActionCard("Retreat"));
+		cards.add(new ActionCard("Knock Down"));
+		cards.add(new ActionCard("Knock Down"));
+		cards.add(new ActionCard("Outmaneuver"));
+		cards.add(new ActionCard("Charge"));
+		cards.add(new ActionCard("Countercharge"));
+		cards.add(new ActionCard("Disgrace"));
+		cards.add(new ActionCard("Adapt"));
+		cards.add(new ActionCard("Outwit"));
 		
 		shuffle();
 	}

@@ -413,15 +413,16 @@ public class RulesEngine {
 			break;
 		case "Drop Weapon":
 			//color changes from red, blue or yellow to green
-			if (!(TournamentColour == CardColour.Purple)) {
+			if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
 				TournamentColour = CardColour.Green;
 			}
 			break;
 		case "Break Lance":
 			//Force one opponent to discard all purple cards from his display
-			ArrayList<Card> a = opponent.getDisplay().removeColour(CardColour.Purple);
+			temp = new ArrayList<Card>();
+			temp = opponent.getDisplay().removeColour(CardColour.Purple);
 			
-			for(Card x : a){
+			for(Card x : temp){
 				deck.addToDiscard(x);
 			}
 			break;
