@@ -12,15 +12,19 @@ import org.junit.Test;
 import comp3004.ivanhoe.BoardState;
 import comp3004.ivanhoe.RulesEngine;
 import comp3004.ivanhoe.Card.CardColour;
+import comp3004.ivanhoe.ColourCard;
 
 public class BoardStateTest {
 	RulesEngine rules;
 	
 	@Before
 	public void setUp() throws Exception {
-		rules = RulesEngine.testRuleEngine(2);
+		rules = RulesEngine.testRuleEngine(5);
 		rules.registerThread(1);
 		rules.registerThread(2);
+		rules.registerThread(3);
+		rules.registerThread(4);
+		rules.registerThread(5);
 		
 		rules.initFirstTournament();
 		assertFalse(rules.isTournamentRunning());
@@ -28,6 +32,8 @@ public class BoardStateTest {
 		assertEquals(8, rules.getPlayerById(1).getHandSize());
 		assertEquals(8, rules.getPlayerById(2).getHandSize());
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
+		rules.getPlayerById(2).addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(2).playColourCard(8);
 	}
 
 	@After
@@ -46,7 +52,12 @@ public class BoardStateTest {
 		} catch (Exception e) {
 			System.out.println("Error");
 		}
-		assertTrue(b != null);
+		assertEquals(CardColour.Blue, b.currColour);
+		assertEquals(rules.getPlayerById(1).getID(), b.owner);
+		assertEquals(b.players.get(0), Long.valueOf(b.owner));
+		assertEquals(5, b.players.size());
+		assertEquals(8, b.hand.size());
+		assertEquals("Blue 3", b.boards.get(1).get(0).getCardName());
 	}
 
 }
