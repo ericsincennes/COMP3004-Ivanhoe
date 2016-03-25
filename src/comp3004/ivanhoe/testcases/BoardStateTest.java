@@ -37,7 +37,15 @@ public class BoardStateTest {
 	@Test
 	public void testBoardState() {
 		BoardState b = rules.makeBoardState(rules.getPlayerById(1));
-
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(b);
+			oos.close();
+			System.out.println("Size of boardstate is: " + baos.size());
+		} catch (Exception e) {
+			System.out.println("Error");
+		}
 		assertTrue(b != null);
 	}
 
