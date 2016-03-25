@@ -14,6 +14,7 @@ public class Optcodes {
 	public static final int ClientGetActionCardTarget = 110;
 	
 	public static final int ClientNotActiveTurn = 150;
+	public static final int ClientActiveTurn = 151;
 	
 	public static final int InvalidCard				= 301;
 	public static final int SuccessfulCardPlay		= 302;
