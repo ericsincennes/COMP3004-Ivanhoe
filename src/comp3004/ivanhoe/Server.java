@@ -170,7 +170,7 @@ public class Server{
 					try {
 						//updateClientBoardState();
 						synchronized (this) {
-							send(Optcodes.ClientNotActiveTurn);
+							//send(Optcodes.ClientNotActiveTurn);
 							wait(500);
 						}
 						continue;
@@ -183,8 +183,7 @@ public class Server{
 				if (rules.isTournamentRunning()) {
 					//Start client turn and draw a card
 					rules.startTurn(threadID);
-					SendClientHand();
-					sendPlayersList();
+					sendBoardState();
 					//Is the tournament running AND not first turn in tournament
 					if (!rules.isColourChosen()) {
 						//choose colour
@@ -196,7 +195,7 @@ public class Server{
 								//send some message about bad colour input
 								c = GetTournamentColourFromClient();
 							}	
-							sendColour(c);
+
 						} else {
 							rules.failInitTournamentColour();
 							//TODO tell client it can't start tournament
@@ -204,7 +203,7 @@ public class Server{
 						}
 					}
 					//Send updated hand to client
-					SendClientHand();
+					sendBoardState();
 
 					//get what cards the client wants to play
 					int cardIndex = -1;
@@ -248,10 +247,13 @@ public class Server{
 								//else send invalid play optcode
 							}
 							
-							rules.playCard(cardIndex, threadID);
-							sendPoints();
-							updateClientBoardState();
-							SendClientHand();
+							if (rules.playCard(cardIndex, threadID)) {
+								
+							}
+							else {
+								send(Optcodes.InvalidCard);
+							}
+							sendBoardState();
 						}
 					}
 				}
