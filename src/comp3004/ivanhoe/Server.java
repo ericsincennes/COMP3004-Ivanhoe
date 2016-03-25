@@ -345,7 +345,10 @@ public class Server{
 			send(board);
 		}
 		
-		private void sentBoardState() {
+		/**
+		 * Sends the boardstate 
+		 */
+		private void sendBoardState() {
 			BoardState board = rules.makeBoardState(rules.getPlayerById(threadID));
 			send(Optcodes.ClientUpdateBoardState);
 			send(board);
