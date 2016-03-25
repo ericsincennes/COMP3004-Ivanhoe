@@ -169,7 +169,10 @@ public class Server{
 				if (rules.getPlayerList().get(0).getID() != threadID) {
 					try {
 						//updateClientBoardState();
-						Thread.sleep(500);
+						synchronized (this) {
+							send(Optcodes.ClientNotActiveTurn);
+							wait(500);
+						}
 						continue;
 					} catch (InterruptedException ie) {
 						ie.printStackTrace();
