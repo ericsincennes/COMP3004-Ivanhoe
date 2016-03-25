@@ -16,26 +16,26 @@ public final class BoardState implements Serializable{
 	public List<List<Card>> actionBoards; //what actioncards have been played
 	public List<Integer> points;
 	public CardColour currColour;
-	public List<Card> discarded;
+	//public List<Card> discarded;
 	
 	public BoardState(Player pOwner, List<Player> thePlayers, Hand pHand, CardColour tourneyColour, Deck theDeck) {
 		owner = pOwner.getID();
 		
 		int pListRot = thePlayers.indexOf(pOwner);
 		int pListSize = thePlayers.size();
-		players = new ArrayList<Long>();
-		boards = new ArrayList<List<Card>>();
-		actionBoards = new ArrayList<List<Card>>();
-		points = new ArrayList<Integer>();
-		for (int i = pListRot; i < pListSize; i=(i+1)%pListSize) {
-			players.add(thePlayers.get(i).getID());
-			boards.add(thePlayers.get(i).getDisplay().getCards());
-			actionBoards.add(thePlayers.get(i).getDisplay().getActionCards());
-			points.add(thePlayers.get(i).getDisplay().calculatePoints());
+		players = new ArrayList<Long>(pListSize);
+		boards = new ArrayList<List<Card>>(pListSize);
+		actionBoards = new ArrayList<List<Card>>(pListSize);
+		points = new ArrayList<Integer>(pListSize);
+		for (int i = 0; i < pListSize; i++) {
+			players.add(thePlayers.get((i+pListRot)%pListSize).getID());
+			boards.add(thePlayers.get((i+pListRot)%pListSize).getDisplay().getCards());
+			actionBoards.add(thePlayers.get((i+pListRot)%pListSize).getDisplay().getActionCards());
+			points.add(thePlayers.get((i+pListRot)%pListSize).getDisplay().calculatePoints());
 		}
 		hand = pHand.getHand();
 		currColour = tourneyColour;
-		discarded = theDeck.viewDiscard();
+		//discarded = theDeck.viewDiscard();
 	}
 	
 }
