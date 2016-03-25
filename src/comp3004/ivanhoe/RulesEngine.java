@@ -395,7 +395,7 @@ public class RulesEngine {
 		switch(card.getCardName()){
 		case "Unhorse":
 			//color changes from purple to red, blue or yellow
-			if (TournamentColour == CardColour.Purple) {
+			if ((TournamentColour == CardColour.Purple) && !(colour == CardColour.Green)) {
 				TournamentColour = colour;
 			}
 			break;
