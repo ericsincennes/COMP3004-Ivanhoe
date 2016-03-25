@@ -656,5 +656,14 @@ public class RulesEngine {
 	public Deck getDeck(){
 		return deck;
 	}
+	
+	/**
+	 * Gets the boardstate of a player, that is all publicly available info for that player
+	 * @param p the player who's boardstate we're fetching
+	 * @return the boardstate obj created
+	 */
+	public BoardState makeBoardState(Player p) {
+		return new BoardState(p, playersList, p.getHand(), TournamentColour, deck);
+	}
 
 }
