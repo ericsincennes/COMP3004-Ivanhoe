@@ -29,15 +29,13 @@ public final class BoardState implements Serializable{
 		points = new ArrayList<Integer>();
 		for (int i = pListRot; i < pListSize; i=(i+1)%pListSize) {
 			players.add(thePlayers.get(i).getID());
-			List oneBoard = new ArrayList<Card>(thePlayers.get(i).getDisplay().getCards());
-			List oneActionBoard = new ArrayList<Card>(thePlayers.get(i).getDisplay().getActionCards());
-			boards.add(oneBoard);
-			actionBoards.add(oneActionBoard);
+			boards.add(thePlayers.get(i).getDisplay().getCards());
+			actionBoards.add(thePlayers.get(i).getDisplay().getActionCards());
 			points.add(thePlayers.get(i).getDisplay().calculatePoints());
 		}
-		hand = new ArrayList<Card>(pHand.getHand());
+		hand = pHand.getHand();
 		currColour = tourneyColour;
-		discarded = new ArrayList<Card>(theDeck.viewDiscard());
+		discarded = theDeck.viewDiscard();
 	}
 	
 }
