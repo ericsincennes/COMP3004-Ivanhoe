@@ -185,15 +185,17 @@ public class PointsBoard {
 	 * Removes all cards of a specified colour
 	 * @param c CardColour
 	 */
-	public void removeColour(CardColour c) {
-
+	public ArrayList<Card> removeColour(CardColour c) {
+		ArrayList<Card> colourcards = new ArrayList<Card>();
 		for (ListIterator<Card> it = cardsPlayed.listIterator(cardsPlayed.size()); 
 				cardsPlayed.size() > 1 && it.hasPrevious();) {
 			if (c == ((ColourCard)it.previous()).getColour()) {
+				colourcards.add(it.previous());
 				it.remove();
 			}
 		}
 		score = calculatePoints();
+		return colourcards;
 	}
 	
 	/**

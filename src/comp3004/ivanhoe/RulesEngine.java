@@ -418,9 +418,10 @@ public class RulesEngine {
 			break;
 		case "Break Lance":
 			//Force one opponent to discard all purple cards from his display
-			//TODO
-			if (target[0] instanceof Player){
-				((Player) target[0]).getDisplay().removeColour(CardColour.Purple);
+			ArrayList<Card> a = opponent.getDisplay().removeColour(CardColour.Purple);
+			
+			for(Card x : a){
+				deck.addToDiscard(x);
 			}
 			break;
 		case "Riposte":
