@@ -199,16 +199,20 @@ public class PointsBoard {
 	/**
 	 * Removes all cards of a specific value
 	 * @param v int value to remove
+	 * @return ArrayList 
 	 */
-	public void removeValue(int v) {
-
+	public ArrayList<Card> removeValue(int v) {
+		ArrayList<Card> card = new ArrayList<Card>();
+		
 		for (ListIterator<Card> it = cardsPlayed.listIterator(cardsPlayed.size()); 
 				cardsPlayed.size() > 1 && it.hasPrevious();) {
 			if (v == ((ColourCard)it.previous()).getValue()) {
+				card.add(it.previous());
 				it.remove();
 			}
-		}	
+		}
 		score = calculatePoints();
+		return card;
 	}
 	
 	/**
