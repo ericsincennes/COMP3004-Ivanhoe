@@ -14,16 +14,17 @@ import comp3004.ivanhoe.Card.CardType;
 import comp3004.ivanhoe.Optcodes;
 
 public class Client {
-	Socket socket;
-	ObjectInputStream in;
-	ObjectOutputStream out;
-	int playerNum = -1;
-	List<Card> CardsInHand;	//ArrayList of current hand
-	List<Long> PlayersList;
-	List<Integer> PointsList;
-	ArrayList<List<Card>> BoardState;
-	Scanner scan = new Scanner(System.in);
-	String colour;
+	private Socket socket;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
+	private int playerNum = -1;
+	private List<Card> CardsInHand;	//ArrayList of current hand
+	private List<Long> PlayersList;
+	private List<Integer> PointsList;
+	private BoardState theBoard;
+	private boolean isActiveTurn;
+	private Scanner scan = new Scanner(System.in);
+	private String colour;
 
 	public static void main(String[] args){
 		new Client();
@@ -93,17 +94,18 @@ public class Client {
 			case Optcodes.ClientWithdraw:
 				break;
 			case Optcodes.ClientGetTokenChoice:
-				 handleTokenChoice();
-				 break;
+				handleTokenChoice();
+				break;
 			case Optcodes.ClientGetActionCardTarget:
 				getActionCardTargets();
 				break;
 			case Optcodes.TournamentColour:
-				 setColour();
-				 break;
+				setColour();
+				break;
 			case Optcodes.ClientGetPoints:
-				 getPoints();
-				 break;
+				getPoints();
+				break; 
+				 
 			default: new Exception("Unexpected Value");
 				break;
 			}
@@ -187,11 +189,10 @@ public class Client {
 	 */
 	private void handleUpdateBoardState(){
 		//calls printboard state and get hand
-		BoardState = (ArrayList<List<Card>>) get();
-		
+		BoardState  b = (BoardState) get();
+		theBoard = b;
 		for (ListIterator<List<Card>> it = BoardState.listIterator(BoardState.size()); it.hasPrevious();) {
 			List<Card> l = it.previous();
-			System.out.println("Player " + (BoardState.indexOf(l)+1) + "'s board	-	Points: " + PointsList.get(BoardState.indexOf(l)));
 			for(Card c: l){
 				System.out.print(c.getCardName() + " - ");
 			}
