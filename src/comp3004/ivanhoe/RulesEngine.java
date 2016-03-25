@@ -375,7 +375,8 @@ public class RulesEngine {
 		CardColour colour = null;
 		int choiceIndex = 0; //used for outwit
 		ArrayList<ArrayList<Integer>> keeping = null; //used for Adapt
-		int cardValue = 0;
+		ArrayList<Card> temp = new ArrayList<Card>();
+		int cardValue;
 		
 		for (int i = 0; i < target.length; i++) {
 			if (target[i].getClass().equals(Long.class)) {
@@ -400,12 +401,12 @@ public class RulesEngine {
 			break;
 		case "Change Weapon":
 			// color changes from red, blue or yellow to a different one of these colors
-			if (!(TournamentColour == CardColour.Purple) || !(TournamentColour == CardColour.Green)) {
-				if (TournamentColour == CardColour.Yellow || colour != CardColour.Yellow) {
+			if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
+				if (TournamentColour == CardColour.Yellow && colour != CardColour.Yellow) {
 					TournamentColour = colour;
-				} else if (TournamentColour == CardColour.Red || colour != CardColour.Red) {
+				} else if (TournamentColour == CardColour.Red && colour != CardColour.Red) {
 					TournamentColour = colour;
-				} else if (TournamentColour == CardColour.Blue || colour != CardColour.Blue) {
+				} else if (TournamentColour == CardColour.Blue && colour != CardColour.Blue) {
 					TournamentColour = colour;
 				}
 			}
@@ -461,10 +462,11 @@ public class RulesEngine {
 		case "Charge":
 			//Identify the lowest value card throughout all displays. 
 			//All players must discard all cards of this value from their displays.
-			ArrayList<Card> temp = new ArrayList<Card>();
+			temp = new ArrayList<Card>();
+			cardValue = 9;
+			
 			for(Player p : playersList){
-				//get lowest value
-				if (p.getDisplay().lowestValue() > cardValue) {
+				if (p.getDisplay().lowestValue() < cardValue) {
 					cardValue = p.getDisplay().lowestValue();
 				}
 			}
@@ -482,7 +484,8 @@ public class RulesEngine {
 		case "Countercharge":
 			//Identify the highest value card throughout all displays.
 			//All players must discard all cards of this value from their displays.
-			ArrayList<Card> temp1 = new ArrayList<Card>();
+			temp = new ArrayList<Card>();
+			cardValue = 0;
 			
 			for(Player p : playersList){
 				if (p.getDisplay().highestValue() > cardValue) {
@@ -491,10 +494,10 @@ public class RulesEngine {
 			}
 			
 			for(Player p : playersList){
-				temp1 = p.getDisplay().removeValue(cardValue);
+				temp = p.getDisplay().removeValue(cardValue);
 			}
 			
-			for(Card x : temp1){
+			for(Card x : temp){
 				//add removed cards to discard
 				deck.addToDiscard(x);
 			}
@@ -505,7 +508,7 @@ public class RulesEngine {
 			}
 			break;
 		case "Adapt":
-			ArrayList<Card> temp2 = new ArrayList<Card>();
+			temp = new ArrayList<Card>();
 			//Each player may only keep one card of each value in his display. 
 			//All other cards with the same value are discarded. 
 			//Each player decides which of the matching-value cards he will discard.
@@ -518,13 +521,13 @@ public class RulesEngine {
 					List<Card> cards = p.getDisplay().getCards();
 					for(Card x: cards){
 						if(cards.indexOf(x) == index){
-							temp2.add(p.getDisplay().remove(index));
+							temp.add(p.getDisplay().remove(index));
 						}
 					}
 				}
 			}
 			
-			for(Card y : temp2){
+			for(Card y : temp){
 				deck.addToDiscard(y);
 			}
 			
