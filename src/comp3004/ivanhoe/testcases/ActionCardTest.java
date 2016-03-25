@@ -39,8 +39,8 @@ public class ActionCardTest {
 		assertTrue(rules.getTournamentColour().equals(CardColour.Blue));
 		
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
-		rules.actionHandler(new ActionCard("Unhorse"), rules.getPlayerById(1), CardColour.Green);
-		assertFalse(rules.getTournamentColour().equals(CardColour.Green));
+		rules.actionHandler(new ActionCard("Unhorse"), rules.getPlayerById(1), CardColour.Red);
+		assertFalse(rules.getTournamentColour().equals(CardColour.Red));
 	}
 	
 	@Test
