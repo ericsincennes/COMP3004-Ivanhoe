@@ -46,7 +46,6 @@ public class RulesEngine {
 	 * @return List
 	 */
 	public synchronized List<Player> getPlayerList(){
-		notifyAll();
 		return playersList;
 	}
 	
