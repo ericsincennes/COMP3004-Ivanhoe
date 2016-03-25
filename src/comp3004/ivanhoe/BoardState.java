@@ -6,7 +6,7 @@ import java.util.List;
 
 import comp3004.ivanhoe.Card.CardColour;
 
-public class BoardState implements Serializable{
+public final class BoardState implements Serializable{
 	
 	public long owner; //player by threadID
 	public List<Long> players; //list of players in game, starting with current player

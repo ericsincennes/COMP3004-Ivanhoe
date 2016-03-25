@@ -341,7 +341,13 @@ public class Server{
 				}
 			}
 			
-			send(Optcodes.ClientupdateBoardState);
+			send(Optcodes.ClientUpdateBoardState);
+			send(board);
+		}
+		
+		private void sentBoardState() {
+			BoardState board = rules.makeBoardState(rules.getPlayerById(threadID));
+			send(Optcodes.ClientUpdateBoardState);
 			send(board);
 		}
 

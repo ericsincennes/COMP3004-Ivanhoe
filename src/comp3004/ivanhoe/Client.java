@@ -74,7 +74,7 @@ public class Client {
 			case Optcodes.ClientGetHand:
 				handleGetHand();
 				break;
-			case Optcodes.ClientupdateBoardState:
+			case Optcodes.ClientUpdateBoardState:
 				handleUpdateBoardState();
 				break;
 			case Optcodes.ClientGetCardsToBePlayed:
