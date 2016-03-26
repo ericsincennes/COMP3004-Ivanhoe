@@ -109,6 +109,7 @@ public class Client {
 				isActiveTurn = true;
 				break;
 			case Optcodes.ClientNotActiveTurn:
+				handleClientNotActive();
 				isActiveTurn = false;
 				break;
 			default: new Exception("Unexpected Value");
@@ -117,6 +118,8 @@ public class Client {
 		}
 	}
 	
+
+
 	/**
 	 * Gets the target for action cards
 	 */
@@ -163,6 +166,23 @@ public class Client {
 			System.out.print("(" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + ".  ");
 		}
 		print("\n");
+	}
+	
+	private void handleClientNotActive() {
+		send((isActiveTurn) ? Optcodes.ClientActiveTurn : Optcodes.ClientNotActiveTurn);
+		if (isActiveTurn) {
+			Object o = get();
+			if (o.getClass() == BoardState.class) {
+				theBoard = (BoardState) o;
+				//print stuff
+			} 
+			else {
+				print("Error wrong class "  + o.getClass().getName());
+			}
+			isActiveTurn = false;
+		}
+		
+		
 	}
 	
 	/**
