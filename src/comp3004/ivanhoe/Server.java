@@ -170,8 +170,10 @@ public class Server{
 					try {
 						//updateClientBoardState();
 						synchronized (this) {
-							//send(Optcodes.ClientNotActiveTurn);
+							send(Optcodes.ClientNotActiveTurn);
+							rules.makeBoardState(rules.getPlayerById(threadID));
 							wait(500);
+							sendBoardState();
 						}
 						continue;
 					} catch (InterruptedException ie) {

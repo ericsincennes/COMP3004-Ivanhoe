@@ -105,7 +105,12 @@ public class Client {
 			case Optcodes.ClientGetPoints:
 				getPoints();
 				break; 
-				 
+			case Optcodes.ClientActiveTurn:
+				isActiveTurn = true;
+				break;
+			case Optcodes.ClientNotActiveTurn:
+				isActiveTurn = false;
+				break;
 			default: new Exception("Unexpected Value");
 				break;
 			}
@@ -184,20 +189,17 @@ public class Client {
 	}
 	
 	/**
-	 * Updates the state of the display and opponents display for the player
-	 * Should print displays and hand together as both will be updated on action
+	 * Gets the state of the board from the server
 	 */
 	private void handleUpdateBoardState(){
-		//calls printboard state and get hand
-		BoardState  b = (BoardState) get();
-		theBoard = b;
-		for (ListIterator<List<Card>> it = BoardState.listIterator(BoardState.size()); it.hasPrevious();) {
-			List<Card> l = it.previous();
-			for(Card c: l){
-				System.out.print(c.getCardName() + " - ");
-			}
-			System.out.println("\n");
-		}
+		Object o = get();
+		print("handleUpdateBoardState() getting " + o.getClass().getName() + " " + o.toString());
+		theBoard = (BoardState) o;
+		
+		if (theBoard.currColour != null) print("The tournament colour is " + theBoard.currColour.name() + ".\n");
+		
+		print("The board state: \n");
+
 	}		
 
 	private void handleTokenChoice(){
