@@ -72,9 +72,13 @@ public class ActionCardTest {
 	public void testBreakLance() {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 4));
+		assertEquals(rules.getPlayerById(2).getDisplay().getLastPlayed().getCardName(), "Purple 4");
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 7));
+		assertEquals(rules.getPlayerById(2).getDisplay().getLastPlayed().getCardName(), "Purple 7");
 		rules.actionHandler(new ActionCard("Break Lance"), rules.getPlayerById(1), rules.getPlayerById(2));
-		assertTrue(rules.getPlayerById(2).getDisplay().getCards().isEmpty());
+		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
+		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 7"));
 	}
 	
 	@Test
@@ -92,8 +96,11 @@ public class ActionCardTest {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
-		rules.actionHandler(new ActionCard("Dodge"), rules.getPlayerById(1), rules.getPlayerById(2), "Blue 3");
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 4"));
+		rules.actionHandler(new ActionCard("Dodge"), rules.getPlayerById(1), rules.getPlayerById(2), "Blue 3");
+		assertFalse(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 4"));
 	}
 	
 	@Test
@@ -122,8 +129,8 @@ public class ActionCardTest {
 		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
 		rules.actionHandler(new ActionCard("Outmaneuver"), rules.getPlayerById(2));
-		assertFalse(rules.getPlayerById(1).getDisplay().getCards().isEmpty());
-		assertTrue(rules.getPlayerById(2).getDisplay().getCards().isEmpty());
+		assertFalse(rules.getPlayerById(1).getDisplay().contains("Green 1"));
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Green 1"));
 
 	}
 	

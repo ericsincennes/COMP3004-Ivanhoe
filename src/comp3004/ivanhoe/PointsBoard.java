@@ -74,12 +74,12 @@ public class PointsBoard {
 	 */
 	public boolean contains(String name) {
 		for (Card c : cardsPlayed) {
-			if (name == c.getCardName()) {
+			if (name.equals(c.getCardName())) {
 				return true;
 			}
 		}
 		for (Card c : actionsPlayed) {
-			if (name == c.getCardName()) {
+			if (name.equals(c.getCardName())) {
 				return true;
 			}
 		}
