@@ -159,9 +159,11 @@ public class Server{
 				if (rules.gameWinner() != null) {
 					if (rules.gameWinner().getID() == threadID) {
 						//send winner msg to client
+						send(Optcodes.GameWinner);
 					}
 					else {
-						//send lose msg to client
+						//send lose msg to client\
+						send(Optcodes.GameOver);
 					}
 					break; //or possibly ask to start again?
 				}
@@ -169,9 +171,12 @@ public class Server{
 				if (rules.getPlayerList().get(0).getID() != threadID) {
 					try {
 						//updateClientBoardState();
+						send(Optcodes.ClientNotActiveTurn);
+						int clientStatus = (int) get();
+						if (clientStatus == Optcodes.ClientActiveTurn) {
+							send(rules.makeBoardState(rules.getPlayerById(threadID)));
+						}
 						synchronized (this) {
-							send(Optcodes.ClientNotActiveTurn);
-							rules.makeBoardState(rules.getPlayerById(threadID));
 							wait(500);
 							sendBoardState();
 						}
@@ -180,6 +185,9 @@ public class Server{
 						ie.printStackTrace();
 						continue;
 					}
+				}
+				else {
+					send(Optcodes.ClientActiveTurn);
 				}
 
 				if (rules.isTournamentRunning()) {
