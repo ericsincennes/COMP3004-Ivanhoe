@@ -38,7 +38,12 @@ public final class BoardState implements Serializable{
 		//discarded = theDeck.viewDiscard();
 	}
 	
-	public boolean equals(BoardState other) {
+	@Override
+	public boolean equals(Object otherobj) {
+		if (!(otherobj instanceof BoardState)) {
+			return false;
+		}
+		BoardState other = (BoardState) otherobj;
 		boolean a,b,c,d,e,f,g;
 		a = this.owner == other.owner;
 		b = this.players.equals(other.players);
