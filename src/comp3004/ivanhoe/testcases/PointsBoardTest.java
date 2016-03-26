@@ -2,6 +2,8 @@ package comp3004.ivanhoe.testcases;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -98,8 +100,9 @@ public class PointsBoardTest {
 		testBoard.addCard(new ColourCard(CardColour.Purple, 4));
 		testBoard.addCard(new SupporterCard(3));
 		
-		testBoard.removeValue(4);
-		assertEquals(testBoard.highestValue(), 3);
+		List<Card> removed = testBoard.removeValue(4);
+		assertEquals(2, removed.size());
+		assertEquals(3, testBoard.highestValue());
 	}
 	
 	@Test
@@ -108,8 +111,9 @@ public class PointsBoardTest {
 		testBoard.addCard(new ColourCard(CardColour.Purple, 4));
 		testBoard.addCard(new SupporterCard(3));
 		
-		testBoard.removeColour(CardColour.Purple);
-		assertEquals(testBoard.highestValue(), 3);
+		List<Card> removed = testBoard.removeColour(CardColour.Purple);
+		assertEquals(2, removed.size());
+		assertEquals(3, testBoard.highestValue());
 	}
 	
 	@Test

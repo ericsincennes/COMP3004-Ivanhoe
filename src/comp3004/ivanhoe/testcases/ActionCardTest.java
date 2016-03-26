@@ -101,7 +101,7 @@ public class ActionCardTest {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
 		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
 		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
-		rules.actionHandler(new ActionCard("Dodge"), rules.getPlayerById(1), "Blue 3");
+		rules.actionHandler(new ActionCard("Retreat"), rules.getPlayerById(1), "Blue 3");
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(1).getHand().contains("Blue 3"));
 	}
@@ -129,42 +129,42 @@ public class ActionCardTest {
 	
 	@Test
 	public void testCharge() {
-		
+		fail();
 	}
 	
 	@Test
 	public void testCounterCharge() {
-		
+		fail();
 	}
 	
 	@Test
 	public void testDisgrace() {
-		
+		fail();
 	}
 	
 	@Test
 	public void testAdapt() {
-		
+		fail();
 	}
 	
 	@Test
 	public void testOutwit() {
-		
+		fail();
 	}
 	
 	@Test
 	public void testShield() {
-		
+		fail();
 	}
 	
 	@Test
 	public void testStunned() {
-		
+		fail();
 	}
 	
 	@Test
 	public void testIvanhoe() {
-		
+		fail();
 	}
 	
 	

@@ -189,8 +189,9 @@ public class PointsBoard {
 		ArrayList<Card> colourcards = new ArrayList<Card>();
 		for (ListIterator<Card> it = cardsPlayed.listIterator(cardsPlayed.size()); 
 				cardsPlayed.size() > 1 && it.hasPrevious();) {
-			if (c == ((ColourCard)it.previous()).getColour()) {
-				colourcards.add(it.previous());
+			ColourCard card = (ColourCard)it.previous();
+			if (c == card.getColour()) {
+				colourcards.add(card);
 				it.remove();
 			}
 		}
@@ -204,17 +205,18 @@ public class PointsBoard {
 	 * @return ArrayList 
 	 */
 	public ArrayList<Card> removeValue(int v) {
-		ArrayList<Card> card = new ArrayList<Card>();
+		ArrayList<Card> cards = new ArrayList<Card>();
 		
 		for (ListIterator<Card> it = cardsPlayed.listIterator(cardsPlayed.size()); 
 				cardsPlayed.size() > 1 && it.hasPrevious();) {
-			if (v == ((ColourCard)it.previous()).getValue()) {
-				card.add(it.previous());
+			ColourCard c = (ColourCard)it.previous();
+			if (v == c.getValue()) {
+				cards.add(c);
 				it.remove();
 			}
 		}
 		score = calculatePoints();
-		return card;
+		return cards;
 	}
 	
 	/**
