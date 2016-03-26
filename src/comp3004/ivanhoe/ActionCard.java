@@ -7,5 +7,6 @@ public class ActionCard extends Card {
 	
 	public ActionCard(String name) {
 		cardName = name;
+		cardType = CardType.Action;
 	}
 }
