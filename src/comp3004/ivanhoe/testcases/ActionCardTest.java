@@ -2,13 +2,15 @@ package comp3004.ivanhoe.testcases;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import comp3004.ivanhoe.ActionCard;
-import comp3004.ivanhoe.BoardState;
 import comp3004.ivanhoe.ColourCard;
+import comp3004.ivanhoe.Player;
 import comp3004.ivanhoe.RulesEngine;
 import comp3004.ivanhoe.Card.CardColour;
 
@@ -26,6 +28,7 @@ public class ActionCardTest {
 		rules.initTournament();
 		assertEquals(8, rules.getPlayerById(1).getHandSize());
 		assertEquals(8, rules.getPlayerById(2).getHandSize());
+		
 	}
 
 	@After
@@ -67,7 +70,7 @@ public class ActionCardTest {
 	
 	@Test
 	public void testBreakLance() {
-		rules.initializeTournamentColour(rules.getPlayerById(2).getID(), CardColour.Purple);
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 4));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 7));
 		rules.actionHandler(new ActionCard("Break Lance"), rules.getPlayerById(1), rules.getPlayerById(2));
@@ -76,27 +79,52 @@ public class ActionCardTest {
 	
 	@Test
 	public void testRiposte() {
-		
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 7));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 4));
+		rules.actionHandler(new ActionCard("Riposte"), rules.getPlayerById(1), rules.getPlayerById(2));
+		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
+		assertTrue(rules.getPlayerById(1).getDisplay().contains("Purple 4"));
 	}
 	
 	@Test
 	public void testDodge() {
-		
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
+		rules.actionHandler(new ActionCard("Dodge"), rules.getPlayerById(1), rules.getPlayerById(2), "Blue 3");
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
 	}
 	
 	@Test
 	public void testRetreat() {
-		
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
+		rules.actionHandler(new ActionCard("Dodge"), rules.getPlayerById(1), "Blue 3");
+		assertFalse(rules.getPlayerById(1).getDisplay().contains("Blue 3"));
+		assertTrue(rules.getPlayerById(1).getHand().contains("Blue 3"));
 	}
 	
 	@Test
 	public void testKnockDown() {
-		
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Red);
+		int oppHandSize = rules.getPlayerById(2).getHandSize();
+		int playHandSize = rules.getPlayerById(1).getHandSize();
+		rules.actionHandler(new ActionCard("Knock Down"), rules.getPlayerById(1), rules.getPlayerById(2));
+		assertEquals(rules.getPlayerById(2).getHandSize(), oppHandSize-1);
+		assertEquals(rules.getPlayerById(1).getHandSize(), playHandSize+1);
 	}
 	
 	@Test
 	public void testOutmaneuver() {
-		
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Green);
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.actionHandler(new ActionCard("Outmaneuver"), rules.getPlayerById(2));
+		assertFalse(rules.getPlayerById(1).getDisplay().getCards().isEmpty());
+		assertTrue(rules.getPlayerById(2).getDisplay().getCards().isEmpty());
+
 	}
 	
 	@Test
