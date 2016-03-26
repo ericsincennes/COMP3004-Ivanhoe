@@ -204,15 +204,21 @@ public class Client {
 		BoardState btmp = (BoardState) o;
 		
 		if (theBoard != null && theBoard.equals(btmp)) {
-			//do nothing
+			
 			return;
 		}
 		else {
+			//debug
+			if (theBoard != null) {
+				print("btmp == theboard? " + btmp.equals(theBoard));
+			}
+			
+			//end debug
 			theBoard = btmp;
 			if (theBoard.currColour != null) print("The tournament colour is " + theBoard.currColour.name() + ".\n");
 			
 			print("The board state: \n");
-			for (int i=theBoard.players.size(); i>0; i--) {
+			for (int i=theBoard.players.size()-1; i>=0; i--) {
 				print("Board of player ID " +theBoard.players.get(i) +". Current points: " + theBoard.points.get(i));
 				List<Card> l = theBoard.boards.get(i);
 				List<Card> al = theBoard.actionBoards.get(i);
@@ -226,12 +232,14 @@ public class Client {
 				}
 				
 			}
+			System.out.println("");
 			
 			print("Your hand:");
 			for(Card c: theBoard.hand){
 				System.out.print(c.getCardName() + " - ");
-				System.out.println("");
+				
 			}
+			System.out.println("");
 		}
 	}		
 

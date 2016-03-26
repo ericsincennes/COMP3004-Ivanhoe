@@ -51,7 +51,8 @@ public final class BoardState implements Serializable{
 		d = this.boards.equals(other.boards);
 		e = this.actionBoards.equals(other.actionBoards);
 		f = this.points.equals(other.points);
-		g = this.currColour.equals(other.currColour);
+		g = this.currColour == other.currColour;
+		boolean h = this.currColour != null && this.currColour.equals(other.currColour);
 		return a && b && c && d && e && f && g;
 	}
 	
