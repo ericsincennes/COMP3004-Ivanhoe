@@ -5,23 +5,34 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneLayout;
 import javax.swing.JOptionPane;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import javax.swing.border.LineBorder;
 
 public class ClientGUI {
 
 	private JFrame frmMain;
+	
 	private JPanel informationPanel;
 	private JPanel displaysPanel;
 	private JPanel handPanel;
@@ -29,6 +40,14 @@ public class ClientGUI {
 	
 	private JLabel informationLable = new JLabel();
 	private JLabel tournamentColourLable = new JLabel();
+	private JLabel highestScore = new JLabel();
+	private JLabel playerScore = new JLabel();
+	
+	private JScrollPane handPane;
+	
+	//TODO Add selected Card holder
+	//once card is selected play card button is activated
+	//else disabled
 	
 	private ArrayList<BufferedImage> cardImages;
 	
@@ -58,10 +77,7 @@ public class ClientGUI {
 	}
 
 	private void getImages(){
-		File dir = new File(ImageDirectory);
-		for(File x: dir.listFiles()){
-			
-		}
+		
 	}
 	
 	/**
@@ -70,11 +86,33 @@ public class ClientGUI {
 	private void initializeActionArea(){
 		actionArea = new JPanel();
 		actionArea.setBackground(Color.gray);
-		actionArea.setLayout(new GridLayout(5,1));
+		actionArea.setLayout(new GridLayout(6,1));
 		
 		JButton endTurnButton = new JButton("End Turn");
 		JButton ivanhoeButton = new JButton("Ivanhoe");
 		JButton withdrawButton = new JButton("Withdraw");
+		JButton playCardButton = new JButton("PlayCard");
+		
+		highestScore.setText("High Score: ");
+		highestScore.setVerticalAlignment(JLabel.CENTER);
+		
+		playerScore.setText("Your Score: ");
+		playerScore.setVerticalAlignment(JLabel.CENTER);
+		
+		playCardButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				//if players turn
+					//if card selected
+						//send card to be played
+					//else if no card selected
+						//JOptionPane.showMessageDialog(actionArea, "Select a card to play or withdraw", "Cannot play nothing", JOptionPane.ERROR_MESSAGE);
+				//else not players turn
+					//JOptionPane.showMessageDialog(actionArea, "Cannot play card when it is not your turn", "Playing card error", JOptionPane.ERROR_MESSAGE);
+			}
+		});
 		
 		//End turn button pressed
 		endTurnButton.addActionListener(new ActionListener() {
@@ -82,8 +120,9 @@ public class ClientGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(false){
-					
+					//if player's turn
 				} else {
+					//if not players turn
 					JOptionPane.showMessageDialog(actionArea, "Cannot end turn when it is not your turn", "End Turn Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -94,12 +133,10 @@ public class ClientGUI {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(false){
-					
-				} else {
-					JOptionPane.showMessageDialog(actionArea, "You do not have the card Ivanhoe to play", "Ivanhoe Error", JOptionPane.ERROR_MESSAGE);
-				}
-				
+				//if player had ivanhoe in hand
+					//play ivanhoe
+				//else
+					//JOptionPane.showMessageDialog(actionArea, "You do not have the card Ivanhoe to play", "Ivanhoe Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		
@@ -109,18 +146,21 @@ public class ClientGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(false){
-					
+					//if player's turn
 				} else {
+					//if not player's turn
 					JOptionPane.showMessageDialog(actionArea, "Cannot withdraw when it is not your turn", "Withdraw Error", JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}
 		});
 		
-		actionArea.add(new JLabel("", JLabel.CENTER));
+		actionArea.add(highestScore);
+		actionArea.add(playerScore);
 		actionArea.add(endTurnButton);
 		actionArea.add(withdrawButton);
 		actionArea.add(ivanhoeButton);
+		actionArea.add(playCardButton);
 	}
 	
 	/**
@@ -130,18 +170,26 @@ public class ClientGUI {
 		handPanel = new JPanel();
 		handPanel.setBackground(Color.gray);
 		handPanel.setLayout(new FlowLayout());
-		handPanel.add(new JLabel("Your Hand", JLabel.CENTER));
-	
-		BufferedImage img = null;
 		
-		try {
-			img = ImageIO.read(new File(ImageDirectory + "Adapt.bmp"));
-		} catch (IOException e) {
-			e.printStackTrace();
+		handPane = new JScrollPane(handPanel);
+		handPane.setVerticalScrollBarPolicy(ScrollPaneLayout.VERTICAL_SCROLLBAR_NEVER);
+		//Test adding cards
+		for(int i=0; i<20; i++){
+			BufferedImage ba = null;
+			try {
+				ba = ImageIO.read(new File(ImageDirectory + "Adapt.bmp"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		
+			JButton jb = new JButton(new ImageIcon(ba));
+			jb.setBorder(BorderFactory.createEmptyBorder());
+			handPanel.add(jb);
+			
+			handPane.revalidate();
 		}
 		
-		JLabel image = new JLabel(new ImageIcon(img));
-		handPanel.add(image);
+		
 	}
 	
 	private void initializeDisplayPanel(){
@@ -149,6 +197,8 @@ public class ClientGUI {
 		displaysPanel.setBackground(Color.cyan);
 		displaysPanel.setLayout(new FlowLayout());
 		displaysPanel.add(new JLabel("Board Display Area", JLabel.CENTER));
+		
+		
 	}
 	
 	private void initializeInformationPanel(){
@@ -186,8 +236,16 @@ public class ClientGUI {
 		
 		frmMain.getContentPane().add(informationPanel, BorderLayout.NORTH);
 		frmMain.getContentPane().add(displaysPanel, BorderLayout.CENTER);
-		frmMain.getContentPane().add(handPanel, BorderLayout.SOUTH);
+		frmMain.getContentPane().add(handPane, BorderLayout.SOUTH);
 		frmMain.getContentPane().add(actionArea, BorderLayout.WEST);
+	}
+	
+	public void updateHighestScore(String text){
+		highestScore.setText("High Score: " + text);
+	}
+	
+	public void updatePlayerScore(String text){
+		playerScore.setText("Your Score: " + text);
 	}
 	
 	public void updateInformationLable(String text){
