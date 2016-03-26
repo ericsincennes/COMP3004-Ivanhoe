@@ -14,17 +14,17 @@ import comp3004.ivanhoe.Card.CardType;
 import comp3004.ivanhoe.Optcodes;
 
 public class Client {
-	private Socket socket;
-	private ObjectInputStream in;
-	private ObjectOutputStream out;
-	private int playerNum = -1;
-	private List<Card> CardsInHand;	//ArrayList of current hand
-	private List<Long> PlayersList;
-	private List<Integer> PointsList;
-	private BoardState theBoard;
-	private boolean isActiveTurn;
-	private Scanner scan = new Scanner(System.in);
-	private String colour;
+	protected Socket socket;
+	protected ObjectInputStream in;
+	protected ObjectOutputStream out;
+	protected int playerNum = -1;
+	protected List<Card> CardsInHand;	//ArrayList of current hand
+	protected List<Long> PlayersList;
+	protected List<Integer> PointsList;
+	protected BoardState theBoard;
+	protected boolean isActiveTurn;
+	protected Scanner scan = new Scanner(System.in);
+	protected String colour;
 
 	public static void main(String[] args){
 		new Client();
