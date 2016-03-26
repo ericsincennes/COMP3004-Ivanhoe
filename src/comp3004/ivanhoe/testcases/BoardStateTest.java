@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import comp3004.ivanhoe.BoardState;
 import comp3004.ivanhoe.RulesEngine;
+import comp3004.ivanhoe.SupporterCard;
 import comp3004.ivanhoe.Card.CardColour;
 import comp3004.ivanhoe.ColourCard;
 
@@ -78,6 +79,7 @@ public class BoardStateTest {
 		BoardState a2 = rules.makeBoardState(rules.getPlayerById(1));
 		BoardState b1 = rules.makeBoardState(rules.getPlayerById(4));
 		
+		assertFalse(a1.equals(new SupporterCard(3)));
 		assertEquals(a1, a2);
 		assertEquals(a2, a1);
 		assertNotEquals(a1, b1);

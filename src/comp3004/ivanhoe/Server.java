@@ -172,10 +172,6 @@ public class Server{
 					try {
 						//updateClientBoardState();
 						send(Optcodes.ClientNotActiveTurn);
-						int clientStatus = (int) get();
-						if (clientStatus == Optcodes.ClientActiveTurn) {
-							send(rules.makeBoardState(rules.getPlayerById(threadID)));
-						}
 						synchronized (this) {
 							wait(500);
 							sendBoardState();

@@ -113,7 +113,6 @@ public class Client {
 				isActiveTurn = true;
 				break;
 			case Optcodes.ClientNotActiveTurn:
-				handleClientNotActive();
 				isActiveTurn = false;
 				break;
 			default: new Exception("Unexpected Value");
@@ -172,22 +171,6 @@ public class Client {
 		print("\n");
 	}
 	
-	private void handleClientNotActive() {
-		send((isActiveTurn) ? Optcodes.ClientActiveTurn : Optcodes.ClientNotActiveTurn);
-		if (isActiveTurn) {
-			Object o = get();
-			if (o.getClass() == BoardState.class) {
-				theBoard = (BoardState) o;
-				//print stuff
-			} 
-			else {
-				print("Error wrong class "  + o.getClass().getName());
-			}
-			isActiveTurn = false;
-		}
-		
-		
-	}
 	
 	/**
 	 * Gets input of what cards are goint to be sent to the server to be played
@@ -218,12 +201,17 @@ public class Client {
 	private void handleUpdateBoardState(){
 		Object o = get();
 		print("handleUpdateBoardState() getting " + o.getClass().getName() + " " + o.toString());
-		theBoard = (BoardState) o;
+		BoardState btmp = (BoardState) o;
 		
-		if (theBoard.currColour != null) print("The tournament colour is " + theBoard.currColour.name() + ".\n");
-		
-		print("The board state: \n");
-
+		if (theBoard.equals(btmp)) {
+			//do nothing
+			return;
+		}
+		else {
+			theBoard = btmp;
+			if (theBoard.currColour != null) print("The tournament colour is " + theBoard.currColour.name() + ".\n");
+			print("The board state: \n");
+		}
 	}		
 
 	private void handleTokenChoice(){
