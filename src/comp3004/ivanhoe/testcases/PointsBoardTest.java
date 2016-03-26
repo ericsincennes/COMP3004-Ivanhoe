@@ -50,6 +50,18 @@ public class PointsBoardTest {
 		testBoard.addCard(new ColourCard(CardColour.Red, 4));
 		assertEquals(testBoard.getLastPlayed().getCardName(), "Red 4");
 		
+		testBoard.setColour(CardColour.Yellow);
+		testBoard.addCard(new ColourCard(CardColour.Yellow, 4));
+		assertEquals(testBoard.getLastPlayed().getCardName(), "Yellow 4");
+		
+		testBoard.setColour(CardColour.Blue);
+		testBoard.addCard(new ColourCard(CardColour.Blue, 3));
+		assertEquals(testBoard.getLastPlayed().getCardName(), "Blue 3");
+		
+		testBoard.setColour(CardColour.Green);
+		testBoard.addCard(new ColourCard(CardColour.Green, 1));
+		assertEquals(testBoard.getLastPlayed().getCardName(), "Green 1");
+		
 		//adding maiden test
 		testBoard.addCard(new SupporterCard(6)); 
 		assertEquals(testBoard.getLastPlayed().getCardName(), "Maiden");
