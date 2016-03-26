@@ -30,6 +30,10 @@ public class Client {
 		new Client();
 	}
 
+	public boolean isActiveTurn() {
+		return isActiveTurn;
+	}
+
 	public Client(){
 		CardsInHand = new ArrayList<Card>();
 		

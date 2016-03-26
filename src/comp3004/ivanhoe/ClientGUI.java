@@ -2,37 +2,37 @@ package comp3004.ivanhoe;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-
 import javax.swing.JFrame;
-import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import javax.swing.JLabel;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.JTextArea;
 import javax.swing.JPanel;
-import javax.swing.JLayeredPane;
-import javax.swing.JSeparator;
-import javax.swing.JList;
-import java.awt.ScrollPane;
-import java.awt.TextArea;
+import javax.swing.JOptionPane;
 import java.awt.Color;
-import java.awt.Panel;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import java.awt.CardLayout;
 import java.awt.BorderLayout;
 
-public class ClientGUI{
+public class ClientGUI {
 
 	private JFrame frmMain;
-	private JPanel currentTournamentColourPanel;
-	private JPanel opponentDisplayPanels;
+	private JPanel informationPanel;
+	private JPanel displaysPanel;
 	private JPanel handPanel;
 	private JPanel actionArea;
+	
+	private JLabel informationLable = new JLabel();
+	private JLabel tournamentColourLable = new JLabel();
+	
+	private ArrayList<BufferedImage> cardImages;
+	
+	private static final String ImageDirectory = (System.getProperty("user.dir") + "/src/Images/");
 	
 	/**
 	 * Launch the application.
@@ -57,6 +57,115 @@ public class ClientGUI{
 		initialize();
 	}
 
+	private void getImages(){
+		File dir = new File(ImageDirectory);
+		for(File x: dir.listFiles()){
+			
+		}
+	}
+	
+	/**
+	 * Everything relating to the action area JPanel goes in here
+	 */
+	private void initializeActionArea(){
+		actionArea = new JPanel();
+		actionArea.setBackground(Color.gray);
+		actionArea.setLayout(new GridLayout(5,1));
+		
+		JButton endTurnButton = new JButton("End Turn");
+		JButton ivanhoeButton = new JButton("Ivanhoe");
+		JButton withdrawButton = new JButton("Withdraw");
+		
+		//End turn button pressed
+		endTurnButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(false){
+					
+				} else {
+					JOptionPane.showMessageDialog(actionArea, "Cannot end turn when it is not your turn", "End Turn Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		
+		//Ivanhoe Button Pressed
+		ivanhoeButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(false){
+					
+				} else {
+					JOptionPane.showMessageDialog(actionArea, "You do not have the card Ivanhoe to play", "Ivanhoe Error", JOptionPane.ERROR_MESSAGE);
+				}
+				
+			}
+		});
+		
+		//Withdraw Button Pressed
+		withdrawButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(false){
+					
+				} else {
+					JOptionPane.showMessageDialog(actionArea, "Cannot withdraw when it is not your turn", "Withdraw Error", JOptionPane.ERROR_MESSAGE);
+				}
+				
+			}
+		});
+		
+		actionArea.add(new JLabel("", JLabel.CENTER));
+		actionArea.add(endTurnButton);
+		actionArea.add(withdrawButton);
+		actionArea.add(ivanhoeButton);
+	}
+	
+	/**
+	 * Everything relating to the hand area JPanel goes in here
+	 */
+	private void initializeHandPanel(){
+		handPanel = new JPanel();
+		handPanel.setBackground(Color.gray);
+		handPanel.setLayout(new FlowLayout());
+		handPanel.add(new JLabel("Your Hand", JLabel.CENTER));
+	
+		BufferedImage img = null;
+		
+		try {
+			img = ImageIO.read(new File(ImageDirectory + "Adapt.bmp"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		JLabel image = new JLabel(new ImageIcon(img));
+		handPanel.add(image);
+	}
+	
+	private void initializeDisplayPanel(){
+		displaysPanel = new JPanel();
+		displaysPanel.setBackground(Color.cyan);
+		displaysPanel.setLayout(new FlowLayout());
+		displaysPanel.add(new JLabel("Board Display Area", JLabel.CENTER));
+	}
+	
+	private void initializeInformationPanel(){
+		informationPanel = new JPanel();
+		informationPanel.setBackground(Color.orange);
+		informationPanel.setLayout(new GridLayout(2, 1));
+		
+		informationLable.setText("Information Lable");
+		informationLable.setHorizontalAlignment(JLabel.CENTER);
+		
+		tournamentColourLable.setText("Tournament colour is: Tournament Colour");
+		tournamentColourLable.setHorizontalAlignment(JLabel.CENTER);
+		
+		informationPanel.add(informationLable);
+		informationPanel.add(tournamentColourLable);
+	}
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -66,29 +175,26 @@ public class ClientGUI{
 		frmMain.setBounds(100, 100, 957, 761);
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		currentTournamentColourPanel = new JPanel();
-		currentTournamentColourPanel.setBackground(Color.orange);
-		currentTournamentColourPanel.setLayout(new FlowLayout());
-		currentTournamentColourPanel.add(new JLabel("Info + Current Tournament Colour", JLabel.CENTER));
+		//Get all images to file
+		getImages();
 		
-		handPanel = new JPanel();
-		handPanel.setBackground(Color.gray);
-		handPanel.setLayout(new FlowLayout());
-		handPanel.add(new JLabel("HAND DISPLAY AREA", JLabel.CENTER));
+		//Initialize all GUI Pieces
+		initializeActionArea();
+		initializeHandPanel();
+		initializeInformationPanel();
+		initializeDisplayPanel();
 		
-		actionArea = new JPanel();
-		actionArea.setBackground(Color.green);
-		actionArea.setLayout(new FlowLayout());
-		actionArea.add(new JLabel("Display Area", JLabel.CENTER));
-		
-		frmMain.getContentPane().add(currentTournamentColourPanel, BorderLayout.NORTH);
-		
-		opponentDisplayPanels = new JPanel();
-		opponentDisplayPanels.setBackground(Color.cyan);
-		opponentDisplayPanels.setLayout(new FlowLayout());
-		opponentDisplayPanels.add(new JLabel("Board Display Area", JLabel.CENTER));
-		frmMain.getContentPane().add(opponentDisplayPanels, BorderLayout.CENTER);
+		frmMain.getContentPane().add(informationPanel, BorderLayout.NORTH);
+		frmMain.getContentPane().add(displaysPanel, BorderLayout.CENTER);
 		frmMain.getContentPane().add(handPanel, BorderLayout.SOUTH);
 		frmMain.getContentPane().add(actionArea, BorderLayout.WEST);
+	}
+	
+	public void updateInformationLable(String text){
+		informationLable.setText(text);
+	}
+	
+	public void updateTournamentColourLable(String text){
+		tournamentColourLable.setText("Current tournament colour is: " + text);
 	}
 }
