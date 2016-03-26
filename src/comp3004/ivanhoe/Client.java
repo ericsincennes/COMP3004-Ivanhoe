@@ -203,7 +203,7 @@ public class Client {
 		print("handleUpdateBoardState() getting " + o.getClass().getName() + " " + o.toString());
 		BoardState btmp = (BoardState) o;
 		
-		if (theBoard.equals(btmp)) {
+		if (theBoard != null && theBoard.equals(btmp)) {
 			//do nothing
 			return;
 		}

@@ -79,6 +79,7 @@ public class BoardStateTest {
 		BoardState a2 = rules.makeBoardState(rules.getPlayerById(1));
 		BoardState b1 = rules.makeBoardState(rules.getPlayerById(4));
 		
+		assertFalse(a1.equals(null));
 		assertFalse(a1.equals(new SupporterCard(3)));
 		assertEquals(a1, a2);
 		assertEquals(a2, a1);
