@@ -38,4 +38,16 @@ public final class BoardState implements Serializable{
 		//discarded = theDeck.viewDiscard();
 	}
 	
+	public boolean equals(BoardState other) {
+		boolean a,b,c,d,e,f,g;
+		a = this.owner == other.owner;
+		b = this.players.equals(other.players);
+		c = this.hand.equals(other.hand);
+		d = this.boards.equals(other.boards);
+		e = this.actionBoards.equals(other.actionBoards);
+		f = this.points.equals(other.points);
+		g = this.currColour.equals(other.currColour);
+		return a && b && c && d && e && f && g;
+	}
+	
 }
