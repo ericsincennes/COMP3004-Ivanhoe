@@ -110,10 +110,11 @@ public class Client {
 				getPoints();
 				break; 
 			case Optcodes.ClientActiveTurn:
+				handleActiveTurn();
 				isActiveTurn = true;
 				break;
 			case Optcodes.ClientNotActiveTurn:
-				isActiveTurn = false;
+				handleNonActiveTurn();
 				break;
 			default: new Exception("Unexpected Value");
 				break;
@@ -122,6 +123,38 @@ public class Client {
 	}
 	
 
+
+	private void handleNonActiveTurn() {
+		isActiveTurn = false;
+	}
+
+	private void handleActiveTurn() {
+		// TODO Auto-generated method stub
+		isActiveTurn = true;
+		print("The board state: \n");
+		for (int i=theBoard.players.size()-1; i>=0; i--) {
+			print("Board of player ID " +theBoard.players.get(i) +". Current points: " + theBoard.points.get(i));
+			List<Card> l = theBoard.boards.get(i);
+			List<Card> al = theBoard.actionBoards.get(i);
+			for(Card c: l){
+				System.out.print(c.getCardName() + " - ");
+				System.out.println("");
+			}
+			if (al.size() > 0) for (Card c: al) {
+				System.out.print("Action Cards affecting board: ");
+				System.out.print(c.getCardName() + " - ");
+			}
+			
+		}
+		System.out.println("");
+		
+		print("Your hand:");
+		for(Card c: theBoard.hand){
+			System.out.print(c.getCardName() + " - ");
+			
+		}
+		System.out.println("");
+	}
 
 	/**
 	 * Gets the target for action cards
