@@ -187,10 +187,10 @@ public class Client {
 			} else if (choice == 66) {
 				send(Optcodes.ClientEndTurn);
 				break;
-			} else if (choice < 1 || choice > CardsInHand.size()) {
+			} else if (choice < 1 || choice > theBoard.hand.size()) {
 				print("Choose a number corresponding to a card in your hand");
 			}
-		} while (choice < 1 || choice > CardsInHand.size());
+		} while (choice < 1 || choice > theBoard.hand.size());
 		
 		send(choice-1);
 	}
@@ -331,5 +331,3 @@ public class Client {
 		return playerNum;
 	}
 }
-
-
