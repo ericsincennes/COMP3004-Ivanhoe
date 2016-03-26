@@ -5,31 +5,27 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneLayout;
 import javax.swing.JOptionPane;
 import java.awt.Color;
-import java.awt.Dimension;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
-public class ClientGUI {
+public class ClientGUI extends Client{
 
 	private JFrame frmMain;
 	
@@ -37,6 +33,7 @@ public class ClientGUI {
 	private JPanel displaysPanel;
 	private JPanel handPanel;
 	private JPanel actionArea;
+	private JPanel opponent1Panle, opponent2Panle, opponent3Panle, opponent4Panle; 
 	
 	private JLabel informationLable = new JLabel();
 	private JLabel tournamentColourLable = new JLabel();
@@ -44,10 +41,10 @@ public class ClientGUI {
 	private JLabel playerScore = new JLabel();
 	
 	private JScrollPane handPane;
+	private JScrollPane displayPane;
 	
-	//TODO Add selected Card holder
-	//once card is selected play card button is activated
-	//else disabled
+	private Card selectedCard = null;
+	
 	
 	private ArrayList<BufferedImage> cardImages;
 	
@@ -173,6 +170,7 @@ public class ClientGUI {
 		
 		handPane = new JScrollPane(handPanel);
 		handPane.setVerticalScrollBarPolicy(ScrollPaneLayout.VERTICAL_SCROLLBAR_NEVER);
+		
 		//Test adding cards
 		for(int i=0; i<20; i++){
 			BufferedImage ba = null;
@@ -188,17 +186,77 @@ public class ClientGUI {
 			
 			handPane.revalidate();
 		}
+	}
+	
+	public void updateHand(){
+		//clear panel
+		handPanel.removeAll();
 		
-		
+		//add all cards from hand
+		for(Card x: theBoard.hand){
+			BufferedImage ba = null;
+			try{
+				ba = ImageIO.read(new File(ImageDirectory + x.getCardName()));
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+			
+			JButton button = new JButton(new ImageIcon(ba));
+			button.setName(x.getCardName());
+			
+			handPanel.add(button);
+			
+		}
+		//repaint
+		handPanel.revalidate();
+		handPane.revalidate();
 	}
 	
 	private void initializeDisplayPanel(){
 		displaysPanel = new JPanel();
 		displaysPanel.setBackground(Color.cyan);
-		displaysPanel.setLayout(new FlowLayout());
-		displaysPanel.add(new JLabel("Board Display Area", JLabel.CENTER));
+		displaysPanel.setLayout(new GridLayout(5, 1));
+		//displaysPanel.add(new JLabel("Board Display Area", JLabel.CENTER));
 		
+		displayPane = new JScrollPane(displaysPanel);
 		
+		for(int i=0; i<4; i++){
+			JPanel oponentDisplay = new JPanel();
+			oponentDisplay.setLayout(new FlowLayout());
+			oponentDisplay.setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent " + (i+1)));
+			for(int b=0; b<10; b++){
+				BufferedImage ba = null;
+				try {
+					ba = ImageIO.read(new File(ImageDirectory + "Adapt.bmp"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				//JButton img = new JButton(new ImageIcon(ba));
+				JLabel img = new JLabel(new ImageIcon(ba));
+				oponentDisplay.add(img);
+				
+			}
+			displaysPanel.add(oponentDisplay);
+		}
+		
+		JPanel playerDisplay = new JPanel();
+		playerDisplay.setLayout(new FlowLayout());
+		playerDisplay.setBorder(new TitledBorder(new LineBorder(Color.black), "Your Display" ));
+		for(int b=0; b<10; b++){
+			BufferedImage ba = null;
+			try {
+				ba = ImageIO.read(new File(ImageDirectory + "Adapt.bmp"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			//JButton img = new JButton(new ImageIcon(ba));
+			JLabel img = new JLabel(new ImageIcon(ba));
+			playerDisplay.add(img);
+			
+		}
+		displaysPanel.add(playerDisplay);
+		
+		displayPane.revalidate();
 	}
 	
 	private void initializeInformationPanel(){
@@ -235,7 +293,7 @@ public class ClientGUI {
 		initializeDisplayPanel();
 		
 		frmMain.getContentPane().add(informationPanel, BorderLayout.NORTH);
-		frmMain.getContentPane().add(displaysPanel, BorderLayout.CENTER);
+		frmMain.getContentPane().add(displayPane, BorderLayout.CENTER);
 		frmMain.getContentPane().add(handPane, BorderLayout.SOUTH);
 		frmMain.getContentPane().add(actionArea, BorderLayout.WEST);
 	}
