@@ -27,7 +27,8 @@ public class Client {
 	protected String colour;
 
 	public static void main(String[] args){
-		new Client();
+		Client p = new Client();
+		p.start();
 	}
 
 	public boolean isActiveTurn() {
@@ -38,7 +39,7 @@ public class Client {
 		CardsInHand = new ArrayList<Card>();
 		
 		connect(2244);
-		start();
+
 	}
 
 	public boolean connect(int port){
