@@ -12,6 +12,7 @@ import comp3004.ivanhoe.ActionCard;
 import comp3004.ivanhoe.ColourCard;
 import comp3004.ivanhoe.Player;
 import comp3004.ivanhoe.RulesEngine;
+import comp3004.ivanhoe.SupporterCard;
 import comp3004.ivanhoe.Card.CardColour;
 
 public class ActionCardTest {
@@ -72,12 +73,10 @@ public class ActionCardTest {
 	public void testBreakLance() {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 4));
-		assertEquals(rules.getPlayerById(2).getDisplay().getLastPlayed().getCardName(), "Purple 4");
-		assertTrue(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 7));
-		assertEquals(rules.getPlayerById(2).getDisplay().getLastPlayed().getCardName(), "Purple 7");
 		rules.actionHandler(new ActionCard("Break Lance"), rules.getPlayerById(1), rules.getPlayerById(2));
-		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
+		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 5"));
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 7"));
 	}
 	
@@ -96,8 +95,6 @@ public class ActionCardTest {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
-		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
-		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 4"));
 		rules.actionHandler(new ActionCard("Dodge"), rules.getPlayerById(1), rules.getPlayerById(2), "Blue 3");
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 4"));

@@ -51,7 +51,7 @@ public class PointsBoard {
 	public boolean addCard(Card c) {
 		if (c.getCardType() == CardType.Colour || c.getCardType() == CardType.Supporter) {
 			if (((ColourCard)c).cardColour == CardColour.White || ((ColourCard)c).cardColour == tourneyColour) {
-				if (c.getCardName() == "Maiden" && this.contains("Maiden")) {
+				if (c.getCardName().equals("Maiden") && this.contains("Maiden")) {
 					return false;
 				}
 				cardsPlayed.add(c);
@@ -172,7 +172,7 @@ public class PointsBoard {
 		Card ret = null;
 		for (ListIterator<Card> it = cardsPlayed.listIterator(cardsPlayed.size()); it.hasPrevious();) {
 			ret = it.previous();
-			if (cardName == ret.getCardName()) {
+			if (cardName.equals(ret.getCardName())) {
 				it.remove();
 				break;
 			}
