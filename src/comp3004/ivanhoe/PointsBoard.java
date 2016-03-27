@@ -95,6 +95,14 @@ public class PointsBoard {
 		return cardsPlayed.get(index);
 	}
 	
+	public Card getCard(String name) {
+		for (Card c : cardsPlayed) {
+			if (name.equals(c.getCardName())) {
+				return c;
+			}
+		}
+		return null;
+	}
 	/**
 	 * Return the last played card
 	 * @return Card
