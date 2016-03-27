@@ -29,5 +29,5 @@ public class Optcodes {
 	public static final int GameWinner 					= 9001;
 	public static final int GameOver					= 8999;
 	
-	
+	public static final int Ivanhoe						= 9999;
 }

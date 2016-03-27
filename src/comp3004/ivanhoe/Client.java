@@ -343,7 +343,7 @@ public class Client {
 	 * @param o Object to be sent
 	 * @return boolean if successful
 	 */
-	private boolean send(Object o){
+	protected boolean send(Object o){
 		try {
 			out.writeObject(o);
 		} catch (IOException e) {

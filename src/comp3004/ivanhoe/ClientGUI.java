@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import javax.swing.border.LineBorder;
@@ -33,7 +33,8 @@ public class ClientGUI extends Client{
 	private JPanel displaysPanel;
 	private JPanel handPanel;
 	private JPanel actionArea;
-	private JPanel opponent1Panle, opponent2Panle, opponent3Panle, opponent4Panle; 
+	private JPanel playerDisplayPanel;
+	private JPanel[] opponentPanle;
 	
 	private JLabel informationLable = new JLabel();
 	private JLabel tournamentColourLable = new JLabel();
@@ -44,9 +45,6 @@ public class ClientGUI extends Client{
 	private JScrollPane displayPane;
 	
 	private Card selectedCard = null;
-	
-	
-	private ArrayList<BufferedImage> cardImages;
 	
 	private static final String ImageDirectory = (System.getProperty("user.dir") + "/src/Images/");
 	
@@ -70,6 +68,7 @@ public class ClientGUI extends Client{
 	 * Create the application.
 	 */
 	public ClientGUI() {
+		opponentPanle = new JPanel[4];
 		initialize();
 	}
 
@@ -99,15 +98,21 @@ public class ClientGUI extends Client{
 		playCardButton.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				//if players turn
-					//if card selected
-						//send card to be played
-					//else if no card selected
-						//JOptionPane.showMessageDialog(actionArea, "Select a card to play or withdraw", "Cannot play nothing", JOptionPane.ERROR_MESSAGE);
-				//else not players turn
-					//JOptionPane.showMessageDialog(actionArea, "Cannot play card when it is not your turn", "Playing card error", JOptionPane.ERROR_MESSAGE);
+			public void actionPerformed(ActionEvent e) {			
+				if(isActiveTurn){
+					if(selectedCard != null){
+						for(Card x : theBoard.hand){
+							int a = theBoard.hand.indexOf(x);
+							send(a);
+						}
+					} else {
+						//no card selected
+						JOptionPane.showMessageDialog(actionArea, "Select a card to play or withdraw", "Cannot play nothing", JOptionPane.ERROR_MESSAGE);
+					}
+				} else {
+					//not players turn
+					JOptionPane.showMessageDialog(actionArea, "Cannot play card when it is not your turn", "Playing card error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
@@ -116,8 +121,10 @@ public class ClientGUI extends Client{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(false){
+				if(isActiveTurn){
 					//if player's turn
+					send(Optcodes.ClientEndTurn);
+					isActiveTurn = false;
 				} else {
 					//if not players turn
 					JOptionPane.showMessageDialog(actionArea, "Cannot end turn when it is not your turn", "End Turn Error", JOptionPane.ERROR_MESSAGE);
@@ -130,10 +137,15 @@ public class ClientGUI extends Client{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//if player had ivanhoe in hand
-					//play ivanhoe
-				//else
-					//JOptionPane.showMessageDialog(actionArea, "You do not have the card Ivanhoe to play", "Ivanhoe Error", JOptionPane.ERROR_MESSAGE);
+				for(Card x : theBoard.hand){
+					//player has ivanhoe
+					if(x.getCardName() == "Ivanhoe"){
+						send(Optcodes.Ivanhoe);
+					} else {
+						//player does not have ivanhoe
+						JOptionPane.showMessageDialog(actionArea, "You do not have the card Ivanhoe to play", "Ivanhoe Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
 			}
 		});
 		
@@ -142,13 +154,14 @@ public class ClientGUI extends Client{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(false){
-					//if player's turn
+				if(isActiveTurn){
+					//is players turn
+					send(Optcodes.ClientWithdraw);
+					isActiveTurn = false;
 				} else {
 					//if not player's turn
 					JOptionPane.showMessageDialog(actionArea, "Cannot withdraw when it is not your turn", "Withdraw Error", JOptionPane.ERROR_MESSAGE);
 				}
-				
 			}
 		});
 		
@@ -171,7 +184,11 @@ public class ClientGUI extends Client{
 		handPane = new JScrollPane(handPanel);
 		handPane.setVerticalScrollBarPolicy(ScrollPaneLayout.VERTICAL_SCROLLBAR_NEVER);
 		
-		//Test adding cards
+		
+		//updateHand();
+		
+		//TODO REMOVE TEST CODE
+		/*
 		for(int i=0; i<20; i++){
 			BufferedImage ba = null;
 			try {
@@ -182,44 +199,57 @@ public class ClientGUI extends Client{
 		
 			JButton jb = new JButton(new ImageIcon(ba));
 			jb.setBorder(BorderFactory.createEmptyBorder());
+			jb.setName("Adapt " + i);
+			jb.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					updateInformationLable("Selected card: " + e.toString());
+				}
+			});
+			
 			handPanel.add(jb);
 			
 			handPane.revalidate();
 		}
+		*/
 	}
-	
-	public void updateHand(){
-		//clear panel
-		handPanel.removeAll();
 		
-		//add all cards from hand
-		for(Card x: theBoard.hand){
-			BufferedImage ba = null;
-			try{
-				ba = ImageIO.read(new File(ImageDirectory + x.getCardName()));
-			} catch (IOException e){
-				e.printStackTrace();
-			}
-			
-			JButton button = new JButton(new ImageIcon(ba));
-			button.setName(x.getCardName());
-			
-			handPanel.add(button);
-			
-		}
-		//repaint
-		handPanel.revalidate();
-		handPane.revalidate();
-	}
-	
 	private void initializeDisplayPanel(){
 		displaysPanel = new JPanel();
 		displaysPanel.setBackground(Color.cyan);
 		displaysPanel.setLayout(new GridLayout(5, 1));
-		//displaysPanel.add(new JLabel("Board Display Area", JLabel.CENTER));
 		
 		displayPane = new JScrollPane(displaysPanel);
 		
+		playerDisplayPanel = new JPanel();
+		playerDisplayPanel.setLayout(new FlowLayout());
+		playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Player"));
+		
+		opponentPanle[0] = new JPanel();
+		opponentPanle[0].setLayout(new FlowLayout());
+		opponentPanle[0].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
+		
+		opponentPanle[1] = new JPanel();
+		opponentPanle[1].setLayout(new FlowLayout());
+		opponentPanle[1].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
+		
+		opponentPanle[2] = new JPanel();
+		opponentPanle[2].setLayout(new FlowLayout());
+		opponentPanle[2].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
+		
+		opponentPanle[3] = new JPanel();
+		opponentPanle[3].setLayout(new FlowLayout());
+		opponentPanle[3].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
+		
+		displaysPanel.add(opponentPanle[0]);
+		displaysPanel.add(opponentPanle[1]);
+		displaysPanel.add(opponentPanle[2]);
+		displaysPanel.add(opponentPanle[3]);
+		displaysPanel.add(playerDisplayPanel);
+		
+		//TODO remove test code
+		/*
 		for(int i=0; i<4; i++){
 			JPanel oponentDisplay = new JPanel();
 			oponentDisplay.setLayout(new FlowLayout());
@@ -257,6 +287,7 @@ public class ClientGUI extends Client{
 		displaysPanel.add(playerDisplay);
 		
 		displayPane.revalidate();
+		*/
 	}
 	
 	private void initializeInformationPanel(){
@@ -298,6 +329,90 @@ public class ClientGUI extends Client{
 		frmMain.getContentPane().add(actionArea, BorderLayout.WEST);
 	}
 	
+	//Update functions
+	
+	public void updateHand(){
+		//clear panel
+		handPanel.removeAll();
+		
+		//add all cards from hand
+		for(Card x: theBoard.hand){
+			BufferedImage ba = null;
+			try{
+				ba = ImageIO.read(new File(ImageDirectory + x.getCardName()+ ".bmp"));
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+			
+			JButton button = new JButton(new ImageIcon(ba));
+			button.setName(x.getCardName());
+			button.setBorder(BorderFactory.createEmptyBorder());
+			button.setToolTipText(x.getCardName());
+			
+			button.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					for(Card x: theBoard.hand){
+						if(x.getCardName() == button.getName()){
+							selectedCard = x;
+							updateInformationLable("Selected card: " + x.getCardName());
+							break;
+						}
+					}
+				}
+			});
+			
+			handPanel.add(button);
+			
+		}
+		//repaint
+		handPanel.revalidate();
+		handPane.revalidate();
+	}
+	
+	public void updateDisplayPanel(){
+		for(List<Card> displays : theBoard.boards){
+			if(theBoard.boards.indexOf(displays) == 0){
+				playerDisplayPanel.removeAll();
+				playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Your Display"));
+				for(Card x: displays){
+					BufferedImage img = null;
+					try{
+						img = ImageIO.read(new File(ImageDirectory + x.getCardName() + ".bmp"));
+					} catch (IOException e){
+						e.printStackTrace();
+					}
+					JLabel imgLable = new JLabel(new ImageIcon(img));
+					imgLable.setToolTipText(x.getCardName());
+					playerDisplayPanel.add(imgLable);
+				}
+				playerDisplayPanel.revalidate();
+				displaysPanel.revalidate();
+				
+			} else {
+				//opponent displays
+				opponentPanle[theBoard.boards.indexOf(displays) -1].removeAll();
+				opponentPanle[theBoard.boards.indexOf(displays) -1].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent " + theBoard.boards.indexOf(displays)));
+				for(Card x: displays){
+					BufferedImage img = null;
+					try{
+						img = ImageIO.read(new File(ImageDirectory + x.getCardName() + ".bmp"));
+					} catch (IOException e){
+						e.printStackTrace();
+					}
+					JLabel imgLable = new JLabel(new ImageIcon(img));
+					imgLable.setToolTipText(x.getCardName());
+					opponentPanle[theBoard.boards.indexOf(displays) -1].add(imgLable);
+					
+				}
+				opponentPanle[theBoard.boards.indexOf(displays) -1].revalidate();
+				displaysPanel.revalidate();
+			}
+		}
+		displayPane.revalidate();
+	}
+	
 	public void updateHighestScore(String text){
 		highestScore.setText("High Score: " + text);
 	}
@@ -307,7 +422,9 @@ public class ClientGUI extends Client{
 	}
 	
 	public void updateInformationLable(String text){
+		informationLable.removeAll();
 		informationLable.setText(text);
+		informationLable.revalidate();
 	}
 	
 	public void updateTournamentColourLable(String text){
