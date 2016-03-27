@@ -65,7 +65,7 @@ public class Client {
 		}
 	}
 
-	private void start(){
+	protected void start(){
 		playerNum = (int) get();	//get player number from server
 
 		while(true){
@@ -299,17 +299,17 @@ public class Client {
 	protected void handleGetTournamentColour(){
 		int choice = -1;
 
-		print("Choose the color of the tournement");
-		print("{1) - Purple");
-		print("{2) - Green");
-		print("{3) - Red");
-		print("{4) - Blue");
-		print("{5) - Yellow");
+		System.out.println("Choose the color of the tournement");
+		System.out.println("{1) - Purple");
+		System.out.println("{2) - Green");
+		System.out.println("{3) - Red");
+		System.out.println("{4) - Blue");
+		System.out.println("{5) - Yellow");
 
 		while (choice == -1) {
 			choice = scan.nextInt();
 			if (choice < 1 || choice > 5){
-				print("Please choose a number between 1 and 5");
+				System.out.println("Please choose a number between 1 and 5");
 				choice = -1;
 			} 
 		}

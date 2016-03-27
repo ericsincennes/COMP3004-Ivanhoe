@@ -55,12 +55,17 @@ public class ClientGUI extends Client{
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				ClientGUI window = null;
 				try {
-					ClientGUI window = new ClientGUI();
+					window = new ClientGUI();
+					window.initialize();
 					window.frmMain.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
+				window.start();
+				
 			}
 		});
 	}
@@ -70,7 +75,7 @@ public class ClientGUI extends Client{
 	 */
 	public ClientGUI() {
 		opponentPanle = new JPanel[4];
-		initialize();
+		//initialize();
 	}
 
 	/**
@@ -288,7 +293,7 @@ public class ClientGUI extends Client{
 		displayPane.revalidate();
 		 */
 	}
-
+	
 	private void initializeInformationPanel(){
 		informationPanel = new JPanel();
 		informationPanel.setBackground(Color.orange);
@@ -323,7 +328,7 @@ public class ClientGUI extends Client{
 		frmMain.getContentPane().add(displayPane, BorderLayout.CENTER);
 		frmMain.getContentPane().add(handPane, BorderLayout.SOUTH);
 		frmMain.getContentPane().add(actionArea, BorderLayout.WEST);
-		
+
 	}
 
 	//Update functions
@@ -431,21 +436,75 @@ public class ClientGUI extends Client{
 	}
 
 	protected void handleGetTournamentColour(){
-		super.handleGetTournamentColour();
-		/*
+
 		String[] options = {"Purple", "Green", "Red", "Blue", "Yellow"};
 		String s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a Tournament Colour","Tournament Colour", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 		
 		if ((s != null) && (s.length() > 0)) {
 			send(Arrays.asList(options).indexOf(s));
 		}
-		*/
+
 	}
 	
+	@Override
 	protected void handleUpdateBoardState(){
 		super.handleUpdateBoardState();
 		
 		updateDisplayPanel();
 		updateHand();
+	}
+	
+	protected void start(){
+		playerNum = (int) get();	//get player number from server
+
+		while(true){
+			Object o = get();
+			print("getting optcode from server " + o.getClass().getName() + " " + o.toString());
+			int optcode = (int) o;
+
+			switch(optcode) {
+			case Optcodes.ClientGetColourChoice:
+				handleGetTournamentColour();
+				break;
+			case Optcodes.ClientUpdateBoardState:
+				handleUpdateBoardState();
+				break;
+			case Optcodes.ClientGetCardsToBePlayed:
+				sendCardsToBePlayed();
+				break;
+			case Optcodes.InvalidCard:
+				print("Card is unable to be played");
+				break;
+			case Optcodes.SuccessfulCardPlay:
+				print("Card was played successfully");
+				break;
+			case Optcodes.ClientWithdraw:
+				break;
+			case Optcodes.ClientGetTokenChoice:
+				handleTokenChoice();
+				break;
+			case Optcodes.ClientGetActionCardTarget:
+				getActionCardTargets();
+				break; 
+			case Optcodes.ClientActiveTurn:
+				isActiveTurn = true;
+				break;
+			case Optcodes.ClientNotActiveTurn:
+				isActiveTurn = false;
+				break;
+			default: new Exception("Unexpected Value");
+				break;
+			}
+		}
+	}
+	
+	private class Updater extends ClientGUI implements Runnable{
+		
+		public Updater(){}
+
+		@Override
+		public void run() {
+			super.start();
+		}
 	}
 }
