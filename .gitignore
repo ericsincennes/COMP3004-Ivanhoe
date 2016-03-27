@@ -6,6 +6,9 @@ out/
 wbp-meta/
 /bin/
 
+#images
+/images/
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
