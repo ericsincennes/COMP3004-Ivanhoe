@@ -371,7 +371,7 @@ public class RulesEngine {
 		Card taken;
 		Random rand = new Random();
 		Player opponent = null;
-		String chosen = null, chosen2 = null;
+		String chosen = null;
 		CardColour colour = null;
 		int choiceIndex = 0; //used for outwit
 		ArrayList<ArrayList<Integer>> keeping = null; //used for Adapt
@@ -382,14 +382,10 @@ public class RulesEngine {
 			if (target[i].getClass().equals(Player.class)) {
 				opponent = (Player) target[i];
 			} else if (target[i].getClass().equals(String.class)) {
-				if (chosen == null) {
-					chosen = (String) target[i];
-				} else {
-					chosen2 = (String) target[i];
-				}
+				chosen = (String) target[i];
 			} else if (target[i].getClass().equals(CardColour.class)) {
 				colour = (CardColour) target[i];
-			} else if (target[i].getClass().equals(int[].class)) {
+			} else if (target[i].getClass().equals(int.class)) {
 				choiceIndex = (int) target[i];
 			} else if (target[i].getClass().equals(ArrayList.class)){
 				keeping.add((ArrayList<Integer>) target[i]);
@@ -547,16 +543,16 @@ public class RulesEngine {
 			//need to give own card before opponent card
 			
 			//give card
-			Card give = caster.getDisplay().getCard(chosen);
+			Card give = caster.getDisplay().getCard(choiceIndex);
 			opponent.getDisplay().addCard(give);
 			
 			//take card
-			Card take = opponent.getDisplay().getCard(chosen2);
+			Card take = opponent.getDisplay().getCard(chosen);
 			caster.getDisplay().addCard(take);
 			
 			//remove cards
-			caster.getDisplay().remove(chosen);
-			opponent.getDisplay().remove(chosen2);
+			caster.getDisplay().remove(choiceIndex);
+			opponent.getDisplay().remove(chosen);
 			break;
 		case "Shield":
 			//A player plays this card face up in front of himself, 

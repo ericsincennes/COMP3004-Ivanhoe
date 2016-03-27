@@ -197,7 +197,7 @@ public class ActionCardTest {
 		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Yellow, 3));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
-		rules.actionHandler(new ActionCard("Outwit"), rules.getPlayerById(1), rules.getPlayerById(2), "Yellow 2", "Yellow 4");
+		rules.actionHandler(new ActionCard("Outwit"), rules.getPlayerById(1), rules.getPlayerById(2), 0, "Yellow 4");
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Yellow 2"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 4"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Yellow 2"));
