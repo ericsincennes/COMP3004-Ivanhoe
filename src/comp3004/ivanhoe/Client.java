@@ -125,11 +125,11 @@ public class Client {
 	
 
 
-	private void handleNonActiveTurn() {
+	protected void handleNonActiveTurn() {
 		isActiveTurn = false;
 	}
 
-	private void handleActiveTurn() {
+	protected void handleActiveTurn() {
 		// TODO Auto-generated method stub
 		isActiveTurn = true;
 		print("The board state: \n");
@@ -160,7 +160,7 @@ public class Client {
 	/**
 	 * Gets the target for action cards
 	 */
-	private void getActionCardTargets(){
+	protected void getActionCardTargets(){
 		//TODO Finish this
 		ArrayList<String> targets = new ArrayList<String>();
 		//get index of card to get data for from server
@@ -172,26 +172,26 @@ public class Client {
 		}
 	}
 	
-	private void getPlayersList() {
+	protected void getPlayersList() {
 		Object o = get(); 
 		print("getPlayersList() getting " + o.getClass().getName() + " " + o.toString());
 		PlayersList = (List<Long>) o;
 	}
 	
-	private void setColour() {
+	protected void setColour() {
 		Object o = get();
 		print("setColour() getting " + o.getClass().getName() + " " + o.toString());
 		colour = ((CardColour) o).name();
 	}
 	
-	private void getPoints() {
+	protected void getPoints() {
 		Object o = get();
 		print("getPoints() getting " + o.getClass().getName() + " " + o.toString());
 		PointsList = (List<Integer>) o;
 		
 	}
 	
-	private void handleGetHand(){
+	protected void handleGetHand(){
 		Object o = get();
 		print("handleGetHand() getting " + o.getClass().getName() + " " + o.toString());
 		CardsInHand = (ArrayList<Card>) o;
@@ -210,7 +210,7 @@ public class Client {
 	 * Gets input of what cards are goint to be sent to the server to be played
 	 * If card is an action card then gets input of the card's targets 
 	 */
-	private void sendCardsToBePlayed(){
+	protected void sendCardsToBePlayed(){
 		int choice = 0;
 		
 		do {
@@ -232,7 +232,7 @@ public class Client {
 	/**
 	 * Gets the state of the board from the server
 	 */
-	private void handleUpdateBoardState(){
+	protected void handleUpdateBoardState(){
 		Object o = get();
 		print("handleUpdateBoardState() getting " + o.getClass().getName() + " " + o.toString());
 		BoardState btmp = (BoardState) o;
@@ -277,7 +277,7 @@ public class Client {
 		}
 	}		
 
-	private void handleTokenChoice(){
+	protected void handleTokenChoice(){
 		int choice = -1;
 
 		print("Choose the colour of the token you want");
@@ -302,7 +302,7 @@ public class Client {
 	 * Gets the player input for tournament colour
 	 * @return Card.CardColour
 	 */
-	private void handleGetTournamentColour(){
+	protected void handleGetTournamentColour(){
 		int choice = -1;
 
 		print("Choose the color of the tournement");
@@ -328,7 +328,7 @@ public class Client {
 	 * Does not verify the typeOf an object
 	 * @return
 	 */
-	private Object get(){
+	protected Object get(){
 		Object o = new Object();
 		try {
 			o = in.readObject();
@@ -353,15 +353,15 @@ public class Client {
 		return true;
 	}
 
-	private void print(String s){
+	protected void print(String s){
 		System.out.println(s);
 	}
 	
-	private void printlist(String s){
+	protected void printlist(String s){
 		System.out.print(s);
 	}
 
-	public int getPlayerNum(){
+	protected int getPlayerNum(){
 		return playerNum;
 	}
 }
