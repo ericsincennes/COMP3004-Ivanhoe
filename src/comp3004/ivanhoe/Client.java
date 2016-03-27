@@ -242,12 +242,6 @@ public class Client {
 			return;
 		}
 		else {
-			//debug
-			if (theBoard != null) {
-				print("btmp == theboard? " + btmp.equals(theBoard));
-			}
-			
-			//end debug
 			theBoard = btmp;
 			if (theBoard.currColour != null) print("The tournament colour is " + theBoard.currColour.name() + ".\n");
 			

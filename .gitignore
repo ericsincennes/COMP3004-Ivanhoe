@@ -7,7 +7,7 @@ wbp-meta/
 /bin/
 
 #images
-/images/
+src/Images/
 
 # Windows image file caches
 Thumbs.db
