@@ -63,11 +63,45 @@ public class RulesEngineTest {
 		Player p = rules.getPlayerById(2);
 		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
 		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Squire 2"); //playing supporter card
+		
+		//blue tournament
 		p.addCard(new ColourCard(CardColour.Red, 3));
 		assertFalse(rules.playCard(p.getHandSize()-1, p.getID())); //colour restriction
 		p.addCard(new ColourCard(CardColour.Blue, 4));
 		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
 		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Blue 4"); //playing on colour
+		
+		//red tournament
+		rules.initializeTournamentColour(p.getID(), CardColour.Red);
+		p.addCard(new ColourCard(CardColour.Yellow, 3));
+		assertFalse(rules.playCard(p.getHandSize()-1, p.getID())); //colour restriction
+		p.addCard(new ColourCard(CardColour.Red, 4));
+		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
+		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Red 4"); //playing on colour
+		
+		//yellow tournament
+		rules.initializeTournamentColour(p.getID(), CardColour.Yellow);
+		p.addCard(new ColourCard(CardColour.Green, 1));
+		assertFalse(rules.playCard(p.getHandSize()-1, p.getID())); //colour restriction
+		p.addCard(new ColourCard(CardColour.Yellow, 4));
+		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
+		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Yellow 4"); //playing on colour
+		
+		//green tournament
+		rules.initializeTournamentColour(p.getID(), CardColour.Green);
+		p.addCard(new ColourCard(CardColour.Purple, 5));
+		assertFalse(rules.playCard(p.getHandSize()-1, p.getID())); //colour restriction
+		p.addCard(new ColourCard(CardColour.Green, 1));
+		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
+		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Green 1"); //playing on colour
+		
+		//purple tournament
+		rules.initializeTournamentColour(p.getID(), CardColour.Purple);
+		p.addCard(new ColourCard(CardColour.Blue, 3));
+		assertFalse(rules.playCard(p.getHandSize()-1, p.getID())); //colour restriction
+		p.addCard(new ColourCard(CardColour.Purple, 7));
+		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
+		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Purple 7"); //playing on colour
 	}
 	 
 	@Test
