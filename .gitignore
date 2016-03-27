@@ -6,6 +6,9 @@ out/
 wbp-meta/
 /bin/
 
+#ignore images
+/images/
+
 #images
 /images/
 
