@@ -547,13 +547,16 @@ public class RulesEngine {
 			//need to give own card before opponent card
 			
 			//give card
-			Card give = caster.getDisplay().remove(chosen);
+			Card give = caster.getDisplay().getCard(chosen);
 			opponent.getDisplay().addCard(give);
 			
 			//take card
-			Card take = opponent.getDisplay().remove(chosen2);
+			Card take = opponent.getDisplay().getCard(chosen2);
 			caster.getDisplay().addCard(take);
 			
+			//remove cards
+			caster.getDisplay().remove(chosen);
+			opponent.getDisplay().remove(chosen2);
 			break;
 		case "Shield":
 			//A player plays this card face up in front of himself, 
