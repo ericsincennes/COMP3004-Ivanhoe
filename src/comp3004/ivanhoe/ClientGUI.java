@@ -350,11 +350,13 @@ public class ClientGUI extends Client{
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					for(Card x: theBoard.hand){
-						if(x.getCardName() == button.getName()){
-							selectedCard = x;
-							updateInformationLable("Selected card: " + x.getCardName());
-							break;
+					if(theBoard.hand != null && !theBoard.hand.isEmpty()){
+						for(Card x: theBoard.hand){
+							if(x.getCardName() == button.getName()){
+								selectedCard = x;
+								updateInformationLable("Selected card: " + x.getCardName());
+								break;
+							}
 						}
 					}
 				}
