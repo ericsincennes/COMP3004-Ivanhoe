@@ -28,7 +28,7 @@ public class Client {
 
 	public static void main(String[] args){
 		Client p = new Client();
-		p.start();
+		p.mainLoop();
 	}
 
 	public boolean isActiveTurn() {
@@ -47,6 +47,7 @@ public class Client {
 		print("Connecting to server...");
 		
 		print("Please enter an IP: ");
+		print("TEST " + this.getClass().getName());
 		String IPaddr = scan.next();
 
 		try {
@@ -65,7 +66,7 @@ public class Client {
 		}
 	}
 
-	protected void start(){
+	protected void mainLoop(){
 		playerNum = (int) get();	//get player number from server
 
 		while(true){

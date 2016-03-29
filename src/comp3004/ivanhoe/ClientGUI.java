@@ -60,12 +60,11 @@ public class ClientGUI extends Client{
 					window = new ClientGUI();
 					window.initialize();
 					window.frmMain.setVisible(true);
+					Thread t = new Thread(window.new Updater());
+					t.start();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-				window.start();
-				
 			}
 		});
 	}
@@ -454,7 +453,8 @@ public class ClientGUI extends Client{
 		updateHand();
 	}
 	
-	protected void start(){
+	@Override
+	protected void mainLoop(){
 		playerNum = (int) get();	//get player number from server
 
 		while(true){
@@ -498,13 +498,12 @@ public class ClientGUI extends Client{
 		}
 	}
 	
-	private class Updater extends ClientGUI implements Runnable{
-		
-		public Updater(){}
+	private class Updater implements Runnable{
 
 		@Override
 		public void run() {
-			super.start();
+			System.out.println("Thread Running");
+			ClientGUI.this.mainLoop();
 		}
 	}
 }
