@@ -180,13 +180,13 @@ public class Server{
 					}
 				}
 				else {
-					sendBoardState();
 					send(Optcodes.ClientActiveTurn);
 				}
 
 				if (rules.isTournamentRunning()) {
 					//Start client turn and draw a card
 					rules.startTurn(threadID);
+					sendBoardState();
 					//Is the tournament running AND not first turn in tournament
 					if (!rules.isColourChosen()) {
 						//choose colour
