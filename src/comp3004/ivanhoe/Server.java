@@ -524,8 +524,9 @@ public class Server{
 		 */
 		private boolean send(Object o){
 			try {
-				String callerClassName = new Exception().getStackTrace()[0].getClassName();
-				print(callerClassName + " sending an " + o.getClass().getName() + " " + o.toString());
+				if (threadID == rules.getPlayerList().get(0).getID()) {
+					print("Thread " + threadID + " sending an " + o.getClass().getName() + " " + o.toString());
+				}
 				out.writeObject(o);
 				out.flush();
 			} catch (IOException e) {

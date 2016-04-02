@@ -127,6 +127,8 @@ public class Client {
 	protected void handleActiveTurn() {
 		// TODO Auto-generated method stub
 		isActiveTurn = true;
+		print("It is now your turn.");
+		/*
 		print("The board state: \n");
 		for (int i=theBoard.players.size()-1; i>=0; i--) {
 			print("Board of player ID " +theBoard.players.get(i) +". Current points: " + theBoard.points.get(i));
@@ -150,6 +152,7 @@ public class Client {
 			
 		}
 		System.out.println("");
+		*/
 	}
 
 	/**
@@ -259,7 +262,7 @@ public class Client {
 			
 			print("Your hand:");
 			for(Card c: theBoard.hand){
-				System.out.print(c.getCardName() + " - ");
+				System.out.print(theBoard.hand.indexOf(c)+1 + ". " + c.getCardName() + " - ");
 				
 			}
 			System.out.println("");
