@@ -42,7 +42,7 @@ public class Client {
 
 	}
 
-	protected boolean connect(String IPaddr, int port){
+	public boolean connect(String IPaddr, int port){
 		InetAddress host;
 		//print("Connecting to server...");
 		

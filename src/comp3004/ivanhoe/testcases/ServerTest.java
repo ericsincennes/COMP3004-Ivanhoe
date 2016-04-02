@@ -21,7 +21,7 @@ public class ServerTest {
 		Server s = new Server();
 		Client c = new Client();
 		
-		boolean b = c.connect(2244);
+		boolean b = c.connect("::", 2244);
 		
 		assertTrue(b == true);
 		
@@ -33,8 +33,8 @@ public class ServerTest {
 		Client c1 = new Client();
 		Client c2 = new Client();
 		
-		boolean b1 = c1.connect(2244);
-		boolean b2 = c2.connect(2244);
+		boolean b1 = c1.connect("::",2244);
+		boolean b2 = c2.connect("::",2244);
 		
 		
 		assertTrue(b1 == true && b2 == true);
@@ -47,9 +47,9 @@ public class ServerTest {
 		Client c2 = new Client();
 		Client c3 = new Client();
 		
-		boolean b1 = c1.connect(2244);
-		boolean b2 = c2.connect(2244);
-		boolean b3 = c3.connect(2244);
+		boolean b1 = c1.connect("::",2244);
+		boolean b2 = c2.connect("::",2244);
+		boolean b3 = c3.connect("::",2244);
 		
 		assertTrue(b1 == true && b2 == true && b3 == true);
 	}
@@ -62,10 +62,10 @@ public class ServerTest {
 		Client c3 = new Client();
 		Client c4 = new Client();
 		
-		boolean b1 = c1.connect(2244);
-		boolean b2 = c2.connect(2244);
-		boolean b3 = c3.connect(2244);
-		boolean b4 = c4.connect(2244);
+		boolean b1 = c1.connect("::",2244);
+		boolean b2 = c2.connect("::",2244);
+		boolean b3 = c3.connect("::",2244);
+		boolean b4 = c4.connect("::",2244);
 		
 		assertTrue(b1 == true && b2 == true && b3 == true && b4 == true);
 	}
@@ -79,11 +79,11 @@ public class ServerTest {
 		Client c4 = new Client();
 		Client c5 = new Client();
 		
-		boolean b1 = c1.connect(2244);
-		boolean b2 = c2.connect(2244);
-		boolean b3 = c3.connect(2244);
-		boolean b4 = c4.connect(2244);
-		boolean b5 = c5.connect(2244);
+		boolean b1 = c1.connect("::",2244);
+		boolean b2 = c2.connect("::",2244);
+		boolean b3 = c3.connect("::",2244);
+		boolean b4 = c4.connect("::",2244);
+		boolean b5 = c5.connect("::",2244);
 		
 		assertTrue(b1 == true && b2 == true && b3 == true && b4 == true && b5 == true);
 	}
@@ -98,12 +98,12 @@ public class ServerTest {
 		Client c5 = new Client();
 		Client c6 = new Client();
 		
-		boolean b1 = c1.connect(2244);
-		boolean b2 = c2.connect(2244);
-		boolean b3 = c3.connect(2244);
-		boolean b4 = c4.connect(2244);
-		boolean b5 = c5.connect(2244);
-		boolean b6 = c6.connect(2244);
+		boolean b1 = c1.connect("::",2244);
+		boolean b2 = c2.connect("::",2244);
+		boolean b3 = c3.connect("::",2244);
+		boolean b4 = c4.connect("::",2244);
+		boolean b5 = c5.connect("::",2244);
+		boolean b6 = c6.connect("::",2244);
 		
 		assertTrue(b6 == false);
 	}

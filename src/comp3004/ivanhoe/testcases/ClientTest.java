@@ -10,7 +10,7 @@ public class ClientTest {
 	@Test
 	public void connectWithoutServer(){	//no server
 		Client c = new Client();
-		boolean x = c.connect(2244); //no server existing should fail
+		boolean x = c.connect("::",2244); //no server existing should fail
 		
 		assertTrue(x == true);
 	}
@@ -20,7 +20,7 @@ public class ClientTest {
 		Client c = new Client();
 		Server s;
 		
-		boolean x = c.connect(2244); //no server code
+		boolean x = c.connect("::",2244); //no server code
 		assertTrue(x == true);
 	}
 	
@@ -29,7 +29,7 @@ public class ClientTest {
 		Client c = new Client();
 		Server s = new Server();
 		
-		boolean x = c.connect(2244); //no server code
+		boolean x = c.connect("::",2244); //no server code
 		assertTrue(x == true);
 	}
 
