@@ -367,7 +367,7 @@ public class RulesEngine {
 	
 	//nested rules engine action card handler
 	//assuming one player target
-	public void actionHandler(Card card, Player caster,  Object... target){
+	public boolean actionHandler(Card card, Player caster,  Object... target){
 		Card taken;
 		Random rand = new Random();
 		Player opponent = null;
@@ -394,7 +394,7 @@ public class RulesEngine {
 		
 		//handle if opponent has shield shield
 		if (opponent != null && opponent.getDisplay().contains("Shield")) {
-			return;
+			return false;
 		}
 
 		switch(card.getCardName()){
@@ -402,6 +402,7 @@ public class RulesEngine {
 			//color changes from purple to red, blue or yellow
 			if ((TournamentColour == CardColour.Purple) && !(colour == CardColour.Green)) {
 				TournamentColour = colour;
+				return true;
 			}
 			break;
 		case "Change Weapon": //target: CardColour
@@ -409,10 +410,13 @@ public class RulesEngine {
 			if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
 				if (TournamentColour == CardColour.Yellow && colour != CardColour.Yellow) {
 					TournamentColour = colour;
+					return true;
 				} else if (TournamentColour == CardColour.Red && colour != CardColour.Red) {
 					TournamentColour = colour;
+					return true;
 				} else if (TournamentColour == CardColour.Blue && colour != CardColour.Blue) {
 					TournamentColour = colour;
+					return true;
 				}
 			}
 			break;
@@ -420,53 +424,90 @@ public class RulesEngine {
 			//color changes from red, blue or yellow to green
 			if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
 				TournamentColour = CardColour.Green;
+				return true;
 			}
 			break;
 		case "Break Lance": //target: Player
+			temp = new ArrayList<Card>();
 			//Force one opponent to discard all purple cards from his display
 			if (opponent.isShielded()) { break; }
-			temp = new ArrayList<Card>();
-			temp = opponent.getDisplay().removeColour(CardColour.Purple);
 			
-			for(Card x : temp){
-				deck.addToDiscard(x);
+			if (opponent.getDisplay().getCards().size() > 1) {
+				for (Card c : opponent.getDisplay().getCards()) {
+					if (c.getCardName().contains("Purple")) {
+						temp.addAll(opponent.getDisplay().removeColour(CardColour.Purple));
+					}
+				}
+			}
+				
+			if (temp.size() > 0) {
+				for(Card x : temp){
+					//add removed cards to discard
+					deck.addToDiscard(x);
+				}
+				return true;
 			}
 			break;
 		case "Riposte": //target Player, Card (to be taken)
 			//Take the last card played on any one opponent’s 
 			//display and add it to your own display.
 			if (opponent.isShielded()) { break; }
-			taken = opponent.getDisplay().remove(opponent.getDisplay().getLastPlayed().getCardName());
-			//need to remove the card from cardsPlayed list in deck
-			caster.getDisplay().addCard(taken);
+			
+			if (opponent.getDisplay().getCards().size() > 1) { 
+				taken = opponent.getDisplay().remove(opponent.getDisplay().getLastPlayed().getCardName());
+				//need to remove the card from cardsPlayed list in deck
+				caster.getDisplay().addCard(taken);
+				return true;
+			}
 			break;
 		case "Dodge": //target: Player, String (cardname)
 			//Discard any one card from any one opponent’s display.
 			if (opponent.isShielded()) { break; }
-			deck.addToDiscard(opponent.getDisplay().remove(chosen));
+			
+			if (opponent.getDisplay().getCards().size() > 1) {
+				deck.addToDiscard(opponent.getDisplay().remove(chosen));
+				return true;
+			}
 			break;
 		case "Retreat": //target: String (cardname)
 			//Take any one card from your own display back into your hand
-			Card c = caster.getDisplay().remove(chosen);
-			caster.getHand().add(c);
-			//need to remove the card from playedCards list in deck
+			
+			if (caster.getDisplay().getCards().size() > 1) {
+				Card c = caster.getDisplay().remove(chosen);
+				caster.getHand().add(c);
+				return true;
+			}
 			break;
 		case "Knock Down": //target: Player
 			//Draw at random one card from any one opponent’s hand and 
 			//add it to your hand, without revealing the card to other opponents.
 			if (opponent.isShielded()) { break; }
-			int r = rand.nextInt(opponent.getHandSize() + 1);
-			taken = opponent.getHand().getCardbyIndex(r);
-			opponent.getHand().remove(taken.getCardName());
-			caster.getHand().add(taken);
+			
+			if (opponent.getHandSize() > 0) {
+				int r = rand.nextInt(opponent.getHandSize() + 1);
+				taken = opponent.getHand().getCardbyIndex(r);
+				opponent.getHand().remove(taken.getCardName());
+				caster.getHand().add(taken);
+				return true;
+			}
 			break;
 		case "Outmaneuver": //target: none
 			//All opponents must remove the last card played on their displays
+			temp = new ArrayList<Card>();
+
 			for(Player p : playersList){
-				if (p != caster && !p.isShielded()) {
+				if ((p != caster) && (!p.isShielded()) && (p.getDisplay().getCards().size() > 1)) {
 					taken =	p.getDisplay().getLastPlayed();
-					deck.addToDiscard(p.getDisplay().remove(taken.getCardName()));
+					temp.add(p.getDisplay().remove(taken.getCardName()));
 				}
+			}
+			
+			if (temp.size() > 0) {
+				for(Card x : temp){
+					//add removed cards to discard
+					deck.addToDiscard(x);
+				}
+				return true;
 			}
 			break;
 		case "Charge": //target: none
@@ -474,7 +515,7 @@ public class RulesEngine {
 			//All players must discard all cards of this value from their displays.
 			temp = new ArrayList<Card>();
 			cardValue = 9;
-			
+
 			for(Player p : playersList){
 				if (p.getDisplay().lowestValue() < cardValue) {
 					cardValue = p.getDisplay().lowestValue();
@@ -482,22 +523,26 @@ public class RulesEngine {
 			}
 			
 			for(Player p : playersList){
-				if (p.isShielded()) { continue; }
+				if (p.isShielded() || (p.getDisplay().getCards().size() < 2)) { continue; }
 				//remove lowest value
-				temp = p.getDisplay().removeValue(cardValue);
+				temp.addAll(p.getDisplay().removeValue(cardValue));
 			}
 			
-			for(Card x : temp){
-				//add removed cards to discard
-				deck.addToDiscard(x);
+			if (temp.size() > 0) {
+				for(Card x : temp){
+					//add removed cards to discard
+					deck.addToDiscard(x);
+				}
+				return true;
 			}
+			
 			break;
 		case "Countercharge": //target: none
 			//Identify the highest value card throughout all displays.
 			//All players must discard all cards of this value from their displays.
 			temp = new ArrayList<Card>();
 			cardValue = 0;
-			
+
 			for(Player p : playersList){
 				if (p.getDisplay().highestValue() > cardValue) {
 					cardValue = p.getDisplay().highestValue();
@@ -505,19 +550,38 @@ public class RulesEngine {
 			}
 			
 			for(Player p : playersList){
-				if (p.isShielded()) { continue; }
-				temp = p.getDisplay().removeValue(cardValue);
+				if (p.isShielded() || (p.getDisplay().getCards().size() < 2)) { continue; }
+				//remove highest value
+				temp.addAll(p.getDisplay().removeValue(cardValue));
 			}
 			
-			for(Card x : temp){
-				//add removed cards to discard
-				deck.addToDiscard(x);
+			if (temp.size() > 0) {
+				for(Card x : temp){
+					//add removed cards to discard
+					deck.addToDiscard(x);
+				}
+				return true;
 			}
 			break;
 		case "Disgrace": //target: none
+			temp = new ArrayList<Card>();
+			
 			for(Player p : playersList){
-				if (p.isShielded()) { continue; }
-				p.getDisplay().removeColour(CardColour.White);
+				if (p.isShielded() || (p.getDisplay().getCards().size() < 2)) { continue; }
+				
+				for (Card c : p.getDisplay().getCards()) {
+					if (c.getCardName().contains("Squire") || c.getCardName().contains("Maiden")) {
+						temp.addAll(p.getDisplay().removeColour(CardColour.White));
+					}
+				}
+			}
+			
+			if (temp.size() > 0) {
+				for(Card x : temp){
+					//add removed cards to discard
+					deck.addToDiscard(x);
+				}
+				return true;
 			}
 			break;
 		case "Adapt": //target: none
@@ -550,21 +614,23 @@ public class RulesEngine {
 			//and take one faceup card from this opponent 
 			//and place it face up in front of yourself. 
 			//This may include the SHIELD and STUNNED cards.
-			
-			//VERY IMPORTANT
-			//need to give own card before opponent card
+			if (opponent.isShielded() || caster.isShielded()) { break; }
 			
 			//give card
-			Card give = caster.getDisplay().getCard(choiceIndex);
-			opponent.getDisplay().addCard(give);
+			if (!caster.getDisplay().getCards().isEmpty() && !opponent.getDisplay().getCards().isEmpty()) {
+				//give card
+				Card give = caster.getDisplay().getCard(choiceIndex);
+				opponent.getDisplay().addCard(give);
 			
-			//take card
-			Card take = opponent.getDisplay().getCard(chosen);
-			caster.getDisplay().addCard(take);
+				//take card
+				Card take = opponent.getDisplay().getCard(chosen);
+				caster.getDisplay().addCard(take);
 			
-			//remove cards
-			caster.getDisplay().remove(choiceIndex);
-			opponent.getDisplay().remove(chosen);
+				//remove cards
+				caster.getDisplay().remove(choiceIndex);
+				opponent.getDisplay().remove(chosen);
+				return true;
+			}
 			break;
 		case "Shield": //target: none
 			//A player plays this card face up in front of himself, 
@@ -591,6 +657,7 @@ public class RulesEngine {
 			print("unexpected input");
 			break;
 		}
+		return false;
 	}
 
 	/**
