@@ -507,7 +507,7 @@ public class Server{
 				e.printStackTrace();
 			}
 			if (threadID == rules.getPlayerList().get(0).getID()) 
-				print("Received a" + o.getClass().getName() + " " + o.toString() + "from thread " + threadID);
+				print("Received a " + o.getClass().getName() + " " + o.toString() + " from thread " + threadID);
 			return o;
 		}
 

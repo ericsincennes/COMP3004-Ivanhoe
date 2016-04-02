@@ -209,22 +209,24 @@ public class Client {
 	 * If card is an action card then gets input of the card's targets 
 	 */
 	protected void sendCardsToBePlayed(){
-		int choice = 0;
+		int choice = -1;
 		
 		do {
 			choice = scan.nextInt();
-			if (choice == 99) {
-				send(Optcodes.ClientWithdraw);
-				break;
-			} else if (choice == 66) {
-				send(Optcodes.ClientEndTurn);
-				break;
-			} else if (choice < 1 || choice > theBoard.hand.size()) {
+			if (choice != 66 || choice != 99 || choice < 1 || choice > theBoard.hand.size()) {
 				print("Choose a number corresponding to a card in your hand");
 			}
-		} while (choice < 1 || choice > theBoard.hand.size());
+			else break;
+		} while (true);
 		
-		send(choice-1);
+		if (choice == 99) {
+			send(Optcodes.ClientWithdraw);
+		} else if (choice == 66) {
+			send(Optcodes.ClientEndTurn);
+		} else {
+			send(choice-1);
+		}
+
 	}
 	
 	/**
