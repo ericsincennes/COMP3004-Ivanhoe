@@ -38,23 +38,22 @@ public class Client {
 	public Client(){
 		CardsInHand = new ArrayList<Card>();
 		
-		connect(2244);
+		//connect(2244);
 
 	}
 
-	public boolean connect(int port){
+	protected boolean connect(String IPaddr, int port){
 		InetAddress host;
-		print("Connecting to server...");
+		//print("Connecting to server...");
 		
-		print("Please enter an IP: ");
-		print("TEST " + this.getClass().getName());
-		String IPaddr = scan.next();
+		//print("Please enter an IP: ");
+		//String IPaddr = scan.next();
 
 		try {
 			//host = InetAddress.getByName("localhost");
 			host = InetAddress.getByName(IPaddr);
 			socket = new Socket(host, port);
-			print("Connection to " + host + " on port "+ port);
+			//print("Connection to " + host + " on port "+ port);
 
 			in = new ObjectInputStream(socket.getInputStream());
 			out = new ObjectOutputStream(socket.getOutputStream());

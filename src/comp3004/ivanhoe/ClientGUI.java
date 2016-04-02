@@ -19,6 +19,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -60,6 +62,7 @@ public class ClientGUI extends Client{
 					window = new ClientGUI();
 					window.initialize();
 					window.frmMain.setVisible(true);
+					window.connect();
 					Thread t = new Thread(window.new Updater());
 					t.start();
 				} catch (Exception e) {
@@ -77,6 +80,36 @@ public class ClientGUI extends Client{
 		//initialize();
 	}
 
+	protected boolean connect(){
+		InetAddress adr = null;
+		String add = null;
+		int po = 0;
+		
+		while(true){
+			add = (String) JOptionPane.showInputDialog(frmMain.getContentPane(), "Enter a IP address to connect to", JOptionPane.QUESTION_MESSAGE );
+			
+			try {
+				adr = InetAddress.getByName(add);
+				break;
+			} catch (UnknownHostException e) {
+				JOptionPane.showMessageDialog(frmMain.getContentPane(), "invalid IP", "IP Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
+		while(true){
+			String p = (String) JOptionPane.showInputDialog(frmMain.getContentPane(), "Enter a port to connect to", JOptionPane.QUESTION_MESSAGE );
+			
+			try{
+				po = Integer.parseInt(p);
+				break;
+			} catch(NumberFormatException err){
+				JOptionPane.showMessageDialog(frmMain.getContentPane(), "Invalid port", "Port Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
+		return super.connect(add, po);
+	}
+	
 	/**
 	 * Everything relating to the action area JPanel goes in here
 	 */
