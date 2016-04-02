@@ -211,7 +211,7 @@ public class Server{
 					//get what cards the client wants to play
 					int cardIndex = -1;
 					
-					while(cardIndex != -3){
+					while(true){
 						//while not end turn optcode
 						cardIndex = getCardsToBePlayed();
 						
@@ -222,16 +222,13 @@ public class Server{
 								CardColour c = getTokenChoice();
 								rules.getPlayerById(threadID).removeToken(c); //may need validation
 							}
-							//now its winner's turn, they'll get a choice of token when their loop hits code
+							//when its winner's turn, they'll get a choice of token when their loop hits code
 							long winner = rules.withdrawCleanup(threadID);
-							//exit loop
-							cardIndex = -3;
 							break;
 						} else if(cardIndex == -3) { 
 							//end turn optcode received
 							print("Got end turn from thread " + threadID + ".");
 							rules.endTurn(threadID);
-							cardIndex = -3;
 							break;
 						} else if(cardIndex == -1){
 							send(Optcodes.InvalidCard);
@@ -509,6 +506,8 @@ public class Server{
 			} catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
 			}
+			if (threadID == rules.getPlayerList().get(0).getID()) 
+				print("Received a" + o.getClass().getName() + " " + o.toString() + "from thread " + threadID);
 			return o;
 		}
 
@@ -519,9 +518,8 @@ public class Server{
 		 */
 		private boolean send(Object o){
 			try {
-				if (threadID == rules.getPlayerList().get(0).getID()) {
-					print("Thread " + threadID + " sending an " + o.getClass().getName() + " " + o.toString());
-				}
+				if (threadID == rules.getPlayerList().get(0).getID()) 
+					print("Thread " + threadID + " sending a " + o.getClass().getName() + " " + o.toString());
 				out.writeObject(o);
 				out.flush();
 				out.reset();
