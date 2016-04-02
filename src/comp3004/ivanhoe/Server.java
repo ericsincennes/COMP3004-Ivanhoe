@@ -185,9 +185,9 @@ public class Server{
 				if (rules.isTournamentRunning()) {
 					//Start client turn and draw a card
 					if (!rules.startTurn(threadID)) {
-						send(Optcodes.ClientActiveTurn);
 						continue;
 					}
+					send(Optcodes.ClientActiveTurn);
 					sendBoardState();
 					//Is the tournament running AND not first turn in tournament
 					if (!rules.isColourChosen()) {
