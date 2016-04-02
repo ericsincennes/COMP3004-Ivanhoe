@@ -49,7 +49,6 @@ public class ClientGUI extends Client{
 	private JScrollPane displayPane;
 
 	private Card selectedCard = null;
-	private boolean setup = false;
 	
 	private static final String ImageDirectory = (System.getProperty("user.dir") + "/src/Images/");
 
@@ -230,9 +229,11 @@ public class ClientGUI extends Client{
 	}
 
 	private void initializeDisplayPanel(){
+		int numplayers = theBoard.players.size();
+		
 		displaysPanel = new JPanel();
-		displaysPanel.setBackground(Color.cyan);
-		displaysPanel.setLayout(new GridLayout(5, 1));
+		displaysPanel.setBackground(Color.gray);
+		displaysPanel.setLayout(new GridLayout(0, 1));
 
 		displayPane = new JScrollPane(displaysPanel);
 
@@ -240,9 +241,9 @@ public class ClientGUI extends Client{
 		playerDisplayPanel.setLayout(new FlowLayout());
 		playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Player"));
 
-		//int numplayers = theBoard.players.size();
 		
-		for(int i=0; i<4; i++){
+		
+		for(int i=0; i<numplayers; i++){
 			opponentPanle[i] = new JPanel();
 			opponentPanle[i].setLayout(new FlowLayout());
 			opponentPanle[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
@@ -281,10 +282,10 @@ public class ClientGUI extends Client{
 		initializeActionArea();
 		initializeHandPanel();
 		initializeInformationPanel();
-		initializeDisplayPanel();
+		//initializeDisplayPanel();
 
 		frmMain.getContentPane().add(informationPanel, BorderLayout.NORTH);
-		frmMain.getContentPane().add(displayPane, BorderLayout.CENTER);
+		//frmMain.getContentPane().add(displayPane, BorderLayout.CENTER);
 		frmMain.getContentPane().add(handPane, BorderLayout.SOUTH);
 		frmMain.getContentPane().add(actionArea, BorderLayout.WEST);
 
@@ -439,14 +440,24 @@ public class ClientGUI extends Client{
 	
 	@Override
 	protected void handleUpdateBoardState(){
+		boolean firstdraw = false;
+		if(theBoard == null){
+			firstdraw = true;
+		}
 		super.handleUpdateBoardState();
+		
+		if(firstdraw){
+			initializeDisplayPanel();
+			frmMain.getContentPane().add(displayPane, BorderLayout.CENTER);
+			frmMain.getContentPane().revalidate();
+		}
 		
 		updateDisplayPanel();
 		updateHand();
 		UpdateInformationPanels();
 		
 	}
-	
+
 	@Override
 	protected void mainLoop(){
 		playerNum = (int) get();	//get player number from server
