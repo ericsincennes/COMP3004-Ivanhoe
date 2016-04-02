@@ -122,6 +122,8 @@ public class RulesEngineTest {
 		p = rules.getPlayerList().get(0);
 		//System.out.println(p.getid());
 		assertEquals(p, p2);
+		rules.startTurn(p.getID());
+		assertEquals(9, p.getHandSize());
 		assertTrue(rules.playCard(0, p.getID()));
 		assertFalse(rules.endTurn(p.getID()));
 		p.addCard(new ColourCard(CardColour.Blue, 3));
