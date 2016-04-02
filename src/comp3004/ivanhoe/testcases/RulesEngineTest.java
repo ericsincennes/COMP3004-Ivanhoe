@@ -116,6 +116,7 @@ public class RulesEngineTest {
 		assertFalse(rules.canEndTurn(p.getID()));
 		assertTrue(rules.playCard(0, p.getID()));
 		assertEquals(p.getDisplay().calculatePoints(), 2);
+		assertEquals(p.getHandSize(), 8);
 		assertTrue(rules.endTurn(p.getID()));
 		
 		//turn 2 - testing end turn checks after plays have already been made
@@ -125,10 +126,13 @@ public class RulesEngineTest {
 		rules.startTurn(p.getID());
 		assertEquals(9, p.getHandSize());
 		assertTrue(rules.playCard(0, p.getID()));
+		assertEquals(8, p.getHandSize());
 		assertFalse(rules.endTurn(p.getID()));
 		p.addCard(new ColourCard(CardColour.Blue, 3));
+		assertEquals(9, p.getHandSize());
 		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
 		assertEquals(p.getDisplay().calculatePoints(), 5);
+		assertEquals(p.getHandSize(), 8);
 		assertTrue(rules.endTurn(p.getID()));
 		
 	}
