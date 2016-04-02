@@ -243,7 +243,7 @@ public class ClientGUI extends Client{
 
 		
 		
-		for(int i=0; i<numplayers; i++){
+		for(int i=0; i<numplayers-1; i++){
 			opponentPanle[i] = new JPanel();
 			opponentPanle[i].setLayout(new FlowLayout());
 			opponentPanle[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
