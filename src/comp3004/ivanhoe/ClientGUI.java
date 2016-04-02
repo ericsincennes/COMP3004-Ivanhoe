@@ -143,8 +143,7 @@ public class ClientGUI extends Client{
 			public void actionPerformed(ActionEvent e) {			
 				if(isActiveTurn){
 					if(selectedCard != null){
-						int a = theBoard.hand.indexOf(selectedCard);
-						send(a);
+						sendCardsToBePlayed();
 					} else {
 						//no card selected
 						JOptionPane.showMessageDialog(actionArea, "Select a card to play or withdraw", "Cannot play nothing", JOptionPane.ERROR_MESSAGE);
@@ -185,6 +184,7 @@ public class ClientGUI extends Client{
 						} else {
 							//player does not have ivanhoe
 							JOptionPane.showMessageDialog(actionArea, "You do not have the card Ivanhoe to play", "Ivanhoe Error", JOptionPane.ERROR_MESSAGE);
+							break;
 						}
 					}
 				}
@@ -275,7 +275,7 @@ public class ClientGUI extends Client{
 	private void initialize() {
 		frmMain = new JFrame();
 		frmMain.setTitle("Ivanhoe");
-		frmMain.setBounds(100, 100, 957, 806);
+		frmMain.setBounds(100, 100, 1300, 810);
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		//Initialize all GUI Pieces
@@ -409,9 +409,16 @@ public class ClientGUI extends Client{
 	}
 	
 	@Override
+	protected void sendCardsToBePlayed(){
+		send(theBoard.hand.indexOf(selectedCard));
+	}
+	
+	@Override
 	public void handleActiveTurn(){
-		isActiveTurn = true;
-		JOptionPane.showMessageDialog(frmMain.getContentPane(), "It is your turn", "Your Turn", JOptionPane.INFORMATION_MESSAGE);
+		if(!isActiveTurn){
+			JOptionPane.showMessageDialog(frmMain.getContentPane(), "It is your turn", "Your Turn", JOptionPane.INFORMATION_MESSAGE);
+			isActiveTurn = true;
+		}
 	}
 	
 	@Override
@@ -475,7 +482,7 @@ public class ClientGUI extends Client{
 				handleUpdateBoardState();
 				break;
 			case Optcodes.ClientGetCardsToBePlayed:
-				sendCardsToBePlayed();
+				//sendCardsToBePlayed();
 				break;
 			case Optcodes.InvalidCard:
 				handleInvalidCard();
