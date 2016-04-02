@@ -261,8 +261,8 @@ public class Client {
 			System.out.println("");
 			
 			print("Your hand:");
-			for(Card c: theBoard.hand){
-				System.out.print(theBoard.hand.indexOf(c)+1 + ". " + c.getCardName() + " - ");
+			for(int i =0; i<theBoard.hand.size(); i++){
+				System.out.print(i+1 + ". " + theBoard.hand.get(i).getCardName() + "  ");
 				
 			}
 			System.out.println("");

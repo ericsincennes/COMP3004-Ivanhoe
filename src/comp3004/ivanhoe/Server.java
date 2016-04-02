@@ -356,6 +356,8 @@ public class Server{
 		 */
 		private void sendBoardState() {
 			BoardState board = rules.makeBoardState(rules.getPlayerById(threadID));
+			if (threadID == rules.getPlayerList().get(0).getID())
+				print("Thread " + threadID + " hand size: " + board.hand.size());
 			send(Optcodes.ClientUpdateBoardState);
 			send(board);
 		}
@@ -521,6 +523,7 @@ public class Server{
 				}
 				out.writeObject(o);
 				out.flush();
+				out.reset();
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
