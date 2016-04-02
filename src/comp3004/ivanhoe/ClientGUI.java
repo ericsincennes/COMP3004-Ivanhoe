@@ -29,6 +29,8 @@ import java.awt.BorderLayout;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import comp3004.ivanhoe.Card.CardColour;
+
 public class ClientGUI extends Client{
 
 	private JFrame frmMain;
@@ -38,10 +40,10 @@ public class ClientGUI extends Client{
 	private JPanel handPanel;
 	private JPanel actionArea;
 	private JPanel playerDisplayPanel;
-	private JPanel[] opponentPanle;
+	private JPanel[] opponentPanel;
 
-	private JLabel informationLable = new JLabel();
-	private JLabel tournamentColourLable = new JLabel();
+	private JLabel informationLabel = new JLabel();
+	private JLabel tournamentColourLabel = new JLabel();
 	private JLabel highestScore = new JLabel();
 	private JLabel playerScore = new JLabel();
 
@@ -79,7 +81,7 @@ public class ClientGUI extends Client{
 	 * Create the application.
 	 */
 	public ClientGUI() {
-		opponentPanle = new JPanel[4];
+		opponentPanel = new JPanel[4];
 		//initialize();
 	}
 
@@ -244,11 +246,11 @@ public class ClientGUI extends Client{
 		
 		
 		for(int i=0; i<numplayers-1; i++){
-			opponentPanle[i] = new JPanel();
-			opponentPanle[i].setLayout(new FlowLayout());
-			opponentPanle[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
+			opponentPanel[i] = new JPanel();
+			opponentPanel[i].setLayout(new FlowLayout());
+			opponentPanel[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
 		
-			displaysPanel.add(opponentPanle[i]);
+			displaysPanel.add(opponentPanel[i]);
 		}
 		
 		displaysPanel.add(playerDisplayPanel);
@@ -259,14 +261,14 @@ public class ClientGUI extends Client{
 		informationPanel.setBackground(Color.orange);
 		informationPanel.setLayout(new GridLayout(2, 1));
 
-		informationLable.setText("Information Lable");
-		informationLable.setHorizontalAlignment(JLabel.CENTER);
+		informationLabel.setText("Information Lable");
+		informationLabel.setHorizontalAlignment(JLabel.CENTER);
 
-		tournamentColourLable.setText("Tournament colour is: Tournament Colour");
-		tournamentColourLable.setHorizontalAlignment(JLabel.CENTER);
+		tournamentColourLabel.setText("Tournament colour is: Tournament Colour");
+		tournamentColourLabel.setHorizontalAlignment(JLabel.CENTER);
 
-		informationPanel.add(informationLable);
-		informationPanel.add(tournamentColourLable);
+		informationPanel.add(informationLabel);
+		informationPanel.add(tournamentColourLabel);
 	}
 
 	/**
@@ -357,8 +359,8 @@ public class ClientGUI extends Client{
 
 			} else {
 				//opponent displays
-				opponentPanle[theBoard.boards.indexOf(displays) -1].removeAll();
-				opponentPanle[theBoard.boards.indexOf(displays) -1].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent " + theBoard.boards.indexOf(displays)));
+				opponentPanel[theBoard.boards.indexOf(displays) -1].removeAll();
+				opponentPanel[theBoard.boards.indexOf(displays) -1].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent " + theBoard.boards.indexOf(displays)));
 				for(Card x: displays){
 					BufferedImage img = null;
 					try{
@@ -368,10 +370,10 @@ public class ClientGUI extends Client{
 					}
 					JLabel imgLable = new JLabel(new ImageIcon(img));
 					imgLable.setToolTipText(x.getCardName());
-					opponentPanle[theBoard.boards.indexOf(displays) -1].add(imgLable);
+					opponentPanel[theBoard.boards.indexOf(displays) -1].add(imgLable);
 
 				}
-				opponentPanle[theBoard.boards.indexOf(displays) -1].revalidate();
+				opponentPanel[theBoard.boards.indexOf(displays) -1].revalidate();
 				displaysPanel.revalidate();
 			}
 		}
@@ -388,7 +390,7 @@ public class ClientGUI extends Client{
 		
 		highestScore.setText("High Score: " + highest );
 		playerScore.setText("Your Score: " + theBoard.points.get(0));
-		tournamentColourLable.setText("Current tournament colour is: " +  theBoard.currColour);
+		tournamentColourLabel.setText("Current tournament colour is: " +  theBoard.currColour);
 	}
 	
 	public void handleClientWithdraw(){
@@ -404,14 +406,47 @@ public class ClientGUI extends Client{
 	}
 
 	public void updateInformationLable(String text){
-		informationLable.removeAll();
-		informationLable.setText(text);
-		informationLable.revalidate();
+		informationLabel.removeAll();
+		informationLabel.setText(text);
+		informationLabel.revalidate();
 	}
 	
 	@Override
 	protected void sendCardsToBePlayed(){
 		send(theBoard.hand.indexOf(selectedCard));
+	}
+	
+	protected void handleTokenChoice(){
+		String[] options = {"Purple", "Green", "Red", "Blue", "Yellow"};
+		int x = 0;
+		String s;
+		
+		if(theBoard.currColour == CardColour.Purple){
+			while (true){
+				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"You won a Purple tournament! Choose a token of your choice","Get a Token", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+				
+				try {
+					x = Integer.parseInt(s);
+				} catch (NumberFormatException e){ }
+				
+				if(x == JOptionPane.CANCEL_OPTION){
+					continue;
+				}
+				if ((s != null) && (s.length() > 0)) {
+					break;
+				}
+			}
+			
+			send(Arrays.asList(options).indexOf(s) + 1);
+			//display to user
+			JOptionPane.showMessageDialog(frmMain.getContentPane(), "Token received of colour " + s, "Token Received", JOptionPane.INFORMATION_MESSAGE);
+			
+		} else {
+			
+			x = Arrays.asList(options).indexOf(theBoard.currColour.name());
+			send(x+1);
+			JOptionPane.showMessageDialog(frmMain.getContentPane(), "You won a round! Token received of colour " + theBoard.currColour.name(), "Token Received", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 	
 	@Override
