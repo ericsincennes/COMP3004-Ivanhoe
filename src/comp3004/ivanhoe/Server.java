@@ -233,7 +233,10 @@ public class Server{
 							rules.endTurn(threadID);
 							cardIndex = -3;
 							break;
-						} else if(cardIndex != -1){
+						} else if(cardIndex == -1){
+							send(Optcodes.InvalidCard);
+						}
+						else {
 							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
 								rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
 							if(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardType() == CardType.Action){
@@ -256,9 +259,8 @@ public class Server{
 							else {
 								send(Optcodes.InvalidCard);
 							}
-							
-							sendBoardState();
 						}
+						sendBoardState();
 					}
 				}
 				
@@ -356,8 +358,7 @@ public class Server{
 		 */
 		private void sendBoardState() {
 			BoardState board = rules.makeBoardState(rules.getPlayerById(threadID));
-			if (threadID == rules.getPlayerList().get(0).getID())
-				print("Thread " + threadID + " hand size: " + board.hand.size());
+			//if (threadID == rules.getPlayerList().get(0).getID())	print("Thread " + threadID + " hand size: " + board.hand.size());
 			send(Optcodes.ClientUpdateBoardState);
 			send(board);
 		}
