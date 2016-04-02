@@ -209,56 +209,60 @@ public class Server{
 					sendBoardState();
 
 					//get what cards the client wants to play
-					int cardIndex = getCardsToBePlayed();
-
-					if(cardIndex == -2){ 
-						//Client withdrawing
-						print("Got withdraw from thread " + threadID + ".");
-						if (rules.withdrawPlayer(threadID)) {
-							CardColour c = getTokenChoice();
-							rules.getPlayerById(threadID).removeToken(c); //may need validation
-						}
-						//now its winner's turn, they'll get a choice of token when their loop hits code
-						long winner = rules.withdrawCleanup(threadID);
-						//exit loop
-						cardIndex = -3;
-						break;
-					} else if(cardIndex == -3) { 
-						//end turn optcode received
-						print("Got end turn from thread " + threadID + ".");
-						rules.endTurn(threadID);
-						cardIndex = -3;
-						break;
-					} else if(cardIndex == -1){
-						send(Optcodes.InvalidCard);
-					}
-					else {
-						System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
-								rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
-						if(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardType() == CardType.Action){
-							//TODO Finish this
-							//if the card to play is an action card
-							//getActionCardTargets(cardIndex);
-							//Send targets to RulesEngine to validate
-							//rules.actionHandler(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex), )
-							//If valid: 
-							//then play
-							//send points
-							//update all boards
-							//send hand
-							//else send invalid play optcode
-						}
-
-						if (rules.playCard(cardIndex, threadID)) {
-							send(Optcodes.SuccessfulCardPlay);
-						}
-						else {
+					int cardIndex = -1;
+					
+					while(cardIndex != -3){
+						//while not end turn optcode
+						cardIndex = getCardsToBePlayed();
+						
+						if(cardIndex == -2){ 
+							//Client withdrawing
+							print("Got withdraw from thread " + threadID + ".");
+							if (rules.withdrawPlayer(threadID)) {
+								CardColour c = getTokenChoice();
+								rules.getPlayerById(threadID).removeToken(c); //may need validation
+							}
+							//now its winner's turn, they'll get a choice of token when their loop hits code
+							long winner = rules.withdrawCleanup(threadID);
+							//exit loop
+							cardIndex = -3;
+							break;
+						} else if(cardIndex == -3) { 
+							//end turn optcode received
+							print("Got end turn from thread " + threadID + ".");
+							rules.endTurn(threadID);
+							cardIndex = -3;
+							break;
+						} else if(cardIndex == -1){
 							send(Optcodes.InvalidCard);
 						}
+						else {
+							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
+								rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
+							if(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardType() == CardType.Action){
+								//TODO Finish this
+								//if the card to play is an action card
+								//getActionCardTargets(cardIndex);
+								//Send targets to RulesEngine to validate
+									//rules.actionHandler(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex), )
+								//If valid: 
+									//then play
+									//send points
+									//update all boards
+									//send hand
+								//else send invalid play optcode
+							}
+							
+							if (rules.playCard(cardIndex, threadID)) {
+								send(Optcodes.SuccessfulCardPlay);
+							}
+							else {
+								send(Optcodes.InvalidCard);
+							}
+						}
+						sendBoardState();
 					}
-					sendBoardState();
 				}
-
 				
 				else {
 					//if tournament is not running
