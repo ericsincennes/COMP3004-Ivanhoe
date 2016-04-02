@@ -213,7 +213,7 @@ public class Client {
 		
 		do {
 			choice = scan.nextInt();
-			if (choice != 66 || choice != 99 || choice < 1 || choice > theBoard.hand.size()) {
+			if (choice != 66 && choice != 99 && (choice < 1 || choice > theBoard.hand.size())) {
 				print("Choose a number corresponding to a card in your hand");
 			}
 			else break;
