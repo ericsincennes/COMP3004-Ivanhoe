@@ -102,14 +102,12 @@ public class ClientGUI extends Client{
 			public void actionPerformed(ActionEvent e) {			
 				if(isActiveTurn){
 					if(selectedCard != null){
-						for(Card x : theBoard.hand){
-							int a = theBoard.hand.indexOf(x);
-							send(a);
-						}
+						int a = theBoard.hand.indexOf(selectedCard);
+						send(a);
 					} else {
 						//no card selected
 						JOptionPane.showMessageDialog(actionArea, "Select a card to play or withdraw", "Cannot play nothing", JOptionPane.ERROR_MESSAGE);
-					}
+						}
 				} else {
 					//not players turn
 					JOptionPane.showMessageDialog(actionArea, "Cannot play card when it is not your turn", "Playing card error", JOptionPane.ERROR_MESSAGE);
@@ -186,36 +184,6 @@ public class ClientGUI extends Client{
 
 		handPane = new JScrollPane(handPanel);
 		handPane.setVerticalScrollBarPolicy(ScrollPaneLayout.VERTICAL_SCROLLBAR_NEVER);
-
-
-		//updateHand();
-
-		//TODO REMOVE TEST CODE
-		/*
-		for(int i=0; i<20; i++){
-			BufferedImage ba = null;
-			try {
-				ba = ImageIO.read(new File(ImageDirectory + "Adapt.bmp"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			JButton jb = new JButton(new ImageIcon(ba));
-			jb.setBorder(BorderFactory.createEmptyBorder());
-			jb.setName("Adapt " + i);
-			jb.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					updateInformationLable("Selected card: " + e.toString());
-				}
-			});
-
-			handPanel.add(jb);
-
-			handPane.revalidate();
-		}
-		 */
 	}
 
 	private void initializeDisplayPanel(){
@@ -250,47 +218,6 @@ public class ClientGUI extends Client{
 		displaysPanel.add(opponentPanle[2]);
 		displaysPanel.add(opponentPanle[3]);
 		displaysPanel.add(playerDisplayPanel);
-
-		//TODO remove test code
-		/*
-		for(int i=0; i<4; i++){
-			JPanel oponentDisplay = new JPanel();
-			oponentDisplay.setLayout(new FlowLayout());
-			oponentDisplay.setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent " + (i+1)));
-			for(int b=0; b<10; b++){
-				BufferedImage ba = null;
-				try {
-					ba = ImageIO.read(new File(ImageDirectory + "Adapt.bmp"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				//JButton img = new JButton(new ImageIcon(ba));
-				JLabel img = new JLabel(new ImageIcon(ba));
-				oponentDisplay.add(img);
-
-			}
-			displaysPanel.add(oponentDisplay);
-		}
-
-		JPanel playerDisplay = new JPanel();
-		playerDisplay.setLayout(new FlowLayout());
-		playerDisplay.setBorder(new TitledBorder(new LineBorder(Color.black), "Your Display" ));
-		for(int b=0; b<10; b++){
-			BufferedImage ba = null;
-			try {
-				ba = ImageIO.read(new File(ImageDirectory + "Adapt.bmp"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			//JButton img = new JButton(new ImageIcon(ba));
-			JLabel img = new JLabel(new ImageIcon(ba));
-			playerDisplay.add(img);
-
-		}
-		displaysPanel.add(playerDisplay);
-
-		displayPane.revalidate();
-		 */
 	}
 	
 	private void initializeInformationPanel(){
@@ -378,7 +305,7 @@ public class ClientGUI extends Client{
 		for(List<Card> displays : theBoard.boards){
 			if(theBoard.boards.indexOf(displays) == 0){
 				playerDisplayPanel.removeAll();
-				playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Your Display"));
+				playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Your Display, Player number: " + playerNum));
 				for(Card x: displays){
 					BufferedImage img = null;
 					try{
@@ -415,7 +342,18 @@ public class ClientGUI extends Client{
 		}
 		displayPane.revalidate();
 	}
-
+	public void handleClientWithdraw(){
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), "You have withdrawn from the game", "GG", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public void handleInvalidCard(){
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), "Card Cannot be played", "Card Error", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void handleSuccessfulCardPlay(){
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), "Card Played", "Card Played", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	public void updateHighestScore(String text){
 		highestScore.setText("High Score: " + text);
 	}
@@ -429,7 +367,12 @@ public class ClientGUI extends Client{
 		informationLable.setText(text);
 		informationLable.revalidate();
 	}
-
+	
+	public void handleActiveTurn(){
+		isActiveTurn = true;
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), "It is your turn", "Your Turn", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	public void updateTournamentColourLable(String text){
 		tournamentColourLable.setText("Current tournament colour is: " + text);
 	}
@@ -473,12 +416,13 @@ public class ClientGUI extends Client{
 				sendCardsToBePlayed();
 				break;
 			case Optcodes.InvalidCard:
-				print("Card is unable to be played");
+				handleInvalidCard();
 				break;
 			case Optcodes.SuccessfulCardPlay:
-				print("Card was played successfully");
+				handleSuccessfulCardPlay();
 				break;
 			case Optcodes.ClientWithdraw:
+				handleClientWithdraw();
 				break;
 			case Optcodes.ClientGetTokenChoice:
 				handleTokenChoice();
@@ -487,7 +431,7 @@ public class ClientGUI extends Client{
 				getActionCardTargets();
 				break; 
 			case Optcodes.ClientActiveTurn:
-				isActiveTurn = true;
+				handleActiveTurn();
 				break;
 			case Optcodes.ClientNotActiveTurn:
 				isActiveTurn = false;
