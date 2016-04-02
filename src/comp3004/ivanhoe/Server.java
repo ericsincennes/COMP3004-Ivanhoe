@@ -254,7 +254,7 @@ public class Server{
 							}
 							
 							if (rules.playCard(cardIndex, threadID)) {
-								
+								send(Optcodes.SuccessfulCardPlay);
 							}
 							else {
 								send(Optcodes.InvalidCard);
