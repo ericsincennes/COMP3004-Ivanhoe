@@ -180,6 +180,7 @@ public class Server{
 					}
 				}
 				else {
+					sendBoardState();
 					send(Optcodes.ClientActiveTurn);
 				}
 
