@@ -391,15 +391,20 @@ public class RulesEngine {
 				keeping.add((ArrayList<Integer>) target[i]);
 			}
 		}
+		
+		//handle if opponent has shield shield
+		if (opponent != null && opponent.getDisplay().contains("Shield")) {
+			return;
+		}
 
 		switch(card.getCardName()){
-		case "Unhorse":
+		case "Unhorse": //target: CardColour
 			//color changes from purple to red, blue or yellow
 			if ((TournamentColour == CardColour.Purple) && !(colour == CardColour.Green)) {
 				TournamentColour = colour;
 			}
 			break;
-		case "Change Weapon":
+		case "Change Weapon": //target: CardColour
 			// color changes from red, blue or yellow to a different one of these colors
 			if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
 				if (TournamentColour == CardColour.Yellow && colour != CardColour.Yellow) {
@@ -411,14 +416,15 @@ public class RulesEngine {
 				}
 			}
 			break;
-		case "Drop Weapon":
+		case "Drop Weapon": //target: none
 			//color changes from red, blue or yellow to green
 			if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
 				TournamentColour = CardColour.Green;
 			}
 			break;
-		case "Break Lance":
+		case "Break Lance": //target: Player
 			//Force one opponent to discard all purple cards from his display
+			if (opponent.isShielded()) { break; }
 			temp = new ArrayList<Card>();
 			temp = opponent.getDisplay().removeColour(CardColour.Purple);
 			
@@ -426,41 +432,44 @@ public class RulesEngine {
 				deck.addToDiscard(x);
 			}
 			break;
-		case "Riposte":
+		case "Riposte": //target Player, Card (to be taken)
 			//Take the last card played on any one opponent’s 
 			//display and add it to your own display.
+			if (opponent.isShielded()) { break; }
 			taken = opponent.getDisplay().remove(opponent.getDisplay().getLastPlayed().getCardName());
 			//need to remove the card from cardsPlayed list in deck
 			caster.getDisplay().addCard(taken);
 			break;
-		case "Dodge":
+		case "Dodge": //target: Player, String (cardname)
 			//Discard any one card from any one opponent’s display.
+			if (opponent.isShielded()) { break; }
 			deck.addToDiscard(opponent.getDisplay().remove(chosen));
 			break;
-		case "Retreat":
+		case "Retreat": //target: String (cardname)
 			//Take any one card from your own display back into your hand
 			Card c = caster.getDisplay().remove(chosen);
 			caster.getHand().add(c);
 			//need to remove the card from playedCards list in deck
 			break;
-		case "Knock Down":
+		case "Knock Down": //target: Player
 			//Draw at random one card from any one opponent’s hand and 
 			//add it to your hand, without revealing the card to other opponents.
+			if (opponent.isShielded()) { break; }
 			int r = rand.nextInt(opponent.getHandSize() + 1);
 			taken = opponent.getHand().getCardbyIndex(r);
 			opponent.getHand().remove(taken.getCardName());
 			caster.getHand().add(taken);
 			break;
-		case "Outmaneuver":
+		case "Outmaneuver": //target: none
 			//All opponents must remove the last card played on their displays
 			for(Player p : playersList){
-				if (p != caster) {
+				if (p != caster && !p.isShielded()) {
 					taken =	p.getDisplay().getLastPlayed();
 					deck.addToDiscard(p.getDisplay().remove(taken.getCardName()));
 				}
 			}
 			break;
-		case "Charge":
+		case "Charge": //target: none
 			//Identify the lowest value card throughout all displays. 
 			//All players must discard all cards of this value from their displays.
 			temp = new ArrayList<Card>();
@@ -473,6 +482,7 @@ public class RulesEngine {
 			}
 			
 			for(Player p : playersList){
+				if (p.isShielded()) { continue; }
 				//remove lowest value
 				temp = p.getDisplay().removeValue(cardValue);
 			}
@@ -482,7 +492,7 @@ public class RulesEngine {
 				deck.addToDiscard(x);
 			}
 			break;
-		case "Countercharge":
+		case "Countercharge": //target: none
 			//Identify the highest value card throughout all displays.
 			//All players must discard all cards of this value from their displays.
 			temp = new ArrayList<Card>();
@@ -495,6 +505,7 @@ public class RulesEngine {
 			}
 			
 			for(Player p : playersList){
+				if (p.isShielded()) { continue; }
 				temp = p.getDisplay().removeValue(cardValue);
 			}
 			
@@ -503,12 +514,13 @@ public class RulesEngine {
 				deck.addToDiscard(x);
 			}
 			break;
-		case "Disgrace":
+		case "Disgrace": //target: none
 			for(Player p : playersList){
+				if (p.isShielded()) { continue; }
 				p.getDisplay().removeColour(CardColour.White);
 			}
 			break;
-		case "Adapt":
+		case "Adapt": //target: none
 			temp = new ArrayList<Card>();
 			//Each player may only keep one card of each value in his display. 
 			//All other cards with the same value are discarded. 
@@ -533,7 +545,7 @@ public class RulesEngine {
 			}
 			
 			break;
-		case "Outwit":
+		case "Outwit": //target: Player, Card (yours), Card (opp's card) 
 			//Place one of your faceup cards in front of an opponent, 
 			//and take one faceup card from this opponent 
 			//and place it face up in front of yourself. 
@@ -554,7 +566,7 @@ public class RulesEngine {
 			caster.getDisplay().remove(choiceIndex);
 			opponent.getDisplay().remove(chosen);
 			break;
-		case "Shield":
+		case "Shield": //target: none
 			//A player plays this card face up in front of himself, 
 			//but separate from his display. As long as a player has 
 			//the SHIELD card in front of him, all action cards have 
@@ -563,7 +575,7 @@ public class RulesEngine {
 			caster.getDisplay().addCard(card);
 			
 			break;
-		case "Stunned":
+		case "Stunned": //target: none
 			//Place this card separately face up in front of any one opponent.
 			//As long as a player has the STUNNED card in front of him, 
 			//he may add only one new card to his display each turn.

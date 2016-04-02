@@ -14,6 +14,7 @@ public class Player {
 	private long id;
 	private boolean isPlaying = false;
 	
+	
 	public Player(){
 		tokens = new HashMap<CardColour,Integer>();
 		display = new PointsBoard();
@@ -103,6 +104,14 @@ public class Player {
 	
 	public PointsBoard getDisplay(){
 		return display;
+	}
+	
+	public boolean isShielded() {
+		return display.contains("Shield");
+	}
+	
+	public boolean isStunned() {
+		return display.contains("Stun");
 	}
 	
 	/**
