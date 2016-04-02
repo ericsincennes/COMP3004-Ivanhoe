@@ -296,7 +296,7 @@ public class ClientGUI extends Client{
 	public void updateHand(){
 		//clear panel
 		handPanel.removeAll();
-
+		
 		//add all cards from hand
 		for(Card x: theBoard.hand){
 			BufferedImage ba = null;
@@ -315,13 +315,11 @@ public class ClientGUI extends Client{
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if(theBoard.hand != null && !theBoard.hand.isEmpty()){
-						for(Card x: theBoard.hand){
-							if(x.getCardName() == button.getName()){
-								selectedCard = x;
-								updateInformationLable("Selected card: " + x.getCardName());
-								break;
-							}
+					for(Card x: theBoard.hand){
+						if(x.getCardName() == button.getName()){
+							selectedCard = x;
+							updateInformationLable("Selected card: " + x.getCardName());
+							break;
 						}
 					}
 				}
@@ -332,7 +330,10 @@ public class ClientGUI extends Client{
 		}
 		//repaint
 		handPanel.revalidate();
-		handPane.revalidate();
+		//handPanel.repaint();
+		
+		handPane.validate();
+		handPane.repaint();
 	}
 
 	public void updateDisplayPanel(){
