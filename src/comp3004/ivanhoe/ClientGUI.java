@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneLayout;
 import javax.swing.JOptionPane;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -48,7 +49,8 @@ public class ClientGUI extends Client{
 	private JScrollPane displayPane;
 
 	private Card selectedCard = null;
-
+	private boolean setup = false;
+	
 	private static final String ImageDirectory = (System.getProperty("user.dir") + "/src/Images/");
 
 	/**
@@ -61,10 +63,12 @@ public class ClientGUI extends Client{
 				try {
 					window = new ClientGUI();
 					window.initialize();
-					window.frmMain.setVisible(true);
 					window.connect();
+					window.frmMain.setVisible(true);
+					
 					Thread t = new Thread(window.new Updater());
 					t.start();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -86,7 +90,12 @@ public class ClientGUI extends Client{
 		int po = 0;
 		
 		while(true){
-			add = (String) JOptionPane.showInputDialog(frmMain.getContentPane(), "Enter a IP address to connect to", JOptionPane.QUESTION_MESSAGE );
+			add = (String) JOptionPane.showInputDialog(frmMain.getContentPane(), "Enter a IP address to connect to","Connect", JOptionPane.QUESTION_MESSAGE );
+			
+			if( add == null || add.length() == 0){
+				JOptionPane.showMessageDialog(frmMain.getContentPane(), "invalid IP", "IP Error", JOptionPane.ERROR_MESSAGE);
+				continue;
+			}
 			
 			try {
 				adr = InetAddress.getByName(add);
@@ -97,7 +106,7 @@ public class ClientGUI extends Client{
 		}
 		
 		while(true){
-			String p = (String) JOptionPane.showInputDialog(frmMain.getContentPane(), "Enter a port to connect to", JOptionPane.QUESTION_MESSAGE );
+			String p = (String) JOptionPane.showInputDialog(frmMain.getContentPane(), "Enter a port to connect to","Connect", JOptionPane.QUESTION_MESSAGE );
 			
 			try{
 				po = Integer.parseInt(p);
@@ -214,9 +223,10 @@ public class ClientGUI extends Client{
 		handPanel = new JPanel();
 		handPanel.setBackground(Color.gray);
 		handPanel.setLayout(new FlowLayout());
-
+		
 		handPane = new JScrollPane(handPanel);
 		handPane.setVerticalScrollBarPolicy(ScrollPaneLayout.VERTICAL_SCROLLBAR_NEVER);
+		handPane.setPreferredSize(new Dimension(0, 220));
 	}
 
 	private void initializeDisplayPanel(){
@@ -230,26 +240,16 @@ public class ClientGUI extends Client{
 		playerDisplayPanel.setLayout(new FlowLayout());
 		playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Player"));
 
-		opponentPanle[0] = new JPanel();
-		opponentPanle[0].setLayout(new FlowLayout());
-		opponentPanle[0].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
-
-		opponentPanle[1] = new JPanel();
-		opponentPanle[1].setLayout(new FlowLayout());
-		opponentPanle[1].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
-
-		opponentPanle[2] = new JPanel();
-		opponentPanle[2].setLayout(new FlowLayout());
-		opponentPanle[2].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
-
-		opponentPanle[3] = new JPanel();
-		opponentPanle[3].setLayout(new FlowLayout());
-		opponentPanle[3].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
-
-		displaysPanel.add(opponentPanle[0]);
-		displaysPanel.add(opponentPanle[1]);
-		displaysPanel.add(opponentPanle[2]);
-		displaysPanel.add(opponentPanle[3]);
+		//int numplayers = theBoard.players.size();
+		
+		for(int i=0; i<4; i++){
+			opponentPanle[i] = new JPanel();
+			opponentPanle[i].setLayout(new FlowLayout());
+			opponentPanle[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
+		
+			displaysPanel.add(opponentPanle[i]);
+		}
+		
 		displaysPanel.add(playerDisplayPanel);
 	}
 	
@@ -274,7 +274,7 @@ public class ClientGUI extends Client{
 	private void initialize() {
 		frmMain = new JFrame();
 		frmMain.setTitle("Ivanhoe");
-		frmMain.setBounds(100, 100, 957, 761);
+		frmMain.setBounds(100, 100, 957, 806);
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		//Initialize all GUI Pieces
@@ -375,6 +375,20 @@ public class ClientGUI extends Client{
 		}
 		displayPane.revalidate();
 	}
+	public void UpdateInformationPanels(){
+		int highest = theBoard.points.get(0);
+		
+		for(Integer x: theBoard.points){
+			if(x > highest){
+				highest = x;
+			}
+		}
+		
+		highestScore.setText("High Score: " + highest );
+		playerScore.setText("Your Score: " + theBoard.points.get(0));
+		tournamentColourLable.setText("Current tournament colour is: " +  theBoard.currColour);
+	}
+	
 	public void handleClientWithdraw(){
 		JOptionPane.showMessageDialog(frmMain.getContentPane(), "You have withdrawn from the game", "GG", JOptionPane.INFORMATION_MESSAGE);
 	}
@@ -386,14 +400,6 @@ public class ClientGUI extends Client{
 	public void handleSuccessfulCardPlay(){
 		JOptionPane.showMessageDialog(frmMain.getContentPane(), "Card Played", "Card Played", JOptionPane.INFORMATION_MESSAGE);
 	}
-	
-	public void updateHighestScore(String text){
-		highestScore.setText("High Score: " + text);
-	}
-
-	public void updatePlayerScore(String text){
-		playerScore.setText("Your Score: " + text);
-	}
 
 	public void updateInformationLable(String text){
 		informationLable.removeAll();
@@ -401,24 +407,34 @@ public class ClientGUI extends Client{
 		informationLable.revalidate();
 	}
 	
+	@Override
 	public void handleActiveTurn(){
 		isActiveTurn = true;
 		JOptionPane.showMessageDialog(frmMain.getContentPane(), "It is your turn", "Your Turn", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
-	public void updateTournamentColourLable(String text){
-		tournamentColourLable.setText("Current tournament colour is: " + text);
-	}
-
+	@Override
 	protected void handleGetTournamentColour(){
-
 		String[] options = {"Purple", "Green", "Red", "Blue", "Yellow"};
-		String s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a Tournament Colour","Tournament Colour", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-		
-		if ((s != null) && (s.length() > 0)) {
-			send(Arrays.asList(options).indexOf(s));
+		int x = 0;
+		String s;
+		while (true){
+			s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a Tournament Colour","Tournament Colour", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+			
+			try {
+				x = Integer.parseInt(s);
+			} catch (NumberFormatException e){ }
+			
+			if(x == JOptionPane.CANCEL_OPTION){
+				continue;
+			}
+			if ((s != null) && (s.length() > 0)) {
+				break;
+			}
 		}
-
+		
+		send(Arrays.asList(options).indexOf(s) + 1);
+		
 	}
 	
 	@Override
@@ -427,6 +443,8 @@ public class ClientGUI extends Client{
 		
 		updateDisplayPanel();
 		updateHand();
+		UpdateInformationPanels();
+		
 	}
 	
 	@Override
@@ -479,7 +497,6 @@ public class ClientGUI extends Client{
 
 		@Override
 		public void run() {
-			System.out.println("Thread Running");
 			ClientGUI.this.mainLoop();
 		}
 	}
