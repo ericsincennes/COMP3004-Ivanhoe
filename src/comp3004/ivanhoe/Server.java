@@ -150,7 +150,7 @@ public class Server{
 
 			//Send player their player number
 			send(playerNum);
-
+			sendBoardState();
 			print(threadID + ": isRunning");
 			while(isRunning){
 				if (rules.gameWinner() != null) {
@@ -180,7 +180,6 @@ public class Server{
 					}
 				}
 				else {
-					sendBoardState();
 					send(Optcodes.ClientActiveTurn);
 				}
 
