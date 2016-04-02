@@ -22,11 +22,8 @@ public class Server{
 
 	public Server(){
 		Scanner in = new Scanner(System.in);
-		/*
-		while (port == 0){
-			print("Enter port to listen on");
-			port = in.nextInt();
-		}*/port = 2244;
+		
+		port = 2244;
 
 		while(numplayers < 2 || numplayers > 5){
 			print("Enter number of players to play (between 2 and 5)");
