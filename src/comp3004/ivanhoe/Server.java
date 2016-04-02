@@ -256,6 +256,7 @@ public class Server{
 							else {
 								send(Optcodes.InvalidCard);
 							}
+							
 							sendBoardState();
 						}
 					}
@@ -400,21 +401,12 @@ public class Server{
 				return -3;
 			}
 
-			if(index < rules.getPlayerById(threadID).getHandSize()){
-				cardname = rules.getPlayerById(threadID).getHand().getCardbyIndex(index).getCardName();
+			if(index < 0 || index > rules.getPlayerById(threadID).getHandSize()){
+				return -1;
 			}
+			return index;
 
-			//if client sent a card
-			if(cardname != ""){
-				if(rules.validatePlay(cardname, threadID)){
-					send(Optcodes.SuccessfulCardPlay);
-					return index;
-				} else {
-					send(Optcodes.InvalidCard);
-					return -1;
-				}
-			}
-			return -1;
+			
 		}
 
 		/**
