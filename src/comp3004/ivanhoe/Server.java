@@ -228,8 +228,13 @@ public class Server{
 						} else if(cardIndex == -3) { 
 							//end turn optcode received
 							print("Got end turn from thread " + threadID + ".");
-							rules.endTurn(threadID);
-							break;
+							if (rules.endTurn(threadID)) {
+								break;
+							}
+							else {
+								continue;
+							}
+							
 						} else if(cardIndex == -1){
 							send(Optcodes.InvalidCard);
 						}
