@@ -231,9 +231,11 @@ public class Server{
 							//end turn optcode received
 							print("Got end turn from thread " + threadID + ".");
 							if (rules.endTurn(threadID)) {
+								send(Optcodes.ClientNotActiveTurn);
 								break;
 							}
 							else {
+								send(Optcodes.ClientActiveTurn);
 								continue;
 							}
 							
