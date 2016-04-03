@@ -712,6 +712,7 @@ public class RulesEngine {
 				deck.addToDiscard(c);
 			}
 		}
+		highestScore = 0;
 		colourChosen = false;
 	}
 	
