@@ -378,17 +378,17 @@ public class RulesEngine {
 		ArrayList<Card> temp = new ArrayList<Card>();
 		int cardValue;
 		
-		for (int i = 0; i < target.length; i++) {
-			if (target[i].getClass().equals(Player.class)) {
-				opponent = (Player) target[i];
-			} else if (target[i].getClass().equals(String.class)) {
-				chosen = (String) target[i];
-			} else if (target[i].getClass().equals(CardColour.class)) {
-				colour = (CardColour) target[i];
-			} else if (target[i].getClass().equals(int.class)) {
-				choiceIndex = (int) target[i];
-			} else if (target[i].getClass().equals(ArrayList.class)){
-				keeping.add((ArrayList<Integer>) target[i]);
+		for (Object o : target) {
+			if (o.getClass().equals(Player.class)) {
+				opponent = (Player) o;
+			} else if (o.getClass().equals(String.class)) {
+				chosen = (String) o;
+			} else if (o.getClass().equals(CardColour.class)) {
+				colour = (CardColour) o;
+			} else if (o.getClass().equals(int.class)) {
+				choiceIndex = (int) o;
+			} else if (o.getClass().equals(ArrayList.class)){
+				keeping.add((ArrayList<Integer>) o);
 			}
 		}
 		
