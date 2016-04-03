@@ -20,8 +20,10 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -30,6 +32,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import comp3004.ivanhoe.Card.CardColour;
+import comp3004.ivanhoe.Card.CardType;
 
 public class ClientGUI extends Client{
 
@@ -248,8 +251,8 @@ public class ClientGUI extends Client{
 		for(int i=0; i<numplayers-1; i++){
 			opponentPanel[i] = new JPanel();
 			opponentPanel[i].setLayout(new FlowLayout());
-			opponentPanel[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent"));
-		
+			opponentPanel[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent" + i));
+			opponentPanel[i].setName("Opponent " + i);
 			displaysPanel.add(opponentPanel[i]);
 		}
 		
@@ -259,10 +262,10 @@ public class ClientGUI extends Client{
 	private void initializeInformationPanel(){
 		informationPanel = new JPanel();
 		informationPanel.setBackground(Color.orange);
-		informationPanel.setLayout(new GridLayout(2, 1));
+		informationPanel.setLayout(new GridLayout(0, 1));
 
-		informationLabel.setText("Information Lable");
-		informationLabel.setHorizontalAlignment(JLabel.CENTER);
+		//informationLabel.setText("Information Lable");
+		//informationLabel.setHorizontalAlignment(JLabel.CENTER);
 
 		tournamentColourLabel.setText("Tournament colour is: Tournament Colour");
 		tournamentColourLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -413,7 +416,209 @@ public class ClientGUI extends Client{
 	
 	@Override
 	protected void sendCardsToBePlayed(){
-		send(theBoard.hand.indexOf(selectedCard));
+		if(selectedCard.getCardType() == CardType.Action){
+			actionCardHelper(selectedCard.getCardName());
+		} else {
+			send(theBoard.hand.indexOf(selectedCard));
+		}
+	}
+	
+	private void actionCardHelper(String name){
+		String[] choices;
+		String s;
+		int x = 0;
+		List<Object> targets;
+		boolean cancleClicked = false;
+		
+		switch(name){
+		case "Unhorse": //target: CardColour
+			//color changes from purple to red, blue or yellow
+			if(theBoard.currColour == CardColour.Purple){
+				choices = new String[]{"Red", "Blue", "Yellow"};
+				while (true){
+					s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a Tournament Colour","Tournament Colour", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+					
+					try {
+						x = Integer.parseInt(s);
+					} catch (NumberFormatException e){ }
+					
+					if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+					if ((s != null) && (s.length() > 0)) { break; }
+				}
+				if(!cancleClicked){
+					for(CardColour cc : CardColour.values()){
+						if(cc.name().equals(s)){
+							send(theBoard.hand.indexOf(selectedCard));
+							targets = new ArrayList<Object>();
+							targets.add(cc);
+							send(targets);
+						}
+					}
+				}
+			} else {
+				JOptionPane.showMessageDialog(frmMain.getContentPane(), "Current Tournament colour is not Purple", "Card Cannot be played", JOptionPane.ERROR_MESSAGE);
+			}
+			break;
+		case "Change Weapon": //target: CardColour
+			// color changes from red, blue or yellow to a different one of these colors
+			if(theBoard.currColour == CardColour.Red || 
+			theBoard.currColour == CardColour.Blue ||
+			theBoard.currColour == CardColour.Yellow){ 
+				choices = new String[]{"Red", "Blue", "Yellow"};
+				while (true){
+					s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a Tournament Colour.","Tournament Colour", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+					
+					try {
+						x = Integer.parseInt(s);
+					} catch (NumberFormatException e){ }
+					
+					if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+					//cannot set tournament colour as current colour
+					if(s.equals(theBoard.currColour.name())){ continue; } 
+					if ((s != null) && (s.length() > 0)) { break; }
+				}
+				if(!cancleClicked){
+					for(CardColour cc : CardColour.values()){
+						if(cc.name().equals(s)){
+							send(theBoard.hand.indexOf(selectedCard));
+							targets = new ArrayList<Object>();
+							targets.add(cc);
+							send(targets);
+						}
+					}
+				}
+			} else {
+				JOptionPane.showMessageDialog(frmMain.getContentPane(), "Current Tournament colour is not red, blue or yellow.", "Card Cannot be played", JOptionPane.ERROR_MESSAGE);
+			}
+			break;
+		case "Drop Weapon":
+			//color changes from red, blue or yellow to green
+			send(theBoard.hand.indexOf(selectedCard));
+			targets = new ArrayList<Object>();
+			targets.add(CardColour.Green);
+			send(targets);
+			break;
+		case "Break Lance": //target: Player
+			//Force one opponent to discard all purple cards from his display
+			choices = new String[theBoard.players.size()-1];
+			for(int i=0; i< choices.length; i++){
+				choices[i] = "Opponent " + i;
+			}
+			while (true){
+				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove all Purple", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+				
+				try {
+					x = Integer.parseInt(s);
+				} catch (NumberFormatException e){ }
+				if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+				if ((s != null) && (s.length() > 0)) { break; }
+			}
+			
+			if(!cancleClicked){
+				int c = Arrays.asList(choices).indexOf(s) + 1;
+				send(theBoard.hand.indexOf(selectedCard));
+				targets = new ArrayList<Object>();
+				targets.add(c);
+				send(targets);
+			}
+
+			break;
+		case "Riposte": //target Player, Card (to be taken)
+			//Take the last card played on any one opponent’s 
+			//display and add it to your own display.
+			choices = new String[theBoard.players.size()-1];
+			for(int i=0; i< choices.length; i++){
+				choices[i] = "Opponent " + i;
+			}
+			
+			while (true){
+				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove last card played", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+				
+				try {
+					x = Integer.parseInt(s);
+				} catch (NumberFormatException e){ }
+				
+				if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+				
+				if (!cancleClicked && (s != null) && (s.length() > 0)) { 
+					int c = Arrays.asList(choices).indexOf(s) + 1;
+					List<Card> li = theBoard.boards.get(c);
+					targets = new ArrayList<Object>();
+					targets.add(li.get(li.size() -1));
+					break;
+				}
+			}
+			send(theBoard.hand.indexOf(selectedCard));
+			send(targets);
+			break;
+		case "Dodge": //target: Player, String (cardname)
+			//Discard any one card from any one opponent’s display.
+			choices = new String[theBoard.players.size()-1];
+			for(int i=0; i< choices.length; i++){
+				choices[i] = "Opponent " + i;
+			}
+			
+			while (true){
+				//Get target player
+				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+				
+				try {
+					x = Integer.parseInt(s);
+				} catch (NumberFormatException e){ }
+				
+				if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+				
+				if (!cancleClicked && (s != null) && (s.length() > 0)) { 
+					int c = Arrays.asList(choices).indexOf(s) + 1;
+					List<Card> li = theBoard.boards.get(c);
+					List<String> cardnames = new ArrayList<String>();
+					choices = cardnames.toArray(choices);
+					
+					while(true){
+						//get target card from target player
+						s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+						
+						try {
+							x = Integer.parseInt(s);
+						} catch (NumberFormatException e){ }
+						
+						if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+						
+						if (!cancleClicked && (s != null) && (s.length() > 0)) { 
+							targets = new ArrayList<Object>();
+							targets.add(s);
+							break;
+						}
+						
+					}
+					break;
+				}
+			}
+			send(theBoard.hand.indexOf(selectedCard));
+			send(targets);
+			break;
+		case "Retreat":
+			break;
+		case "Knock Down":
+			break;
+		case "Outmaneuver":
+			break;
+		case "Charge":
+			break;
+		case "Countercharge":
+			break;
+		case "Disgrace":
+			break;
+		case "Adapt":
+			break;
+		case "Outwit":
+			break;
+		case "Shield":
+			break;
+		case "Stunned":
+			break;
+			
+		}
 	}
 	
 	protected void handleTokenChoice(){
