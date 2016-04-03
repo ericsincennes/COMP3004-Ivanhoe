@@ -428,7 +428,7 @@ public class ClientGUI extends Client{
 		String s;
 		int x = 0;
 		List<Object> targets;
-		boolean cancleClicked = false;
+		boolean cancelClicked = false;
 		
 		switch(name){
 		case "Unhorse": //target: CardColour
@@ -442,10 +442,10 @@ public class ClientGUI extends Client{
 						x = Integer.parseInt(s);
 					} catch (NumberFormatException e){ }
 					
-					if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+					if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 					if ((s != null) && (s.length() > 0)) { break; }
 				}
-				if(!cancleClicked){
+				if(!cancelClicked){
 					for(CardColour cc : CardColour.values()){
 						if(cc.name().equals(s)){
 							send(theBoard.hand.indexOf(selectedCard));
@@ -472,12 +472,12 @@ public class ClientGUI extends Client{
 						x = Integer.parseInt(s);
 					} catch (NumberFormatException e){ }
 					
-					if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+					if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 					//cannot set tournament colour as current colour
 					if(s.equals(theBoard.currColour.name())){ continue; } 
 					if ((s != null) && (s.length() > 0)) { break; }
 				}
-				if(!cancleClicked){
+				if(!cancelClicked){
 					for(CardColour cc : CardColour.values()){
 						if(cc.name().equals(s)){
 							send(theBoard.hand.indexOf(selectedCard));
@@ -510,11 +510,11 @@ public class ClientGUI extends Client{
 				try {
 					x = Integer.parseInt(s);
 				} catch (NumberFormatException e){ }
-				if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 				if ((s != null) && (s.length() > 0)) { break; }
 			}
 			
-			if(!cancleClicked){
+			if(!cancelClicked){
 				int c = Arrays.asList(choices).indexOf(s) + 1;
 				send(theBoard.hand.indexOf(selectedCard));
 				targets = new ArrayList<Object>();
@@ -538,9 +538,9 @@ public class ClientGUI extends Client{
 					x = Integer.parseInt(s);
 				} catch (NumberFormatException e){ }
 				
-				if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 				
-				if (!cancleClicked && (s != null) && (s.length() > 0)) { 
+				if (!cancelClicked && (s != null) && (s.length() > 0)) { 
 					int c = Arrays.asList(choices).indexOf(s) + 1;
 					List<Card> li = theBoard.boards.get(c);
 					targets = new ArrayList<Object>();
@@ -548,8 +548,11 @@ public class ClientGUI extends Client{
 					break;
 				}
 			}
-			send(theBoard.hand.indexOf(selectedCard));
-			send(targets);
+			if(!cancelClicked){
+				send(theBoard.hand.indexOf(selectedCard));
+				send(targets);
+			}
+			
 			break;
 		case "Dodge": //target: Player, String (cardname)
 			//Discard any one card from any one opponent’s display.
@@ -566,9 +569,9 @@ public class ClientGUI extends Client{
 					x = Integer.parseInt(s);
 				} catch (NumberFormatException e){ }
 				
-				if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 				
-				if (!cancleClicked && (s != null) && (s.length() > 0)) { 
+				if (!cancelClicked && (s != null) && (s.length() > 0)) { 
 					int c = Arrays.asList(choices).indexOf(s) + 1;
 					List<Card> li = theBoard.boards.get(c);
 					List<String> cardnames = new ArrayList<String>();
@@ -582,9 +585,9 @@ public class ClientGUI extends Client{
 							x = Integer.parseInt(s);
 						} catch (NumberFormatException e){ }
 						
-						if(x == JOptionPane.CANCEL_OPTION){ cancleClicked = true; }
+						if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 						
-						if (!cancleClicked && (s != null) && (s.length() > 0)) { 
+						if (!cancelClicked && (s != null) && (s.length() > 0)) { 
 							targets = new ArrayList<Object>();
 							targets.add(s);
 							break;
@@ -594,28 +597,139 @@ public class ClientGUI extends Client{
 					break;
 				}
 			}
+			if(!cancelClicked){
+				send(theBoard.hand.indexOf(selectedCard));
+				send(targets);
+			}
+			
+			break;
+		case "Retreat": //target: String (cardname)
+			//Take any one card from your own display back into your hand
+			List<Card> playerBoard = theBoard.boards.get(0);
+			choices = null;
+			choices = playerBoard.toArray(choices);
+			while(true){
+				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose card to add to hand.","Take back card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+				
+				try {
+					x = Integer.parseInt(s);
+				} catch (NumberFormatException e){ }
+				
+				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
+				
+				if (!cancelClicked && (s != null) && (s.length() > 0)) { 
+					targets = new ArrayList<Object>();
+					targets.add(s);
+					break;
+				}
+			}
+			if(!cancelClicked){
+				send(theBoard.hand.indexOf(selectedCard));
+				send(targets);
+			}
+			
+			break;
+		case "Knock Down": //target: Player
+			//Draw at random one card from any one opponent’s hand and 
+			//add it to your hand, without revealing the card to other opponents.
+			choices = new String[theBoard.players.size()-1];
+			for(int i=0; i< choices.length; i++){
+				choices[i] = "Opponent " + i;
+			}
+			
+			while (true){
+				//Get target player
+				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+				
+				try {
+					x = Integer.parseInt(s);
+				} catch (NumberFormatException e){ }
+				
+				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
+				
+				if (!cancelClicked && (s != null) && (s.length() > 0)) { 
+					x = Arrays.asList(choices).indexOf(s);
+					targets = new ArrayList<Object>();
+					targets.add(theBoard.players.get(x));
+					break;
+				}
+			}
+			if(!cancelClicked){
+				send(theBoard.hand.indexOf(selectedCard));
+				send(targets);
+			}
+			
+			break;
+		case "Outmaneuver": //target: none
+			//All opponents must remove the last card played on their displays
 			send(theBoard.hand.indexOf(selectedCard));
+			targets = new ArrayList<Object>();
 			send(targets);
 			break;
-		case "Retreat":
+		case "Charge": //target: none
+			//Identify the lowest value card throughout all displays. 
+			//All players must discard all cards of this value from their displays.
+			send(theBoard.hand.indexOf(selectedCard));
+			targets = new ArrayList<Object>();
+			send(targets);
 			break;
-		case "Knock Down":
-			break;
-		case "Outmaneuver":
-			break;
-		case "Charge":
-			break;
-		case "Countercharge":
+		case "Countercharge": //target: none
+			//Identify the highest value card throughout all displays.
+			//All players must discard all cards of this value from their displays.
+			send(theBoard.hand.indexOf(selectedCard));
+			targets = new ArrayList<Object>();
+			send(targets);
 			break;
 		case "Disgrace":
+			send(theBoard.hand.indexOf(selectedCard));
+			targets = new ArrayList<Object>();
+			send(targets);
 			break;
 		case "Adapt":
 			break;
-		case "Outwit":
+		case "Outwit": //target: Player, Card (yours), Card (opp's card) 
+			//Place one of your faceup cards in front of an opponent, 
+			//and take one faceup card from this opponent 
+			//and place it face up in front of yourself. 
+			//This may include the SHIELD and STUNNED cards.
+			
+			
 			break;
 		case "Shield":
+			send(theBoard.hand.indexOf(selectedCard));
+			targets = new ArrayList<Object>();
+			send(targets);
 			break;
-		case "Stunned":
+		case "Stunned": //target: none
+			//Place this card separately face up in front of any one opponent.
+			//As long as a player has the STUNNED card in front of him, 
+			//he may add only one new card to his display each turn.
+			choices = new String[theBoard.players.size()-1];
+			for(int i=0; i< choices.length; i++){
+				choices[i] = "Opponent " + i;
+			}
+			
+			while (true){ 
+				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+				
+				try {
+					x = Integer.parseInt(s);
+				} catch (NumberFormatException e){ }
+				
+				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
+				
+				if (!cancelClicked && (s != null) && (s.length() > 0)) { 
+					x = Arrays.asList(choices).indexOf(s);
+					targets = new ArrayList<Object>();
+					targets.add(theBoard.players.get(x));
+					break;
+				}
+			}
+			if(!cancelClicked){
+				send(theBoard.hand.indexOf(selectedCard));
+				send(targets);
+			}
+			
 			break;
 			
 		}
