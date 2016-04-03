@@ -347,37 +347,6 @@ public class Server{
 			
 		}
 
-		/**
-		 * Gets the displays for all players and sends it to the client
-		 * Currently does not send ActionCards in the display
-		 */
-		private void updateClientBoardState(){
-			print("Thread " + threadID + " Sending board state to client");
-			ArrayList<List<Card>> board = new ArrayList<List<Card>>();
-			List<Card> nonActionCards = rules.getPlayerById(threadID).getDisplay().getCards();
-			//List<Card> actionCards = rules.getPlayerById(threadID).getDisplay().getActionCards();
-
-			board.add(nonActionCards);
-			
-			for( Player p : rules.getPlayerList()){
-				if(p.getID() != threadID){
-					board.add(p.getDisplay().getCards());
-				}
-			}
-			
-			
-			
-			for(List<Card> c : board){
-				System.out.println("List size: " + c.size());
-				for(Card x : c){
-					System.out.println(x.getCardName());
-					System.out.println(x.getCardType());
-				}
-			}
-			
-			send(Optcodes.ClientUpdateBoardState);
-			send(board);
-		}
 		
 		/**
 		 * Sends the boardstate 
@@ -401,19 +370,6 @@ public class Server{
 			return false;
 		}
 		
-		private void sendPoints() {
-			List<Integer> points = new ArrayList<Integer>();
-			points.add(rules.getPlayerById(threadID).getDisplay().calculatePoints());
-			
-			for( Player p : rules.getPlayerList()){
-				if(p.getID() != threadID){
-					points.add(p.getDisplay().calculatePoints());
-				}
-			}
-			
-			send(Optcodes.ClientGetPoints);
-			send(points);
-		}
 
 		/**
 		 * Get the index of the card to be played and plays the card
@@ -451,46 +407,6 @@ public class Server{
 			} else {
 				isRunning = false;
 			}
-		}
-
-		private void sendPlayersList() {
-			int me_index = 0;
-			int listSize = rules.getPlayerList().size();
-			List<Long> playerIDs = new ArrayList<Long>();
-			for (; me_index < listSize; me_index++) {
-				if (rules.getPlayerList().get(me_index).getID() == threadID) {
-					break;
-				}
-			}
-			for (int i=0; i < listSize; i++) {
-				playerIDs.add(rules.getPlayerList().get((me_index+i)%listSize).getID());
-			}
-			print("Thread " + threadID + ": Sending playerlist to client");
-			send(Optcodes.ClientGetPlayerList);
-			send(playerIDs);
-
-		}
-
-		/**
-		 * Gets the hand from the Player class and sends it to the client
-		 */
-		private void SendClientHand(){
-			List<Card> hand = new ArrayList<Card>();
-			hand.addAll(rules.getPlayerById(threadID).getHand().getHand());
-			
-			System.out.println("Thread " + threadID + " hand");
-			for(Card c : hand){
-				System.out.print(c.getCardName()+ " - ");
-			}
-			System.out.println("");
-			
-			send(Optcodes.ClientGetHand);
-			send(hand);
-		}
-		
-		private void sendColour(CardColour c) {
-			send(Optcodes.TournamentColour);
-			send(c);
 		}
 
 		/**
