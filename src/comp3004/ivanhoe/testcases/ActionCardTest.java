@@ -20,15 +20,17 @@ public class ActionCardTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		rules = RulesEngine.testRuleEngine(2);
+		rules = RulesEngine.testRuleEngine(3);
 		rules.registerThread(1);
 		rules.registerThread(2);
+		rules.registerThread(3);
 		
 		rules.initFirstTournament();
 		assertFalse(rules.isTournamentRunning());
 		rules.initTournament();
 		assertEquals(8, rules.getPlayerById(1).getHandSize());
 		assertEquals(8, rules.getPlayerById(2).getHandSize());
+		assertEquals(8, rules.getPlayerById(3).getHandSize());
 		
 	}
 
@@ -127,11 +129,15 @@ public class ActionCardTest {
 		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
 		rules.getPlayerById(2).getDisplay().addCard(new SupporterCard(3));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(3));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
 		rules.actionHandler(new ActionCard("Outmaneuver"), rules.getPlayerById(2));
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Green 1"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Squire 2"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Green 1"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Squire 3"));
+		assertFalse(rules.getPlayerById(3).getDisplay().contains("Green 1"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Squire 3"));
 
 	}
 	
@@ -144,12 +150,17 @@ public class ActionCardTest {
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 5));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
 		rules.actionHandler(new ActionCard("Charge"), rules.getPlayerById(2));
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Blue 4"));
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 4"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 5"));
+		assertFalse(rules.getPlayerById(3).getDisplay().contains("Blue 3"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 4"));
 	}
 	
 	@Test
@@ -161,12 +172,18 @@ public class ActionCardTest {
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 5));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 5));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 5));
 		rules.actionHandler(new ActionCard("Countercharge"), rules.getPlayerById(2));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Blue 4"));
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Blue 5"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Blue 5"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 3"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 4"));
+		assertFalse(rules.getPlayerById(3).getDisplay().contains("Blue 5"));
 	}
 	
 	@Test
@@ -177,12 +194,18 @@ public class ActionCardTest {
 		rules.getPlayerById(1).getDisplay().addCard(new SupporterCard(2));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
 		rules.getPlayerById(2).getDisplay().addCard(new SupporterCard(6));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Yellow, 3));
+		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(3));
+		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(2));
 		rules.actionHandler(new ActionCard("Disgrace"), rules.getPlayerById(2));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 3"));
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Squire 2"));
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Squire 3"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Yellow 4"));
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Maiden"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Yellow 3"));
+		assertFalse(rules.getPlayerById(3).getDisplay().contains("Squire 2"));
+		assertFalse(rules.getPlayerById(3).getDisplay().contains("Squire 3"));
 	}
 	
 	@Test
