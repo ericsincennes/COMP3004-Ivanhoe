@@ -83,7 +83,7 @@ public class Deck {
 		cards.add(new ActionCard("Change Weapon"));
 		cards.add(new ActionCard("Drop Weapon"));
 		cards.add(new ActionCard("Shield"));
-		cards.add(new ActionCard("Stun"));
+		cards.add(new ActionCard("Stunned"));
 		cards.add(new ActionCard("Ivanhoe"));
 		cards.add(new ActionCard("Break Lance"));
 		cards.add(new ActionCard("Riposte"));
