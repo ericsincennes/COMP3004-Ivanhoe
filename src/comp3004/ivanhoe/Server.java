@@ -255,7 +255,7 @@ public class Server{
 									//update all boards
 									//send hand
 								//else send invalid play optcode
-								ActionCard played = (ActionCard) rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex);
+								//ActionCard played = (ActionCard) rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex);
 								List<Object> targets = null;
 								Object o = get();
 								if (o instanceof List<?>) {
@@ -265,7 +265,7 @@ public class Server{
 									send(Optcodes.InvalidCard);
 									continue;
 								}
-								if (rules.actionHandler(played, rules.getPlayerById(threadID), targets)) {
+								if (rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets)) {
 									send(Optcodes.SuccessfulCardPlay);
 								}
 								else {

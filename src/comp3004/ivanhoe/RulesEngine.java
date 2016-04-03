@@ -367,7 +367,7 @@ public class RulesEngine {
 	
 	//nested rules engine action card handler
 	//assuming one player target
-	public boolean actionHandler(Card card, Player caster,  List<Object> target){
+	public boolean actionHandler(int cardIndex, Player caster,  List<Object> target){
 		Card taken;
 		Random rand = new Random();
 		Player opponent = null;
@@ -397,11 +397,12 @@ public class RulesEngine {
 			return false;
 		}
 
-		switch(card.getCardName()){
+		switch(caster.getHand().getCardbyIndex(cardIndex).cardName){
 		case "Unhorse": //target: CardColour
 			//color changes from purple to red, blue or yellow
 			if ((TournamentColour == CardColour.Purple) && !(colour == CardColour.Green)) {
 				TournamentColour = colour;
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			break;
@@ -410,12 +411,15 @@ public class RulesEngine {
 			if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
 				if (TournamentColour == CardColour.Yellow && colour != CardColour.Yellow) {
 					TournamentColour = colour;
+					caster.playActionCard(cardIndex);
 					return true;
 				} else if (TournamentColour == CardColour.Red && colour != CardColour.Red) {
 					TournamentColour = colour;
+					caster.playActionCard(cardIndex);
 					return true;
 				} else if (TournamentColour == CardColour.Blue && colour != CardColour.Blue) {
 					TournamentColour = colour;
+					caster.playActionCard(cardIndex);
 					return true;
 				}
 			}
@@ -424,6 +428,7 @@ public class RulesEngine {
 			//color changes from red, blue or yellow to green
 			if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
 				TournamentColour = CardColour.Green;
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			break;
@@ -445,6 +450,7 @@ public class RulesEngine {
 					//add removed cards to discard
 					deck.addToDiscard(x);
 				}
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			break;
@@ -457,6 +463,7 @@ public class RulesEngine {
 				taken = opponent.getDisplay().remove(opponent.getDisplay().getLastPlayed().getCardName());
 				//need to remove the card from cardsPlayed list in deck
 				caster.getDisplay().addCard(taken);
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			break;
@@ -466,6 +473,7 @@ public class RulesEngine {
 			
 			if (opponent.getDisplay().getCards().size() > 1) {
 				deck.addToDiscard(opponent.getDisplay().remove(chosen));
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			break;
@@ -475,6 +483,7 @@ public class RulesEngine {
 			if (caster.getDisplay().getCards().size() > 1) {
 				Card c = caster.getDisplay().remove(chosen);
 				caster.getHand().add(c);
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			break;
@@ -488,6 +497,7 @@ public class RulesEngine {
 				taken = opponent.getHand().getCardbyIndex(r);
 				opponent.getHand().remove(taken.getCardName());
 				caster.getHand().add(taken);
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			break;
@@ -507,6 +517,7 @@ public class RulesEngine {
 					//add removed cards to discard
 					deck.addToDiscard(x);
 				}
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			break;
@@ -533,6 +544,7 @@ public class RulesEngine {
 					//add removed cards to discard
 					deck.addToDiscard(x);
 				}
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			
@@ -560,6 +572,7 @@ public class RulesEngine {
 					//add removed cards to discard
 					deck.addToDiscard(x);
 				}
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			break;
@@ -581,6 +594,7 @@ public class RulesEngine {
 					//add removed cards to discard
 					deck.addToDiscard(x);
 				}
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			break;
@@ -629,6 +643,7 @@ public class RulesEngine {
 				//remove cards
 				caster.getDisplay().remove(choiceIndex);
 				opponent.getDisplay().remove(chosen);
+				caster.playActionCard(cardIndex);
 				return true;
 			}
 			break;
@@ -638,7 +653,7 @@ public class RulesEngine {
 			//the SHIELD card in front of him, all action cards have 
 			//no effect on his display.
 			
-			caster.getDisplay().addCard(card);
+			caster.playActionCard(cardIndex);
 			
 			break;
 		case "Stunned": //target: none
@@ -646,7 +661,7 @@ public class RulesEngine {
 			//As long as a player has the STUNNED card in front of him, 
 			//he may add only one new card to his display each turn.
 			
-			opponent.getDisplay().addCard(card);
+			caster.playActionCard(cardIndex);
 			
 			break;
 		case "Ivanhoe":

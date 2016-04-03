@@ -94,8 +94,8 @@ public class Player {
 		Card card = hand.getCardbyIndex(posinhand);
 		if (card.getCardName().equals("Shield") || card.getCardName().equals("Stunned")) {
 			display.addCard(card);
-			getHand().removeByIndex(posinhand);
 		}
+		getHand().removeByIndex(posinhand);
 	}
 	
 	public int getHandSize(){
