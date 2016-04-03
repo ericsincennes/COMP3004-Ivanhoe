@@ -379,8 +379,8 @@ public class RulesEngine {
 		int cardValue;
 		
 		for (Object o : target) {
-			if (o.getClass().equals(Player.class)) {
-				opponent = (Player) o;
+			if (o.getClass().equals(Long.class)) {
+				opponent = getPlayerById((Long) o);
 			} else if (o.getClass().equals(String.class)) {
 				chosen = (String) o;
 			} else if (o.getClass().equals(CardColour.class)) {
