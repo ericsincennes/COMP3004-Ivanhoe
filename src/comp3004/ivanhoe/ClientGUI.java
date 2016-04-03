@@ -363,7 +363,7 @@ public class ClientGUI extends Client{
 			} else {
 				//opponent displays
 				opponentPanel[theBoard.boards.indexOf(displays) -1].removeAll();
-				opponentPanel[theBoard.boards.indexOf(displays) -1].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent " + theBoard.boards.indexOf(displays)));
+				opponentPanel[theBoard.boards.indexOf(displays) -1].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent ID: " + theBoard.players.get(theBoard.boards.indexOf(displays)) ));
 				for(Card x: displays){
 					BufferedImage img = null;
 					try{
@@ -393,7 +393,12 @@ public class ClientGUI extends Client{
 		
 		highestScore.setText("High Score: " + highest );
 		playerScore.setText("Your Score: " + theBoard.points.get(0));
-		tournamentColourLabel.setText("Current tournament colour is: " +  theBoard.currColour);
+		if(theBoard.currColour == null){
+			tournamentColourLabel.setText("Current tournament is being decided");
+		} else {
+			tournamentColourLabel.setText("Current tournament colour is: " +  theBoard.currColour);
+		}
+		
 	}
 	
 	public void handleClientWithdraw(){
