@@ -203,7 +203,6 @@ public class ClientGUI extends Client{
 				if(isActiveTurn){
 					//is players turn
 					send(Optcodes.ClientWithdraw);
-					isActiveTurn = false;
 				} else {
 					//if not player's turn
 					JOptionPane.showMessageDialog(actionArea, "Cannot withdraw when it is not your turn", "Withdraw Error", JOptionPane.ERROR_MESSAGE);
