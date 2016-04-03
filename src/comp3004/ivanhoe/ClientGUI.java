@@ -168,7 +168,6 @@ public class ClientGUI extends Client{
 				if(isActiveTurn){
 					//if player's turn
 					send(Optcodes.ClientEndTurn);
-					isActiveTurn = false;
 				} else {
 					//if not players turn
 					JOptionPane.showMessageDialog(actionArea, "Cannot end turn when it is not your turn", "End Turn Error", JOptionPane.ERROR_MESSAGE);
@@ -251,7 +250,7 @@ public class ClientGUI extends Client{
 		for(int i=0; i<numplayers-1; i++){
 			opponentPanel[i] = new JPanel();
 			opponentPanel[i].setLayout(new FlowLayout());
-			opponentPanel[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent" + i));
+			opponentPanel[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent " + i));
 			opponentPanel[i].setName("Opponent " + i);
 			displaysPanel.add(opponentPanel[i]);
 		}
@@ -262,10 +261,10 @@ public class ClientGUI extends Client{
 	private void initializeInformationPanel(){
 		informationPanel = new JPanel();
 		informationPanel.setBackground(Color.orange);
-		informationPanel.setLayout(new GridLayout(0, 1));
+		informationPanel.setLayout(new GridLayout(2, 1));
 
-		//informationLabel.setText("Information Lable");
-		//informationLabel.setHorizontalAlignment(JLabel.CENTER);
+		informationLabel.setText("no card selected");
+		informationLabel.setHorizontalAlignment(JLabel.CENTER);
 
 		tournamentColourLabel.setText("Tournament colour is: Tournament Colour");
 		tournamentColourLabel.setHorizontalAlignment(JLabel.CENTER);
