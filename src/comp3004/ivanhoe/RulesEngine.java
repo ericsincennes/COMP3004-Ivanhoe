@@ -367,7 +367,7 @@ public class RulesEngine {
 	
 	//nested rules engine action card handler
 	//assuming one player target
-	public boolean actionHandler(Card card, Player caster,  Object... target){
+	public boolean actionHandler(Card card, Player caster,  List<Object> target){
 		Card taken;
 		Random rand = new Random();
 		Player opponent = null;
