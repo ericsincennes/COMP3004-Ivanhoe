@@ -255,16 +255,33 @@ public class Server{
 									//update all boards
 									//send hand
 								//else send invalid play optcode
+								ActionCard played = (ActionCard) rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex);
+								List<Object> targets = null;
+								Object o = get();
+								if (o instanceof List<?>) {
+									targets = (List<Object>) o;
+								}
+								if (targets == null) {
+									send(Optcodes.InvalidCard);
+									continue;
+								}
+								if (rules.actionHandler(played, rules.getPlayerById(threadID), targets)) {
+									send(Optcodes.SuccessfulCardPlay);
+								}
+								else {
+									send(Optcodes.InvalidCard);
+								}
 							}
 							else if (rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardType() == CardType.Ivanhoe) {
 								send(Optcodes.InvalidCard);
 							}
-							
-							if (rules.playCard(cardIndex, threadID)) {
-								send(Optcodes.SuccessfulCardPlay);
-							}
 							else {
-								send(Optcodes.InvalidCard);
+								if (rules.playCard(cardIndex, threadID)) {
+									send(Optcodes.SuccessfulCardPlay);
+								}
+								else {
+									send(Optcodes.InvalidCard);
+								}
 							}
 						}
 						sendBoardState();
