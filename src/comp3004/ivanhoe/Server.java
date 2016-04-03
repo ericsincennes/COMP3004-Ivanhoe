@@ -256,6 +256,9 @@ public class Server{
 									//send hand
 								//else send invalid play optcode
 							}
+							else if (rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardType() == CardType.Ivanhoe) {
+								send(Optcodes.InvalidCard);
+							}
 							
 							if (rules.playCard(cardIndex, threadID)) {
 								send(Optcodes.SuccessfulCardPlay);
