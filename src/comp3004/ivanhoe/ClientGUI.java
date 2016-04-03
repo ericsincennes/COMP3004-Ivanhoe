@@ -425,7 +425,7 @@ public class ClientGUI extends Client{
 	
 	private void actionCardHelper(String name){
 		String[] choices;
-		String s;
+		String s = null;
 		int x = 0;
 		List<Object> targets;
 		boolean cancelClicked = false;
@@ -435,7 +435,7 @@ public class ClientGUI extends Client{
 			//color changes from purple to red, blue or yellow
 			if(theBoard.currColour == CardColour.Purple){
 				choices = new String[]{"Red", "Blue", "Yellow"};
-				while (true){
+				while (!cancelClicked){
 					s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a Tournament Colour","Tournament Colour", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 					
 					try {
@@ -445,6 +445,7 @@ public class ClientGUI extends Client{
 					if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 					if ((s != null) && (s.length() > 0)) { break; }
 				}
+				
 				if(!cancelClicked){
 					for(CardColour cc : CardColour.values()){
 						if(cc.name().equals(s)){
@@ -465,6 +466,7 @@ public class ClientGUI extends Client{
 			theBoard.currColour == CardColour.Blue ||
 			theBoard.currColour == CardColour.Yellow){ 
 				choices = new String[]{"Red", "Blue", "Yellow"};
+				
 				while (true){
 					s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a Tournament Colour.","Tournament Colour", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 					
@@ -473,8 +475,11 @@ public class ClientGUI extends Client{
 					} catch (NumberFormatException e){ }
 					
 					if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
-					//cannot set tournament colour as current colour
-					if(s.equals(theBoard.currColour.name())){ continue; } 
+					//Cannot change colour to current tournament colour
+					if(s.equals(theBoard.currColour.name())){ 
+						JOptionPane.showMessageDialog(frmMain.getContentPane(), "Cannot change colour to current tournament colour", "Card Cannot be played", JOptionPane.ERROR_MESSAGE);
+						continue; 
+					} 
 					if ((s != null) && (s.length() > 0)) { break; }
 				}
 				if(!cancelClicked){
@@ -504,7 +509,7 @@ public class ClientGUI extends Client{
 			for(int i=0; i< choices.length; i++){
 				choices[i] = "Opponent " + i;
 			}
-			while (true){
+			while (!cancelClicked){
 				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove all Purple", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 				
 				try {
@@ -530,8 +535,9 @@ public class ClientGUI extends Client{
 			for(int i=0; i< choices.length; i++){
 				choices[i] = "Opponent " + i;
 			}
+			targets = new ArrayList<Object>();
 			
-			while (true){
+			while (!cancelClicked){
 				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove last card played", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 				
 				try {
@@ -541,10 +547,11 @@ public class ClientGUI extends Client{
 				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 				
 				if (!cancelClicked && (s != null) && (s.length() > 0)) { 
-					int c = Arrays.asList(choices).indexOf(s) + 1;
-					List<Card> li = theBoard.boards.get(c);
-					targets = new ArrayList<Object>();
-					targets.add(li.get(li.size() -1));
+					int c = Arrays.asList(choices).indexOf(s) + 1; //in theboard.players index 0 = you
+					List<Card> li = theBoard.boards.get(c); //get cards of opponent
+					
+					targets.add(theBoard.players.get(c)); //add opponent to targets
+					targets.add(li.get(li.size() -1)); //add opponent card to targets
 					break;
 				}
 			}
@@ -560,8 +567,8 @@ public class ClientGUI extends Client{
 			for(int i=0; i< choices.length; i++){
 				choices[i] = "Opponent " + i;
 			}
-			
-			while (true){
+			targets = new ArrayList<Object>();
+			while (!cancelClicked){
 				//Get target player
 				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 				
@@ -572,14 +579,16 @@ public class ClientGUI extends Client{
 				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 				
 				if (!cancelClicked && (s != null) && (s.length() > 0)) { 
-					int c = Arrays.asList(choices).indexOf(s) + 1;
-					List<Card> li = theBoard.boards.get(c);
+					int c = Arrays.asList(choices).indexOf(s) + 1; //in theboard.players index 0 = you
+					targets.add(theBoard.players.get(c)); //add opponent to targets
+					List<Card> li = theBoard.boards.get(c); //get cards of opponent
+					
 					List<String> cardnames = new ArrayList<String>();
 					choices = cardnames.toArray(choices);
 					
-					while(true){
+					while(!cancelClicked){
 						//get target card from target player
-						s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+						s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target card.","Remove card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 						
 						try {
 							x = Integer.parseInt(s);
@@ -587,12 +596,10 @@ public class ClientGUI extends Client{
 						
 						if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 						
-						if (!cancelClicked && (s != null) && (s.length() > 0)) { 
-							targets = new ArrayList<Object>();
+						if (!cancelClicked && (s != null) && (s.length() > 0)) {
 							targets.add(s);
 							break;
 						}
-						
 					}
 					break;
 				}
@@ -608,7 +615,8 @@ public class ClientGUI extends Client{
 			List<Card> playerBoard = theBoard.boards.get(0);
 			choices = null;
 			choices = playerBoard.toArray(choices);
-			while(true){
+			targets = new ArrayList<Object>();
+			while(!cancelClicked){
 				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose card to add to hand.","Take back card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 				
 				try {
@@ -618,7 +626,6 @@ public class ClientGUI extends Client{
 				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 				
 				if (!cancelClicked && (s != null) && (s.length() > 0)) { 
-					targets = new ArrayList<Object>();
 					targets.add(s);
 					break;
 				}
@@ -636,10 +643,10 @@ public class ClientGUI extends Client{
 			for(int i=0; i< choices.length; i++){
 				choices[i] = "Opponent " + i;
 			}
-			
-			while (true){
+			targets = new ArrayList<Object>();
+			while (!cancelClicked){
 				//Get target player
-				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Take card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 				
 				try {
 					x = Integer.parseInt(s);
@@ -648,8 +655,7 @@ public class ClientGUI extends Client{
 				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 				
 				if (!cancelClicked && (s != null) && (s.length() > 0)) { 
-					x = Arrays.asList(choices).indexOf(s);
-					targets = new ArrayList<Object>();
+					x = Arrays.asList(choices).indexOf(s) + 1;
 					targets.add(theBoard.players.get(x));
 					break;
 				}
@@ -719,7 +725,7 @@ public class ClientGUI extends Client{
 				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
 				
 				if (!cancelClicked && (s != null) && (s.length() > 0)) { 
-					x = Arrays.asList(choices).indexOf(s);
+					x = Arrays.asList(choices).indexOf(s) + 1;
 					targets = new ArrayList<Object>();
 					targets.add(theBoard.players.get(x));
 					break;
@@ -729,7 +735,6 @@ public class ClientGUI extends Client{
 				send(theBoard.hand.indexOf(selectedCard));
 				send(targets);
 			}
-			
 			break;
 			
 		}
