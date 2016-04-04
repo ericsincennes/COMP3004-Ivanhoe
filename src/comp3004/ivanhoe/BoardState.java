@@ -11,10 +11,11 @@ public final class BoardState implements Serializable{
 	public long owner; //player by threadID
 	public List<Long> players; //list of players in game, starting with current player
 	public List<Card> hand;
-	//next 3 board states corresponds to players list
+	//next 4 board states corresponds to players list
 	public List<List<Card>> boards;
 	public List<List<Card>> actionBoards; //what actioncards have been played
 	public List<Integer> points;
+	public List<List<CardColour>> tokens;
 	public CardColour currColour;
 	//public List<Card> discarded;
 	
@@ -27,11 +28,13 @@ public final class BoardState implements Serializable{
 		boards = new ArrayList<List<Card>>(pListSize);
 		actionBoards = new ArrayList<List<Card>>(pListSize);
 		points = new ArrayList<Integer>(pListSize);
+		tokens = new ArrayList<List<CardColour>>(pListSize);
 		for (int i = 0; i < pListSize; i++) {
 			players.add(thePlayers.get((i+pListRot)%pListSize).getID());
 			boards.add(thePlayers.get((i+pListRot)%pListSize).getDisplay().getCards());
 			actionBoards.add(thePlayers.get((i+pListRot)%pListSize).getDisplay().getActionCards());
 			points.add(thePlayers.get((i+pListRot)%pListSize).getDisplay().calculatePoints());
+			tokens.add(thePlayers.get((i+pListRot)%pListSize).getTokens());
 		}
 		hand = pHand.getHand();
 		currColour = tourneyColour;
