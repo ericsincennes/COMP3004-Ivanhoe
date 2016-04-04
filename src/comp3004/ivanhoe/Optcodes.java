@@ -17,6 +17,9 @@ public class Optcodes {
 	public static final int SuccessfulCardPlay			= 302;
 	public static final int TournamentColour			= 303;
 	
+	public static final int WinTournament				= 501;
+	public static final int LoseTournament				= 499;
+	
 	public static final int GameWinner 					= 9001;
 	public static final int GameOver					= 8999;
 	

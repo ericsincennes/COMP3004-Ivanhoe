@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import comp3004.ivanhoe.Card.CardColour;
 import comp3004.ivanhoe.Card.CardType;
@@ -16,13 +19,13 @@ public class Server{
 	private int 			numplayers;
 	private boolean 		isAcceptingConnections = true;
 	private ServerSocket 	listeningSocket;
+	private BlockingQueue<String> eventQueue; //interthread communication - active thread will never poll but will be only sender
 	//private Log				log = new Log(this.getClass().getName(), "ServerLog");
 	private RulesEngine		rules;
 
 
 	public Server(){
-		Scanner in = new Scanner(System.in);
-		
+		Scanner in = new Scanner(System.in);		
 		port = 2244;
 
 		while(numplayers < 2 || numplayers > 5){
@@ -31,6 +34,7 @@ public class Server{
 		}
 		in.close();
 		rules = new RulesEngine(numplayers);
+		eventQueue = new LinkedBlockingQueue<String>();
 		connectAndRecieve(numplayers);
 	}
 
@@ -170,7 +174,10 @@ public class Server{
 						//updateClientBoardState();
 						send(Optcodes.ClientNotActiveTurn);
 						synchronized (this) {
-							wait(500);
+							String event = eventQueue.poll(200, TimeUnit.MILLISECONDS);
+							if (event != null) {
+								handleEvent(event);
+							}
 							sendBoardState();
 						}
 						continue;
@@ -267,6 +274,7 @@ public class Server{
 									send(Optcodes.InvalidCard);
 									continue;
 								}
+								sendEvent("actioncard " + rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
 								if (rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets)) {
 									send(Optcodes.SuccessfulCardPlay);
 								}
@@ -293,6 +301,7 @@ public class Server{
 				else {
 					//if tournament is not running
 					if (rules.getPlayerById(threadID).getPlaying()) { //then you are winner of previous tourney
+						sendEvent("wintourney");
 						if(rules.getTournamentColour() == CardColour.Purple){
 							//if purple tournament give token of choice
 							CardColour c = getTokenChoice();
@@ -437,6 +446,45 @@ public class Server{
 			}
 
 			return colour;
+		}
+		
+		/**
+		 * puts a copy of a server event into the eventqueue for each other thread to poll
+		 * @param msg to be sent, it gets prepended with threadID
+		 */
+		private void sendEvent(String msg) {
+			msg = threadID + " " + msg;
+			try {
+				for (int i=0; i<numplayers; i++) {
+					eventQueue.add(msg);
+				}
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		/**
+		 * handles an event, somehow
+		 * @param event - the event msg received, with prepended sender ID
+		 */
+		private void handleEvent(String event) {
+			String msg[] = event.split(" ", 2);
+			long sender = Long.valueOf(msg[0]);
+			if (sender == threadID) {
+				eventQueue.add(event);
+				return;
+			}
+			String ev[] = msg[1].split(" ", 2);
+			switch (ev[0]) {
+			case "wintourney":
+				send(Optcodes.LoseTournament);
+				send(msg[0]);
+				break;
+			case "actioncard":
+				break;
+			default:
+				break;
+			}
 		}
 
 		/**
