@@ -52,6 +52,7 @@ public class ActionCardTest {
 		toSend.add(CardColour.Blue);
 		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
 		assertTrue(rules.getTournamentColour().equals(CardColour.Blue));
+		assertTrue(!rules.getPlayerById(1).getHand().contains("Unhorse"));
 		toSend.clear();
 		
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
@@ -59,6 +60,7 @@ public class ActionCardTest {
 		toSend.add(CardColour.Red);
 		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
 		assertFalse(rules.getTournamentColour().equals(CardColour.Red));
+		assertTrue(rules.getPlayerById(1).getHand().contains("Unhorse"));
 		toSend.clear();
 	}
 	
@@ -69,6 +71,7 @@ public class ActionCardTest {
 		toSend.add(CardColour.Red);
 		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
 		assertTrue(rules.getTournamentColour().equals(CardColour.Red));
+		assertTrue(!rules.getPlayerById(1).getHand().contains("Change Weapon"));
 		toSend.clear();
 		
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Green);
@@ -76,20 +79,23 @@ public class ActionCardTest {
 		toSend.add(CardColour.Red);
 		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
 		assertFalse(rules.getTournamentColour().equals(CardColour.Red));
+		assertTrue(rules.getPlayerById(1).getHand().contains("Change Weapon"));
 		toSend.clear();
 	}
 	
 	@Test
 	public void testDropWeapon() {
-		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
-		rules.getPlayerById(1).addCard(new ActionCard("Drop Weapon"));
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
-		assertFalse(rules.getTournamentColour().equals(CardColour.Green));
-		
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Yellow);
 		rules.getPlayerById(1).addCard(new ActionCard("Drop Weapon"));
 		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
 		assertTrue(rules.getTournamentColour().equals(CardColour.Green));
+		assertTrue(!rules.getPlayerById(1).getHand().contains("Drop Weapon"));
+		
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
+		rules.getPlayerById(1).addCard(new ActionCard("Drop Weapon"));
+		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertFalse(rules.getTournamentColour().equals(CardColour.Green));
+		assertTrue(rules.getPlayerById(1).getHand().contains("Drop Weapon"));
 	}
 	
 	@Test
@@ -104,6 +110,7 @@ public class ActionCardTest {
 		
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 7"));
+		assertTrue(!rules.getPlayerById(1).getHand().contains("Break Lance"));
 		toSend.clear();
 	}
 	
@@ -119,6 +126,7 @@ public class ActionCardTest {
 		
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Purple 4"));
+		assertTrue(!rules.getPlayerById(1).getHand().contains("Riposte"));
 		toSend.clear();
 	}
 
@@ -135,6 +143,7 @@ public class ActionCardTest {
 		
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 4"));
+		assertTrue(!rules.getPlayerById(1).getHand().contains("Dodge"));
 		toSend.clear();
 	}
 	
@@ -150,6 +159,7 @@ public class ActionCardTest {
 		
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(1).getHand().contains("Blue 3"));
+		assertTrue(!rules.getPlayerById(1).getHand().contains("Retreat"));
 		toSend.clear();
 	}
 	
@@ -165,6 +175,7 @@ public class ActionCardTest {
 		
 		assertEquals(rules.getPlayerById(2).getHandSize(), oppHandSize-1);
 		assertEquals(rules.getPlayerById(1).getHandSize(), playHandSize+1);
+		assertTrue(!rules.getPlayerById(1).getHand().contains("Knock Down"));
 		toSend.clear();
 	}
 	
@@ -187,6 +198,7 @@ public class ActionCardTest {
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Squire 3"));
 		assertFalse(rules.getPlayerById(3).getDisplay().contains("Green 1"));
 		assertTrue(rules.getPlayerById(3).getDisplay().contains("Squire 3"));
+		assertTrue(!rules.getPlayerById(2).getHand().contains("Outmaneuver"));
 	}
 	
 	@Test
@@ -212,6 +224,7 @@ public class ActionCardTest {
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 5"));
 		assertFalse(rules.getPlayerById(3).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 4"));
+		assertTrue(!rules.getPlayerById(2).getHand().contains("Charge"));
 	}
 	
 	@Test
@@ -238,6 +251,7 @@ public class ActionCardTest {
 		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 4"));
 		assertFalse(rules.getPlayerById(3).getDisplay().contains("Blue 5"));
+		assertTrue(!rules.getPlayerById(2).getHand().contains("Countercharge"));
 	}
 	
 	@Test
@@ -263,6 +277,7 @@ public class ActionCardTest {
 		assertTrue(rules.getPlayerById(3).getDisplay().contains("Yellow 3"));
 		assertFalse(rules.getPlayerById(3).getDisplay().contains("Squire 2"));
 		assertFalse(rules.getPlayerById(3).getDisplay().contains("Squire 3"));
+		assertTrue(!rules.getPlayerById(2).getHand().contains("Disgrace"));
 	}
 	
 	@Test
@@ -288,6 +303,7 @@ public class ActionCardTest {
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 4"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Yellow 2"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Yellow 4"));
+		assertTrue(!rules.getPlayerById(1).getHand().contains("Outwit"));
 		toSend.clear();
 	}
 	
@@ -300,6 +316,7 @@ public class ActionCardTest {
 		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
 		
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Shield"));
+		assertTrue(!rules.getPlayerById(1).getHand().contains("Shield"));
 	}
 	
 	@Test
@@ -312,6 +329,7 @@ public class ActionCardTest {
 		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
 		
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Stunned"));
+		assertTrue(!rules.getPlayerById(1).getHand().contains("Stunned"));
 		toSend.clear();
 	}
 	
