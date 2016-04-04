@@ -46,15 +46,17 @@ public class ActionCardTest {
 	}
 	
 	@Test
-	public void testUnhorse() {
+	public void testUnhorse() { //unaffected by shield
+		//successful play
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
 		rules.getPlayerById(1).addCard(new ActionCard("Unhorse"));
 		toSend.add(CardColour.Blue);
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
 		assertTrue(rules.getTournamentColour().equals(CardColour.Blue));
 		assertTrue(!rules.getPlayerById(1).getHand().contains("Unhorse"));
 		toSend.clear();
 		
+		//unsuccessful play
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
 		rules.getPlayerById(1).addCard(new ActionCard("Unhorse"));
 		toSend.add(CardColour.Red);
@@ -62,18 +64,22 @@ public class ActionCardTest {
 		assertFalse(rules.getTournamentColour().equals(CardColour.Red));
 		assertTrue(rules.getPlayerById(1).getHand().contains("Unhorse"));
 		toSend.clear();
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
-	public void testChangeWeapon() {
+	public void testChangeWeapon() { //unaffected by shield
+		//successful play
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
 		rules.getPlayerById(1).addCard(new ActionCard("Change Weapon"));
 		toSend.add(CardColour.Red);
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
 		assertTrue(rules.getTournamentColour().equals(CardColour.Red));
 		assertTrue(!rules.getPlayerById(1).getHand().contains("Change Weapon"));
 		toSend.clear();
 		
+		//unsuccessful play
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Green);
 		rules.getPlayerById(1).addCard(new ActionCard("Change Weapon"));
 		toSend.add(CardColour.Red);
@@ -81,21 +87,27 @@ public class ActionCardTest {
 		assertFalse(rules.getTournamentColour().equals(CardColour.Red));
 		assertTrue(rules.getPlayerById(1).getHand().contains("Change Weapon"));
 		toSend.clear();
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
-	public void testDropWeapon() {
+	public void testDropWeapon() { //unaffected by shield
+		//successful play
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Yellow);
 		rules.getPlayerById(1).addCard(new ActionCard("Drop Weapon"));
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
 		assertTrue(rules.getTournamentColour().equals(CardColour.Green));
 		assertTrue(!rules.getPlayerById(1).getHand().contains("Drop Weapon"));
 		
+		//unsuccessful play
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
 		rules.getPlayerById(1).addCard(new ActionCard("Drop Weapon"));
 		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
 		assertFalse(rules.getTournamentColour().equals(CardColour.Green));
 		assertTrue(rules.getPlayerById(1).getHand().contains("Drop Weapon"));
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
@@ -106,12 +118,33 @@ public class ActionCardTest {
 		
 		rules.getPlayerById(1).addCard(new ActionCard("Break Lance"));
 		toSend.add(p2);
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
 		
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 7"));
 		assertTrue(!rules.getPlayerById(1).getHand().contains("Break Lance"));
 		toSend.clear();
+		
+		rules.roundCleanup();
+	}
+	
+	@Test
+	public void testBreakLanceShielded() {
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 4));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 7));
+		rules.getPlayerById(2).getDisplay().addCard(new ActionCard("Shield"));
+		
+		rules.getPlayerById(1).addCard(new ActionCard("Break Lance"));
+		toSend.add(p2);
+		assertFalse(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
+		
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Purple 7"));
+		assertTrue(rules.getPlayerById(1).getHand().contains("Break Lance"));
+		toSend.clear();
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
@@ -122,12 +155,33 @@ public class ActionCardTest {
 		
 		rules.getPlayerById(1).addCard(new ActionCard("Riposte"));
 		toSend.add(p2);
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
 		
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Purple 4"));
 		assertTrue(!rules.getPlayerById(1).getHand().contains("Riposte"));
 		toSend.clear();
+		
+		rules.roundCleanup();
+	}
+	
+	@Test
+	public void testRiposteShielded() {
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 7));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 5));
+		rules.getPlayerById(2).getDisplay().addCard(new ActionCard("Shield"));
+		
+		rules.getPlayerById(1).addCard(new ActionCard("Riposte"));
+		toSend.add(p2);
+		assertFalse(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
+		
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Purple 5"));
+		assertFalse(rules.getPlayerById(1).getDisplay().contains("Purple 5"));
+		assertTrue(rules.getPlayerById(1).getHand().contains("Riposte"));
+		toSend.clear();
+		
+		rules.roundCleanup();
 	}
 
 	@Test
@@ -139,44 +193,70 @@ public class ActionCardTest {
 		rules.getPlayerById(1).addCard(new ActionCard("Dodge"));
 		toSend.add("Blue 3");
 		toSend.add(p2);
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
 		
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 4"));
 		assertTrue(!rules.getPlayerById(1).getHand().contains("Dodge"));
 		toSend.clear();
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
-	public void testRetreat() {
+	public void testDodgeShielded() {
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
+		rules.getPlayerById(2).getDisplay().addCard(new ActionCard("Shield"));
+
+		rules.getPlayerById(1).addCard(new ActionCard("Dodge"));
+		toSend.add("Blue 3");
+		toSend.add(p2);
+		assertFalse(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
+		
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 4"));
+		assertTrue(rules.getPlayerById(1).getHand().contains("Dodge"));
+		toSend.clear();
+		
+		rules.roundCleanup();
+	}
+	
+	@Test
+	public void testRetreat() { //unaffected by shield
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
 		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
 		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
 		
 		rules.getPlayerById(1).addCard(new ActionCard("Retreat"));
 		toSend.add("Blue 3");
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
 		
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(1).getHand().contains("Blue 3"));
 		assertTrue(!rules.getPlayerById(1).getHand().contains("Retreat"));
 		toSend.clear();
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
-	public void testKnockDown() {
+	public void testKnockDown() { //unaffected by shield
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Red);
 		int playHandSize = rules.getPlayerById(1).getHandSize();
 		int oppHandSize = rules.getPlayerById(2).getHandSize();
 		
 		rules.getPlayerById(1).addCard(new ActionCard("Knock Down"));
 		toSend.add(p2);
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
 		
 		assertEquals(rules.getPlayerById(2).getHandSize(), oppHandSize-1);
 		assertEquals(rules.getPlayerById(1).getHandSize(), playHandSize+1);
 		assertTrue(!rules.getPlayerById(1).getHand().contains("Knock Down"));
 		toSend.clear();
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
@@ -190,15 +270,51 @@ public class ActionCardTest {
 		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
 		
 		rules.getPlayerById(2).addCard(new ActionCard("Outmaneuver"));
-		rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend));
 		
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Green 1"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Squire 2"));
+		
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Green 1"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Squire 3"));
+		
 		assertFalse(rules.getPlayerById(3).getDisplay().contains("Green 1"));
 		assertTrue(rules.getPlayerById(3).getDisplay().contains("Squire 3"));
+		
 		assertTrue(!rules.getPlayerById(2).getHand().contains("Outmaneuver"));
+		
+		rules.roundCleanup();
+	}
+	
+	@Test
+	public void testOutmaneuverShielded() {
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Green);
+		rules.getPlayerById(1).getDisplay().addCard(new SupporterCard(2));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(2).getDisplay().addCard(new SupporterCard(3));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(3));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		//player 3 is protected
+		rules.getPlayerById(3).getDisplay().addCard(new ActionCard("Shield"));
+		
+		rules.getPlayerById(2).addCard(new ActionCard("Outmaneuver"));
+		assertTrue(rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend));
+		
+		assertFalse(rules.getPlayerById(1).getDisplay().contains("Green 1"));
+		assertTrue(rules.getPlayerById(1).getDisplay().contains("Squire 2"));
+		
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Green 1"));
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Squire 3"));
+		
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Green 1"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Squire 3"));
+		
+		assertTrue(!rules.getPlayerById(2).getHand().contains("Outmaneuver"));
+		
+		
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
@@ -215,16 +331,54 @@ public class ActionCardTest {
 		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
 		
 		rules.getPlayerById(2).addCard(new ActionCard("Charge"));
-		rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend));
 		
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Blue 4"));
+		
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 4"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 5"));
+		
 		assertFalse(rules.getPlayerById(3).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 4"));
+		
 		assertTrue(!rules.getPlayerById(2).getHand().contains("Charge"));
+		
+		rules.roundCleanup();
+	}
+	
+	@Test
+	public void testChargeShielded() {
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 5));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
+		//player 3 is protected
+		rules.getPlayerById(3).getDisplay().addCard(new ActionCard("Shield"));
+		
+		rules.getPlayerById(2).addCard(new ActionCard("Charge"));
+		assertTrue(rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend));
+		
+		assertFalse(rules.getPlayerById(1).getDisplay().contains("Blue 3"));
+		assertTrue(rules.getPlayerById(1).getDisplay().contains("Blue 4"));
+		
+		assertFalse(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 4"));
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 5"));
+		
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 3"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 4"));
+		
+		assertTrue(!rules.getPlayerById(2).getHand().contains("Charge"));
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
@@ -241,17 +395,56 @@ public class ActionCardTest {
 		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 5));
 		
 		rules.getPlayerById(2).addCard(new ActionCard("Countercharge"));
-		rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend));
 		
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Blue 4"));
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Blue 5"));
+		
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Blue 5"));
+		
 		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 3"));
 		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 4"));
 		assertFalse(rules.getPlayerById(3).getDisplay().contains("Blue 5"));
+		
 		assertTrue(!rules.getPlayerById(2).getHand().contains("Countercharge"));
+		
+		rules.roundCleanup();
+	}
+	
+	@Test
+	public void testCounterChargeShielded() {
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Blue, 5));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 5));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Blue, 5));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 3));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 4));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Blue, 5));
+		//player 3 is protected
+		rules.getPlayerById(3).getDisplay().addCard(new ActionCard("Shield"));
+		
+		rules.getPlayerById(2).addCard(new ActionCard("Countercharge"));
+		assertTrue(rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend));
+		
+		assertTrue(rules.getPlayerById(1).getDisplay().contains("Blue 3"));
+		assertTrue(rules.getPlayerById(1).getDisplay().contains("Blue 4"));
+		assertFalse(rules.getPlayerById(1).getDisplay().contains("Blue 5"));
+		
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Blue 3"));
+		assertFalse(rules.getPlayerById(2).getDisplay().contains("Blue 5"));
+		
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 3"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 4"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Blue 5"));
+		
+		assertTrue(!rules.getPlayerById(2).getHand().contains("Countercharge"));
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
@@ -267,17 +460,55 @@ public class ActionCardTest {
 		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(2));
 		
 		rules.getPlayerById(2).addCard(new ActionCard("Disgrace"));
-		rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend));
 		
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 3"));
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Squire 2"));
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Squire 3"));
+		
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Yellow 4"));
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Maiden"));
+		
 		assertTrue(rules.getPlayerById(3).getDisplay().contains("Yellow 3"));
 		assertFalse(rules.getPlayerById(3).getDisplay().contains("Squire 2"));
 		assertFalse(rules.getPlayerById(3).getDisplay().contains("Squire 3"));
+		
 		assertTrue(!rules.getPlayerById(2).getHand().contains("Disgrace"));
+		
+		rules.roundCleanup();
+	}
+	
+	@Test
+	public void testDisgraceShielded() {
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Yellow);
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Yellow, 3));
+		rules.getPlayerById(1).getDisplay().addCard(new SupporterCard(3));
+		rules.getPlayerById(1).getDisplay().addCard(new SupporterCard(2));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
+		rules.getPlayerById(2).getDisplay().addCard(new SupporterCard(6));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Yellow, 3));
+		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(3));
+		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(2));
+		//player 3 is protected
+		rules.getPlayerById(3).getDisplay().addCard(new ActionCard("Shield"));
+		
+		rules.getPlayerById(2).addCard(new ActionCard("Disgrace"));
+		assertTrue(rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend));
+		
+		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 3"));
+		assertFalse(rules.getPlayerById(1).getDisplay().contains("Squire 2"));
+		assertFalse(rules.getPlayerById(1).getDisplay().contains("Squire 3"));
+		
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Yellow 4"));
+		assertFalse(rules.getPlayerById(2).getDisplay().contains("Maiden"));
+		
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Yellow 3"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Squire 2"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Squire 3"));
+		
+		assertTrue(!rules.getPlayerById(2).getHand().contains("Disgrace"));
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
@@ -285,6 +516,10 @@ public class ActionCardTest {
 		fail();
 	}
 	
+	@Test
+	public void testAdaptShielded() {
+		fail();
+	}
 	@Test
 	public void testOutwit() {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Yellow);
@@ -297,44 +532,80 @@ public class ActionCardTest {
 		toSend.add(p2);
 		toSend.add(0);
 		toSend.add("Yellow 4");
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
 		
 		assertFalse(rules.getPlayerById(1).getDisplay().contains("Yellow 2"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 4"));
+		
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Yellow 2"));
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Yellow 4"));
+		
 		assertTrue(!rules.getPlayerById(1).getHand().contains("Outwit"));
 		toSend.clear();
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
-	public void testShield() {
+	public void testOutwitShielded() {
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Yellow);
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Yellow, 2));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Yellow, 3));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
+		//player 2 is protected
+		rules.getPlayerById(2).getDisplay().addCard(new ActionCard("Shield"));
+		
+		rules.getPlayerById(1).addCard(new ActionCard("Outwit"));
+		toSend.add(p2);
+		toSend.add(0);
+		toSend.add("Yellow 4");
+		assertFalse(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
+		
+		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 2"));
+		assertFalse(rules.getPlayerById(1).getDisplay().contains("Yellow 4"));
+		
+		assertFalse(rules.getPlayerById(2).getDisplay().contains("Yellow 2"));
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Yellow 4"));
+		
+		assertTrue(rules.getPlayerById(1).getHand().contains("Outwit"));
+		toSend.clear();
+		
+		rules.roundCleanup();
+	}
+	
+	@Test
+	public void testShield() { //only one shield in game
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Green);
 		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
 		
 		rules.getPlayerById(1).addCard(new ActionCard("Shield"));
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
 		
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Shield"));
 		assertTrue(!rules.getPlayerById(1).getHand().contains("Shield"));
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
-	public void testStunned() {
+	public void testStunned() { //unaffected by shield
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Green);
 		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
 		
 		rules.getPlayerById(1).addCard(new ActionCard("Stunned"));
 		toSend.add(p2);
-		rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		assertTrue(rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend));
 		
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Stunned"));
 		assertTrue(!rules.getPlayerById(1).getHand().contains("Stunned"));
 		toSend.clear();
+		
+		rules.roundCleanup();
 	}
 	
 	@Test
-	public void testIvanhoe() {
+	public void testIvanhoe() { //unaffected by shield
 		fail();
 	}
 	
