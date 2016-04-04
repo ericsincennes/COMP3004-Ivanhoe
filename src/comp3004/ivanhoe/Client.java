@@ -18,9 +18,6 @@ public class Client {
 	protected ObjectInputStream in;
 	protected ObjectOutputStream out;
 	protected int playerNum = -1;
-	protected List<Card> CardsInHand;	//ArrayList of current hand
-	protected List<Long> PlayersList;
-	protected List<Integer> PointsList;
 	protected BoardState theBoard;
 	protected boolean isActiveTurn;
 	protected Scanner scan = new Scanner(System.in);
@@ -37,7 +34,6 @@ public class Client {
 	}
 
 	public Client(){
-		CardsInHand = new ArrayList<Card>();
 	}
 
 	public boolean connect(String IPaddr, int port){
@@ -72,18 +68,12 @@ public class Client {
 			case Optcodes.ClientGetColourChoice:
 				handleGetTournamentColour();
 				break;
-			case Optcodes.ClientGetHand:
-				handleGetHand();
-				break;
 			case Optcodes.ClientUpdateBoardState:
 				handleUpdateBoardState();
 				break;
 			case Optcodes.ClientGetCardsToBePlayed:
 				print("Choose a card to play, type 99 to withdraw, or type 66 to end turn.");
 				sendCardsToBePlayed();
-				break;
-			case Optcodes.ClientGetPlayerList:
-				getPlayersList();
 				break;
 			case Optcodes.InvalidCard:
 				print("Card is unable to be played");
@@ -102,9 +92,6 @@ public class Client {
 			case Optcodes.TournamentColour:
 				setColour();
 				break;
-			case Optcodes.ClientGetPoints:
-				getPoints();
-				break; 
 			case Optcodes.ClientActiveTurn:
 				handleActiveTurn();
 				isActiveTurn = true;
@@ -163,44 +150,17 @@ public class Client {
 		ArrayList<String> targets = new ArrayList<String>();
 		//get index of card to get data for from server
 		int index = (Integer) get();
-		Card c = CardsInHand.get(index);
+		Card c = theBoard.hand.get(index);
 		
 		if(c.getCardType() == CardType.Action){
 			
 		}
 	}
 	
-	protected void getPlayersList() {
-		Object o = get(); 
-		print("getPlayersList() getting " + o.getClass().getName() + " " + o.toString());
-		PlayersList = (List<Long>) o;
-	}
-	
 	protected void setColour() {
 		Object o = get();
 		print("setColour() getting " + o.getClass().getName() + " " + o.toString());
 		colour = ((CardColour) o).name();
-	}
-	
-	protected void getPoints() {
-		Object o = get();
-		print("getPoints() getting " + o.getClass().getName() + " " + o.toString());
-		PointsList = (List<Integer>) o;
-		
-	}
-	
-	protected void handleGetHand(){
-		Object o = get();
-		print("handleGetHand() getting " + o.getClass().getName() + " " + o.toString());
-		CardsInHand = (ArrayList<Card>) o;
-
-		 
-		print("Tournament Colour: " + colour);
-		print("Cards currently in hand:");
-		for (Card c: CardsInHand){
-			System.out.print("(" + (CardsInHand.indexOf(c)+1) + ") - " + c.getCardName() + ".  ");
-		}
-		print("\n");
 	}
 	
 	
