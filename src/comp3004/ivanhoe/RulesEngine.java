@@ -377,10 +377,10 @@ public class RulesEngine {
 		ArrayList<ArrayList<Integer>> keeping = null; //used for Adapt
 		ArrayList<Card> temp = new ArrayList<Card>();
 		int cardValue;
-		
+				
 		for (Object o : target) {
-			if (o.getClass().equals(Long.class)) {
-				opponent = getPlayerById((Long) o);
+			if (o instanceof Long) {
+				opponent = getPlayerById((long) o);
 			} else if (o.getClass().equals(String.class)) {
 				chosen = (String) o;
 			} else if (o.getClass().equals(CardColour.class)) {
@@ -651,11 +651,13 @@ public class RulesEngine {
 			caster.playActionCard(cardIndex);
 			
 			break;
-		case "Stunned": //target: none
+		case "Stunned": //target: Player
 			//Place this card separately face up in front of any one opponent.
 			//As long as a player has the STUNNED card in front of him, 
 			//he may add only one new card to his display each turn.
-			
+	
+			Card stun = new ActionCard("Stunned");
+			opponent.getDisplay().addCard(stun);
 			caster.playActionCard(cardIndex);
 			
 			break;

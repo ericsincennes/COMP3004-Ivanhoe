@@ -92,7 +92,7 @@ public class Player {
 	 */
 	public void playActionCard(int posinhand){
 		Card card = hand.getCardbyIndex(posinhand);
-		if (card.getCardName().equals("Shield") || card.getCardName().equals("Stunned")) {
+		if (card.getCardName().equals("Shield")) {
 			display.addCard(card);
 		}
 		getHand().removeByIndex(posinhand);
