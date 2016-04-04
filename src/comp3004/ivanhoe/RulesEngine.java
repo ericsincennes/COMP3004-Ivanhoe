@@ -453,9 +453,12 @@ public class RulesEngine {
 			//Take the last card played on any one opponent’s 
 			//display and add it to your own display.
 			if (opponent.isShielded()) { break; }
+			String last = opponent.getDisplay().getLastPlayed().getCardName();
+			
+			if (caster.getDisplay().contains("Maiden") && last.equals("Maiden")) { break; }
 			
 			if (opponent.getDisplay().getCards().size() > 1) { 
-				taken = opponent.getDisplay().remove(opponent.getDisplay().getLastPlayed().getCardName());
+				taken = opponent.getDisplay().remove(last);
 				//need to remove the card from cardsPlayed list in deck
 				caster.getDisplay().addCard(taken);
 				caster.playActionCard(cardIndex);
@@ -625,6 +628,12 @@ public class RulesEngine {
 			//This may include the SHIELD and STUNNED cards.
 			if (opponent.isShielded() && (chosen != "Shield")) { break; }
 			
+			if (chosen.equals("Maiden")) {
+				if (caster.getDisplay().contains("Maiden") && !caster.getDisplay().getCard(choiceIndex).getCardName().equals("Maiden")) {
+					break;
+				}
+			}
+			 
 			//give card
 			if (!caster.getDisplay().getCards().isEmpty() && !opponent.getDisplay().getCards().isEmpty()) {
 				//give card
