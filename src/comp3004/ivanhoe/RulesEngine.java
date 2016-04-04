@@ -491,7 +491,7 @@ public class RulesEngine {
 			if (opponent.isShielded()) { break; }
 			
 			if (opponent.getHandSize() > 0) {
-				int r = rand.nextInt(opponent.getHandSize() + 1);
+				int r = rand.nextInt(opponent.getHandSize());
 				taken = opponent.getHand().getCardbyIndex(r);
 				opponent.getHand().remove(taken.getCardName());
 				caster.getHand().add(taken);
