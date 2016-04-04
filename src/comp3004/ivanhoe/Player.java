@@ -111,7 +111,7 @@ public class Player {
 	}
 	
 	public boolean isStunned() {
-		return display.contains("Stun");
+		return display.contains("Stunned");
 	}
 	
 	/**

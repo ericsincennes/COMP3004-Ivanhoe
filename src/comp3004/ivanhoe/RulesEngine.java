@@ -392,11 +392,6 @@ public class RulesEngine {
 			}
 		}
 		
-		//handle if opponent has shield shield
-		if (opponent != null && opponent.getDisplay().contains("Shield")) {
-			return false;
-		}
-
 		switch(caster.getHand().getCardbyIndex(cardIndex).cardName){
 		case "Unhorse": //target: CardColour
 			//color changes from purple to red, blue or yellow
@@ -628,7 +623,7 @@ public class RulesEngine {
 			//and take one faceup card from this opponent 
 			//and place it face up in front of yourself. 
 			//This may include the SHIELD and STUNNED cards.
-			if (opponent.isShielded() || caster.isShielded()) { break; }
+			if (opponent.isShielded() && (chosen != "Shield")) { break; }
 			
 			//give card
 			if (!caster.getDisplay().getCards().isEmpty() && !opponent.getDisplay().getCards().isEmpty()) {

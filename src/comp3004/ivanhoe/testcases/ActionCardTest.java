@@ -2,6 +2,7 @@ package comp3004.ivanhoe.testcases;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -17,6 +18,7 @@ import comp3004.ivanhoe.Card.CardColour;
 
 public class ActionCardTest {
 	RulesEngine rules;
+	List<Object> toSend = new ArrayList<Object>();
 	
 	@Before
 	public void setUp() throws Exception {
@@ -41,33 +43,47 @@ public class ActionCardTest {
 	@Test
 	public void testUnhorse() {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
-		rules.actionHandler(new ActionCard("Unhorse"), rules.getPlayerById(1), CardColour.Blue);
+		rules.getPlayerById(1).addCard(new ActionCard("Unhorse"));
+		toSend.add(CardColour.Blue);
+		rules.actionHandler(8, rules.getPlayerById(1), toSend);
 		assertTrue(rules.getTournamentColour().equals(CardColour.Blue));
+		toSend.clear();
 		
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
-		rules.actionHandler(new ActionCard("Unhorse"), rules.getPlayerById(1), CardColour.Red);
+		rules.getPlayerById(1).addCard(new ActionCard("Unhorse"));
+		toSend.add(CardColour.Red);
+		rules.actionHandler(8, rules.getPlayerById(1), toSend);
 		assertFalse(rules.getTournamentColour().equals(CardColour.Red));
+		toSend.clear();
 	}
 	
 	@Test
 	public void testChangeWeapon() {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
-		rules.actionHandler(new ActionCard("Change Weapon"), rules.getPlayerById(1), CardColour.Red);
+		rules.getPlayerById(1).addCard(new ActionCard("Change Weapon"));
+		toSend.add(CardColour.Red);
+		rules.actionHandler(8, rules.getPlayerById(1), toSend);
 		assertTrue(rules.getTournamentColour().equals(CardColour.Red));
+		toSend.clear();
 		
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Green);
-		rules.actionHandler(new ActionCard("Change Weapon"), rules.getPlayerById(1), CardColour.Red);
+		rules.getPlayerById(1).addCard(new ActionCard("Change Weapon"));
+		toSend.add(CardColour.Red);
+		rules.actionHandler(8, rules.getPlayerById(1), toSend);
 		assertFalse(rules.getTournamentColour().equals(CardColour.Red));
+		toSend.clear();
 	}
 	
 	@Test
 	public void testDropWeapon() {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
-		rules.actionHandler(new ActionCard("Drop Weapon"), rules.getPlayerById(1));
+		rules.getPlayerById(1).addCard(new ActionCard("Drop Weapon"));
+		rules.actionHandler(8, rules.getPlayerById(1), toSend);
 		assertFalse(rules.getTournamentColour().equals(CardColour.Green));
 		
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Yellow);
-		rules.actionHandler(new ActionCard("Drop Weapon"), rules.getPlayerById(1));
+		rules.getPlayerById(1).addCard(new ActionCard("Drop Weapon"));
+		rules.actionHandler(8, rules.getPlayerById(1), toSend);
 		assertTrue(rules.getTournamentColour().equals(CardColour.Green));
 	}
 	
@@ -76,10 +92,12 @@ public class ActionCardTest {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 4));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 7));
-		rules.actionHandler(new ActionCard("Break Lance"), rules.getPlayerById(1), rules.getPlayerById(2));
+		rules.getPlayerById(1).addCard(new ActionCard("Break Lance"));
+		toSend.add(rules.getPlayerById(2));
+		rules.actionHandler(8, rules.getPlayerById(1), toSend);
 		assertTrue(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
-		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 5"));
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 7"));
+		toSend.clear();
 	}
 	
 	@Test
@@ -87,9 +105,12 @@ public class ActionCardTest {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 7));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Purple, 4));
-		rules.actionHandler(new ActionCard("Riposte"), rules.getPlayerById(1), rules.getPlayerById(2));
+		rules.getPlayerById(1).addCard(new ActionCard("Riposte"));
+		toSend.add(rules.getPlayerById(2));
+		rules.actionHandler(8, rules.getPlayerById(1), toSend);
 		assertFalse(rules.getPlayerById(2).getDisplay().contains("Purple 4"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Purple 4"));
+		toSend.clear();
 	}
 	
 	@Test
