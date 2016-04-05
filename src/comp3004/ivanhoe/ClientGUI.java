@@ -237,7 +237,7 @@ public class ClientGUI extends Client{
 			opponentPanel[i] = new JPanel();
 			opponentPanel[i].setLayout(new FlowLayout());
 			opponentPanel[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent " + playerid[i+1]));
-			opponentPanel[i].setName("Opponent " + i);
+			opponentPanel[i].setName("Opponent " + playerid[i+1]);
 			displaysPanel.add(opponentPanel[i]);
 		}
 		
@@ -641,6 +641,9 @@ public class ClientGUI extends Client{
 					List<Card> li = theBoard.boards.get(c); //get cards of opponent
 					
 					List<String> cardnames = new ArrayList<String>();
+					for(Card card: li){
+						cardnames.add(card.getCardName());
+					}
 					choices = cardnames.toArray(choices);
 					
 					while(!cancelClicked){
