@@ -300,6 +300,7 @@ public class Server{
 									eventmsg.add(result);
 									sendEvent(eventmsg);
 									rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets);
+									//TODO add handler for getting ivanhoed
 									send(Optcodes.SuccessfulCardPlay);
 								}
 								else {
@@ -473,14 +474,15 @@ public class Server{
 		/**
 		 * handles an event, somehow
 		 * @param event - the event msg received, with prepended sender ID
+		 * @return anything, null if nothing to return
 		 */
-		private void handleEvent(List<Object> event) {
-			if (event.size() < 2) { return; }
+		private Object handleEvent(List<Object> event) {
+			if (event.size() < 2) { return null; }
 			if (event.get(0) instanceof Long && (long) event.get(0) == threadID) {
 				eventQueue.add(event);
-				return;
+				return null;
 			}
-			if (!(event.get(1) instanceof String)) { return; }
+			if (!(event.get(1) instanceof String)) { return null; }
 			switch ((String) event.get(1)) {
 			case "tournamentover":
 				send(Optcodes.LoseTournament);
@@ -495,13 +497,27 @@ public class Server{
 				send(((Long) event.get(0)).toString()); //player id who failed
 				send((List<Card>)event.get(2)); //hand
 			case "actioncard":
-					send((rules.getPlayerById(threadID).getHand().contains("Ivanhoe")) ? 
-							Optcodes.ClientGetIvanhoeChoice : Optcodes.ClientActionCardPlayed);
-					send((String) event.get(2));
-				break;
+					if (rules.getPlayerById(threadID).getHand().contains("Ivanhoe")) {
+						send(Optcodes.ClientGetIvanhoeChoice);
+						send((String) event.get(2));
+						Long casterID = (Long) event.get(0);
+						try {
+							client.setSoTimeout(7000);
+							client.setSoTimeout(0);
+							//TODO wait for ivanhoe response
+						} catch (SocketException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} else {
+						send(Optcodes.ClientActionCardPlayed);
+						send((String) event.get(2));
+					}
+					break;
 			default:
 				break;
 			}
+			return null;
 		}
 
 		/**
