@@ -4,8 +4,10 @@ package comp3004.ivanhoe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import comp3004.ivanhoe.Card.CardColour;
 import comp3004.ivanhoe.Card.CardType;
@@ -383,7 +385,7 @@ public class RulesEngine {
 				} else if (o.getClass().equals(int.class)) {
 					choiceIndex = (int) o;
 				} else if (o.getClass().equals(ArrayList.class)){
-					keeping.add((ArrayList<Integer>) o);
+					//keeping.add((ArrayList<Integer>) o);
 				}
 			}
 			
@@ -554,27 +556,24 @@ public class RulesEngine {
 				}
 				break;
 			case "Adapt": //target: none
-				temp = new ArrayList<Card>();
-				//Each player may only keep one card of each value in his display. 
-				//All other cards with the same value are discarded. 
-				//Each player decides which of the matching-value cards he will discard.
+				count = 0;
+				Set<Integer> dupes = new HashSet<Integer>();
 				
-				//This loop assumes that the order of lists in keeping
-				//matches the correct player in players list
-				for(ArrayList<Integer> intArray : keeping ){
-					for(Integer index: intArray){
-						Player p = playersList.get(keeping.indexOf(intArray));
-						List<Card> cards = p.getDisplay().getCards();
-						for(Card x: cards){
-							if(cards.indexOf(x) == index){
-								temp.add(p.getDisplay().remove(index));
+				
+				for (Player p : playersList) {
+					if (p.getPlaying()) {
+						if (!p.isShielded()) {
+							for (Card c : p.getDisplay().getCards()) {
+								dupes.add(((ColourCard)c).getValue());
+							}
+							if (dupes.size() < p.getDisplay().getCards().size()) {
+								return false;
+							} else {
+								return true;
 							}
 						}
 					}
-				}
-				
-				for(Card y : temp){
-					deck.addToDiscard(y);
+					dupes.clear();
 				}
 				
 				break;
