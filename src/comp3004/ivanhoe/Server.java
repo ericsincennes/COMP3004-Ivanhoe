@@ -165,8 +165,17 @@ public class Server{
 						send(Optcodes.GameWinner);
 					}
 					else {
-						//send(Optcodes.GameOver);
-						break;
+						try {
+							String event = eventQueue.poll(200, TimeUnit.SECONDS);
+							if (event != null) {
+								handleEvent(event);
+							}
+						}
+
+						catch (InterruptedException ie) {
+							ie.printStackTrace();
+							break;
+						}
 					}
 					break; //or possibly ask to start again?
 				}
