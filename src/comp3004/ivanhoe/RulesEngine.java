@@ -783,5 +783,22 @@ public class RulesEngine {
 	public BoardState makeBoardState(Player p) {
 		return new BoardState(p, playersList, p.getHand(), TournamentColour, deck);
 	}
+	
+	/**
+	 * Removes a player from the game. Used if someone disconnects.
+	 * @param threadID - the ID of the player to remove from game
+	 */
+	public void removePlayer(long threadID) {
+		Player toRemove = getPlayerById(threadID);
+		
+		List<Card> toDiscard = toRemove.getDisplay().clearBoard();
+		toDiscard.addAll(toRemove.getHand().discardHand());
+		for (Card c : toDiscard) { deck.addToDiscard(c); }
+		
+		players.remove(threadID);
+		playersList.remove(toRemove);
+		numPlayers--; expectedPlayers--;
+		
+	}
 
 }
