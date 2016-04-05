@@ -292,14 +292,15 @@ public class Server{
 									continue;
 								}
 								
-								if (rules.validateActionCard(cardIndex, rules.getPlayerById(threadID), targets)) {
+								String result = rules.validateActionCard(cardIndex, rules.getPlayerById(threadID), targets);
+								if (result.length()!=0) {
 									List<Object> eventmsg = new ArrayList<Object>();
 									eventmsg.add(Long.valueOf(threadID));
 									eventmsg.add("actioncard");
-									eventmsg.add(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
-									eventmsg.addAll(targets);
+									eventmsg.add(result);
 									sendEvent(eventmsg);
 									rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets);
+									//TODO add handler for getting ivanhoed
 									send(Optcodes.SuccessfulCardPlay);
 								}
 								else {
@@ -473,14 +474,15 @@ public class Server{
 		/**
 		 * handles an event, somehow
 		 * @param event - the event msg received, with prepended sender ID
+		 * @return anything, null if nothing to return
 		 */
-		private void handleEvent(List<Object> event) {
-			if (event.size() < 2) { return; }
+		private Object handleEvent(List<Object> event) {
+			if (event.size() < 2) { return null; }
 			if (event.get(0) instanceof Long && (long) event.get(0) == threadID) {
 				eventQueue.add(event);
-				return;
+				return null;
 			}
-			if (!(event.get(1) instanceof String)) { return; }
+			if (!(event.get(1) instanceof String)) { return null; }
 			switch ((String) event.get(1)) {
 			case "tournamentover":
 				send(Optcodes.LoseTournament);
@@ -492,22 +494,30 @@ public class Server{
 				break;
 			case "failstart":
 				send(Optcodes.OppFailStartTournament);
-				send(((Long) event.get(0)).toString());
-				send((List<Card>)event.get(2));
+				send(((Long) event.get(0)).toString()); //player id who failed
+				send((List<Card>)event.get(2)); //hand
 			case "actioncard":
-				if (event.size() == 3) {
-					send(Optcodes.ClientGetIvanhoeChoice);
-					send((String) event.get(2));
-					
-				}
-				List<Object> targets = event.subList(2, event.size()-1);
-				for (Object t : targets) {
-					
-				}
-				break;
+					if (rules.getPlayerById(threadID).getHand().contains("Ivanhoe")) {
+						send(Optcodes.ClientGetIvanhoeChoice);
+						send((String) event.get(2));
+						Long casterID = (Long) event.get(0);
+						try {
+							client.setSoTimeout(7000);
+							client.setSoTimeout(0);
+							//TODO wait for ivanhoe response
+						} catch (SocketException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} else {
+						send(Optcodes.ClientActionCardPlayed);
+						send((String) event.get(2));
+					}
+					break;
 			default:
 				break;
 			}
+			return null;
 		}
 
 		/**

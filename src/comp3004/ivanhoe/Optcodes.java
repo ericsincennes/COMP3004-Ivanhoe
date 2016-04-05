@@ -10,6 +10,8 @@ public class Optcodes {
 	public static final int ClientWithdraw				= 107;
 	public static final int ClientGetTokenChoice		= 108;
 	public static final int ClientGetActionCardTarget 	= 110;
+	public static final int ClientActionCardPlayed		= 111;
+	public static final int ClientGetIvanhoeChoice		= 112;
 	
 	public static final int ClientNotActiveTurn			= 150;
 	public static final int ClientActiveTurn 			= 151;
@@ -26,6 +28,5 @@ public class Optcodes {
 	public static final int GameWinner 					= 9001;
 	public static final int GameOver					= 8999;
 	
-	public static final int ClientGetIvanhoeChoice		= 9990;
 	public static final int Ivanhoe						= 9999;
 }
