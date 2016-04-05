@@ -404,7 +404,7 @@ public class RulesEngine {
 			case "Change Weapon": //target: CardColour
 				// color changes from red, blue or yellow to a different one of these colors
 				if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
-					if (TournamentColour == colour) {
+					if (!(TournamentColour == colour)) {
 						return "Player " + caster.getID() + " has played Change Weapon changing colour to " + colour.name() + ".";
 					} 
 				}
@@ -657,7 +657,7 @@ public class RulesEngine {
 		case "Change Weapon": //target: CardColour
 			// color changes from red, blue or yellow to a different one of these colors
 			if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
-				if (TournamentColour == colour) {
+				if (!(TournamentColour == colour)) {
 					TournamentColour = colour;
 					caster.playActionCard(cardIndex);
 					return true;
