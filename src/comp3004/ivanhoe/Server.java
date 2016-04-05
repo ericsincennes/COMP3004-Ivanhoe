@@ -222,6 +222,7 @@ public class Server{
 
 						} else {
 							rules.failInitTournamentColour();
+							send(Optcodes.ClientFailStartTournament);
 							//TODO tell client it can't start tournament
 							continue;
 						}
@@ -291,6 +292,7 @@ public class Server{
 									List<Object> eventmsg = new ArrayList<Object>();
 									eventmsg.add(Long.valueOf(threadID));
 									eventmsg.add("actioncard");
+									eventmsg.add(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
 									eventmsg.addAll(targets);
 									sendEvent(eventmsg);
 									rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets);
@@ -338,16 +340,6 @@ public class Server{
 					rules.initTournament();
 				}
 			}
-		}
-		
-		private ArrayList<String> getActionCardTargets(int index){
-			ArrayList<String> targets;
-			
-			//send the client the index of the card to get the info for
-			send(index);
-			
-			targets = (ArrayList<String>) get();
-			return targets;
 		}
 		
 		/**
@@ -424,20 +416,6 @@ public class Server{
 			
 		}
 
-		/**
-		 * Sends the thread id representing the player in the rules engine to the player
-		 */
-		private void sendPlayerId(){
-			//Register Thread with the rules engine
-			int b = rules.registerThread(threadID);
-
-			//if game full close connection
-			if(b != -1){ 
-				send(b); 
-			} else {
-				isRunning = false;
-			}
-		}
 
 		/**
 		 * Gets the tournament colour from the client
@@ -493,7 +471,7 @@ public class Server{
 		 * @param event - the event msg received, with prepended sender ID
 		 */
 		private void handleEvent(List<Object> event) {
-
+			if (event.size() < 2) { return; }
 			if (event.get(0) instanceof Long && (long) event.get(0) == threadID) {
 				eventQueue.add(event);
 				return;
@@ -508,6 +486,15 @@ public class Server{
 				send(Optcodes.GameOver);
 				send(((Long) event.get(0)).toString());
 			case "actioncard":
+				if (event.size() == 3) {
+					send(Optcodes.ClientGetIvanhoeChoice);
+					send((String) event.get(2));
+					
+				}
+				List<Object> targets = event.subList(2, event.size()-1);
+				for (Object t : targets) {
+					
+				}
 				break;
 			default:
 				break;
