@@ -498,7 +498,8 @@ public class Server{
 			try {
 				o = in.readObject();
 			} catch (ClassNotFoundException | IOException e) {
-				e.printStackTrace();
+				rules.removePlayer(threadID);
+				this.interrupt();
 			}
 			if (threadID == rules.getPlayerList().get(0).getID()) 
 				print("Received a " + o.getClass().getName() + " " + o.toString() + " from thread " + threadID);
@@ -518,8 +519,8 @@ public class Server{
 				out.flush();
 				out.reset();
 			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
+				rules.removePlayer(threadID);
+				this.interrupt();
 			}
 			return true;
 		}
