@@ -302,11 +302,10 @@ public class Server{
 									if (rules.canBeIvanhoed(threadID)) { //wait 7 seconds for invanhoe response if applicable
 										List<Object> event = null;
 										try {
-											event = eventQueue.poll(7, TimeUnit.SECONDS);
+											event = eventQueue.poll(7200, TimeUnit.MILLISECONDS);
 										} catch (InterruptedException e) { e.printStackTrace(); }
-										if (event != null && event.size() >= 3 && 
-												event.get(3).equals(true)) { //reply should be ID, "Ivanhoe" and if it's played or not
-																			 //no response is negative
+										if (event != null && event.size() >= 3 && 	//reply should be ID, "Ivanhoe" and if it's played or not
+												event.get(3).equals(true)) { 		//no response is negative
 											send(Optcodes.Ivanhoe);
 											sendBoardState();
 											continue;
