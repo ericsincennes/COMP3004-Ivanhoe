@@ -52,7 +52,8 @@ public class ClientGUI extends Client{
 	private JLabel tournamentColourLabel = new JLabel();
 	private JLabel highestScore = new JLabel();
 	private JLabel playerScore = new JLabel();
-
+	private JLabel tokens = new JLabel();
+	
 	private JScrollPane handPane;
 	private JScrollPane displayPane;
 	private JScrollPane actionCardPane;
@@ -145,7 +146,7 @@ public class ClientGUI extends Client{
 
 		playerScore.setText("Your Score: ");
 		playerScore.setVerticalAlignment(JLabel.CENTER);
-
+		
 		playCardButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -275,7 +276,7 @@ public class ClientGUI extends Client{
 	private void initializeInformationPanel(){
 		informationPanel = new JPanel();
 		informationPanel.setBackground(Color.orange);
-		informationPanel.setLayout(new GridLayout(2, 1));
+		informationPanel.setLayout(new GridLayout(3, 1));
 
 		informationLabel.setText("no card selected");
 		informationLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -283,8 +284,12 @@ public class ClientGUI extends Client{
 		tournamentColourLabel.setText("Tournament colour is being selected");
 		tournamentColourLabel.setHorizontalAlignment(JLabel.CENTER);
 
+		tokens.setText("You have no Tokens");
+		tokens.setHorizontalAlignment(JLabel.CENTER);
+		
 		informationPanel.add(informationLabel);
 		informationPanel.add(tournamentColourLabel);
+		informationPanel.add(tokens);
 	}
 	
 	/**
@@ -465,6 +470,39 @@ public class ClientGUI extends Client{
 		JOptionPane.showMessageDialog(frmMain.getContentPane(), "Card Played", "Card Played", JOptionPane.INFORMATION_MESSAGE);
 	}
 
+	public void updateTokenLable(){
+		String playerTokens = "Your tokens: ";
+		String[] opponentTokens = new String[theBoard.tokens.size()];
+		
+		//get player id's
+		Long[] playerid = new Long[theBoard.tokens.size()];
+		playerid = theBoard.players.toArray(playerid);
+		
+		for(int i =0; i<opponentTokens.length-1; i++){
+			opponentTokens[i] = "Opponent " + playerid[i+1] + " ";
+		}
+		
+		for(List<CardColour> tokensList : theBoard.tokens){
+			if(theBoard.tokens.indexOf(tokensList) == 0){
+				for(CardColour c : tokensList){
+					playerTokens += c.name() +" ";
+				}
+			} else {
+				for(CardColour c : tokensList){
+					opponentTokens[theBoard.tokens.indexOf(tokensList) -1] += c.name() +" ";
+				}	
+			}
+		}
+		//concat opponents tokens into one string
+		StringBuilder builder = new StringBuilder();
+		for(String s : opponentTokens) {
+		    builder.append(s);
+		}
+		String opponents =  builder.toString();
+		
+		tokens.setText(playerTokens + opponents);
+	}
+	
 	public void updateInformationLable(String text){
 		informationLabel.removeAll();
 		informationLabel.setText(text);
@@ -902,6 +940,7 @@ public class ClientGUI extends Client{
 		updateActionCardPanel();
 		updateHand();
 		UpdateInformationPanels();
+		updateTokenLable();
 		
 	}
 
