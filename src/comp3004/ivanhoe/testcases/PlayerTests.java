@@ -24,7 +24,7 @@ public class PlayerTests {
 	@Test
 	public void addCardToHand() {
 		p.addCard(new ColourCard(CardColour.Blue, 6));
-		assertTrue(p.hasInHand("Blue 6"));
+		assertTrue(p.getHand().contains("Blue 6"));
 	}
 	
 	@Test
