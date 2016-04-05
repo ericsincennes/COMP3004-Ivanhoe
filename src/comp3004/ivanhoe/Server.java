@@ -221,9 +221,13 @@ public class Server{
 							}	
 
 						} else {
-							rules.failInitTournamentColour();
+							List<Object> eventmsg = new ArrayList<Object>(2);
+							eventmsg.add(Long.valueOf(threadID));
+							eventmsg.add("failstart");
+							eventmsg.add(rules.getPlayerById(threadID).getHand().getHand());
 							send(Optcodes.ClientFailStartTournament);
-							//TODO tell client it can't start tournament
+							sendEvent(eventmsg);
+							rules.failInitTournamentColour();
 							continue;
 						}
 					}
@@ -485,6 +489,11 @@ public class Server{
 			case "gameover":
 				send(Optcodes.GameOver);
 				send(((Long) event.get(0)).toString());
+				break;
+			case "failstart":
+				send(Optcodes.OppFailStartTournament);
+				send(((Long) event.get(0)).toString());
+				send((List<Card>)event.get(2));
 			case "actioncard":
 				if (event.size() == 3) {
 					send(Optcodes.ClientGetIvanhoeChoice);
