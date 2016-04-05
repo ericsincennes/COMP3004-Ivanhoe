@@ -1,8 +1,10 @@
 package comp3004.ivanhoe;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import comp3004.ivanhoe.Card.CardColour;
 import comp3004.ivanhoe.Card.CardType;
@@ -48,12 +50,7 @@ public class Player {
 	 * @return int
 	 */
 	public int getTokenCount(){
-		int temp = 0;
-		Collection<Integer> values = tokens.values();
-		for (Iterator<Integer> it = values.iterator(); it.hasNext();) {
-			temp += it.next();
-		}
-		return temp;
+		return getTokens().size();
 	}
 	
 	/**
@@ -104,6 +101,16 @@ public class Player {
 	
 	public PointsBoard getDisplay(){
 		return display;
+	}
+	
+	public List<CardColour> getTokens() {
+		List<CardColour> theList = new ArrayList<CardColour>(5);
+		if (tokens.get(CardColour.Purple) == 1) theList.add(CardColour.Purple);
+		if (tokens.get(CardColour.Green) == 1) theList.add(CardColour.Green);
+		if (tokens.get(CardColour.Red) == 1) theList.add(CardColour.Red);
+		if (tokens.get(CardColour.Blue) == 1) theList.add(CardColour.Blue);
+		if (tokens.get(CardColour.Yellow) == 1) theList.add(CardColour.Yellow);
+		return theList;
 	}
 	
 	public boolean isShielded() {

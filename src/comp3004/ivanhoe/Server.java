@@ -20,6 +20,7 @@ public class Server{
 	private boolean 		isAcceptingConnections = true;
 	private ServerSocket 	listeningSocket;
 	private BlockingQueue<String> eventQueue; //interthread communication - active thread will never poll but will be only sender
+											  //except in the case of ivanhoe...
 	//private Log				log = new Log(this.getClass().getName(), "ServerLog");
 	private RulesEngine		rules;
 
@@ -160,11 +161,21 @@ public class Server{
 				if (rules.gameWinner() != null) {
 					if (rules.gameWinner().getID() == threadID) {
 						//send winner msg to client
+						sendEvent("gameover");
 						send(Optcodes.GameWinner);
 					}
 					else {
-						//send lose msg to client\
-						send(Optcodes.GameOver);
+						try {
+							String event = eventQueue.poll(200, TimeUnit.SECONDS);
+							if (event != null) {
+								handleEvent(event);
+							}
+						}
+
+						catch (InterruptedException ie) {
+							ie.printStackTrace();
+							break;
+						}
 					}
 					break; //or possibly ask to start again?
 				}
@@ -301,7 +312,7 @@ public class Server{
 				else {
 					//if tournament is not running
 					if (rules.getPlayerById(threadID).getPlaying()) { //then you are winner of previous tourney
-						sendEvent("wintourney");
+						sendEvent("tournamentover");
 						if(rules.getTournamentColour() == CardColour.Purple){
 							//if purple tournament give token of choice
 							CardColour c = getTokenChoice();
@@ -455,7 +466,7 @@ public class Server{
 		private void sendEvent(String msg) {
 			msg = threadID + " " + msg;
 			try {
-				for (int i=0; i<numplayers; i++) {
+				for (int i=0; i<numplayers-1; i++) {
 					eventQueue.add(msg);
 				}
 			} catch (IllegalStateException e) {
@@ -476,10 +487,13 @@ public class Server{
 			}
 			String ev[] = msg[1].split(" ", 2);
 			switch (ev[0]) {
-			case "wintourney":
+			case "tournamentover":
 				send(Optcodes.LoseTournament);
 				send(msg[0]);
 				break;
+			case "gameover":
+				send(Optcodes.GameOver);
+				send(msg[0]);
 			case "actioncard":
 				break;
 			default:
@@ -497,7 +511,8 @@ public class Server{
 			try {
 				o = in.readObject();
 			} catch (ClassNotFoundException | IOException e) {
-				e.printStackTrace();
+				rules.removePlayer(threadID);
+				this.interrupt();
 			}
 			if (threadID == rules.getPlayerList().get(0).getID()) 
 				print("Received a " + o.getClass().getName() + " " + o.toString() + " from thread " + threadID);
@@ -517,8 +532,8 @@ public class Server{
 				out.flush();
 				out.reset();
 			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
+				rules.removePlayer(threadID);
+				this.interrupt();
 			}
 			return true;
 		}
