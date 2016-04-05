@@ -20,6 +20,7 @@ public class Server{
 	private boolean 		isAcceptingConnections = true;
 	private ServerSocket 	listeningSocket;
 	private BlockingQueue<String> eventQueue; //interthread communication - active thread will never poll but will be only sender
+											  //except in the case of ivanhoe...
 	//private Log				log = new Log(this.getClass().getName(), "ServerLog");
 	private RulesEngine		rules;
 
