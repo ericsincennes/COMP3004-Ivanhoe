@@ -19,7 +19,7 @@ public class Server{
 	private int 			numplayers;
 	private boolean 		isAcceptingConnections = true;
 	private ServerSocket 	listeningSocket;
-	private BlockingQueue<String> eventQueue; //interthread communication - active thread will never poll but will be only sender
+	private BlockingQueue<List<Object>> eventQueue; //interthread communication - active thread will never poll but will be only sender
 											  //except in the case of ivanhoe...
 	//private Log				log = new Log(this.getClass().getName(), "ServerLog");
 	private RulesEngine		rules;
@@ -35,7 +35,7 @@ public class Server{
 		}
 		in.close();
 		rules = new RulesEngine(numplayers);
-		eventQueue = new LinkedBlockingQueue<String>();
+		eventQueue = new LinkedBlockingQueue<List<Object>>();
 		connectAndRecieve(numplayers);
 	}
 
@@ -158,15 +158,18 @@ public class Server{
 			sendBoardState();
 			print(threadID + ": isRunning");
 			while(isRunning){
-				if (rules.gameWinner() != null) {
-					if (rules.gameWinner().getID() == threadID) {
+				if (rules.getPlayerList().size() == 1 || rules.gameWinner() != null) {
+					if (rules.getPlayerList().size() == 1 || rules.gameWinner().getID() == threadID) {
 						//send winner msg to client
-						sendEvent("gameover");
+						List<Object> eventmsg = new ArrayList<Object>(2);
+						eventmsg.add(Long.valueOf(threadID));
+						eventmsg.add("gameover");
+						sendEvent(eventmsg);
 						send(Optcodes.GameWinner);
 					}
 					else {
 						try {
-							String event = eventQueue.poll(200, TimeUnit.SECONDS);
+							List<Object> event = eventQueue.poll(200, TimeUnit.SECONDS);
 							if (event != null) {
 								handleEvent(event);
 							}
@@ -184,13 +187,11 @@ public class Server{
 					try {
 						//updateClientBoardState();
 						send(Optcodes.ClientNotActiveTurn);
-						synchronized (this) {
-							String event = eventQueue.poll(200, TimeUnit.MILLISECONDS);
-							if (event != null) {
-								handleEvent(event);
-							}
-							sendBoardState();
+						List<Object> event = eventQueue.poll(200, TimeUnit.MILLISECONDS);
+						if (event != null) {
+							handleEvent(event);
 						}
+						sendBoardState();
 						continue;
 					} catch (InterruptedException ie) {
 						ie.printStackTrace();
@@ -285,8 +286,14 @@ public class Server{
 									send(Optcodes.InvalidCard);
 									continue;
 								}
-								sendEvent("actioncard " + rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
-								if (rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets)) {
+								
+								if (rules.validateActionCard(cardIndex, rules.getPlayerById(threadID), targets)) {
+									List<Object> eventmsg = new ArrayList<Object>();
+									eventmsg.add(Long.valueOf(threadID));
+									eventmsg.add("actioncard");
+									eventmsg.addAll(targets);
+									sendEvent(eventmsg);
+									rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets);
 									send(Optcodes.SuccessfulCardPlay);
 								}
 								else {
@@ -312,7 +319,10 @@ public class Server{
 				else {
 					//if tournament is not running
 					if (rules.getPlayerById(threadID).getPlaying()) { //then you are winner of previous tourney
-						sendEvent("tournamentover");
+						List<Object> eventmsg = new ArrayList<Object>(2);
+						eventmsg.add(Long.valueOf(threadID));
+						eventmsg.add("tournamentover");
+						sendEvent(eventmsg);
 						if(rules.getTournamentColour() == CardColour.Purple){
 							//if purple tournament give token of choice
 							CardColour c = getTokenChoice();
@@ -461,13 +471,17 @@ public class Server{
 		
 		/**
 		 * puts a copy of a server event into the eventqueue for each other thread to poll
-		 * @param msg to be sent, it gets prepended with threadID
+		 * @param msg to be sent, a list of objects with first element being threadID, and 2nd being the event
 		 */
-		private void sendEvent(String msg) {
-			msg = threadID + " " + msg;
+		private void sendEvent(List<Object> msg) {
+			if (msg.size() == 0) return;
 			try {
-				for (int i=0; i<numplayers-1; i++) {
-					eventQueue.add(msg);
+				if (msg.get(0) instanceof Long && (long) msg.get(0) == threadID) {
+					for (int i=0; i<numplayers-1; i++) {
+						eventQueue.add(msg);
+					}
+				} else {
+					throw new IllegalStateException("Sending an event without correct ID");
 				}
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
@@ -478,22 +492,21 @@ public class Server{
 		 * handles an event, somehow
 		 * @param event - the event msg received, with prepended sender ID
 		 */
-		private void handleEvent(String event) {
-			String msg[] = event.split(" ", 2);
-			long sender = Long.valueOf(msg[0]);
-			if (sender == threadID) {
+		private void handleEvent(List<Object> event) {
+
+			if (event.get(0) instanceof Long && (long) event.get(0) == threadID) {
 				eventQueue.add(event);
 				return;
 			}
-			String ev[] = msg[1].split(" ", 2);
-			switch (ev[0]) {
+			if (!(event.get(1) instanceof String)) { return; }
+			switch ((String) event.get(1)) {
 			case "tournamentover":
 				send(Optcodes.LoseTournament);
-				send(msg[0]);
+				send(((Long) event.get(0)).toString());
 				break;
 			case "gameover":
 				send(Optcodes.GameOver);
-				send(msg[0]);
+				send(((Long) event.get(0)).toString());
 			case "actioncard":
 				break;
 			default:
