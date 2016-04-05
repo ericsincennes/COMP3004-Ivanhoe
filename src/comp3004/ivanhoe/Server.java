@@ -161,11 +161,12 @@ public class Server{
 				if (rules.gameWinner() != null) {
 					if (rules.gameWinner().getID() == threadID) {
 						//send winner msg to client
+						sendEvent("gameover");
 						send(Optcodes.GameWinner);
 					}
 					else {
-						//send lose msg to client\
-						send(Optcodes.GameOver);
+						//send(Optcodes.GameOver);
+						break;
 					}
 					break; //or possibly ask to start again?
 				}
@@ -302,7 +303,7 @@ public class Server{
 				else {
 					//if tournament is not running
 					if (rules.getPlayerById(threadID).getPlaying()) { //then you are winner of previous tourney
-						sendEvent("wintourney");
+						sendEvent("tournamentover");
 						if(rules.getTournamentColour() == CardColour.Purple){
 							//if purple tournament give token of choice
 							CardColour c = getTokenChoice();
@@ -477,10 +478,13 @@ public class Server{
 			}
 			String ev[] = msg[1].split(" ", 2);
 			switch (ev[0]) {
-			case "wintourney":
+			case "tournamentover":
 				send(Optcodes.LoseTournament);
 				send(msg[0]);
 				break;
+			case "gameover":
+				send(Optcodes.GameOver);
+				send(msg[0]);
 			case "actioncard":
 				break;
 			default:
