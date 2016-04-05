@@ -495,7 +495,8 @@ public class Server{
 				send(((Long) event.get(0)).toString()); //player id who failed
 				send((List<Card>)event.get(2)); //hand
 			case "actioncard":
-					send(Optcodes.ClientGetIvanhoeChoice);
+					send((rules.getPlayerById(threadID).getHand().contains("Ivanhoe")) ? 
+							Optcodes.ClientGetIvanhoeChoice : Optcodes.ClientActionCardPlayed);
 					send((String) event.get(2));
 				break;
 			default:
