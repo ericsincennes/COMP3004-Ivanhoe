@@ -292,12 +292,12 @@ public class Server{
 									continue;
 								}
 								
-								if (rules.validateActionCard(cardIndex, rules.getPlayerById(threadID), targets)) {
+								String result = rules.validateActionCard(cardIndex, rules.getPlayerById(threadID), targets);
+								if (result.length()!=0) {
 									List<Object> eventmsg = new ArrayList<Object>();
 									eventmsg.add(Long.valueOf(threadID));
 									eventmsg.add("actioncard");
-									eventmsg.add(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
-									eventmsg.addAll(targets);
+									eventmsg.add(result);
 									sendEvent(eventmsg);
 									rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets);
 									send(Optcodes.SuccessfulCardPlay);
@@ -492,18 +492,11 @@ public class Server{
 				break;
 			case "failstart":
 				send(Optcodes.OppFailStartTournament);
-				send(((Long) event.get(0)).toString());
-				send((List<Card>)event.get(2));
+				send(((Long) event.get(0)).toString()); //player id who failed
+				send((List<Card>)event.get(2)); //hand
 			case "actioncard":
-				if (event.size() == 3) {
 					send(Optcodes.ClientGetIvanhoeChoice);
 					send((String) event.get(2));
-					
-				}
-				List<Object> targets = event.subList(2, event.size()-1);
-				for (Object t : targets) {
-					
-				}
 				break;
 			default:
 				break;

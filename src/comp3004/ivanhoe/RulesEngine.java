@@ -361,9 +361,14 @@ public class RulesEngine {
 		return false;
 	}
 	
-	//nested rules engine action card handler
-		//assuming one player target
-		public boolean validateActionCard(int cardIndex, Player caster,  List<Object> target){
+		/**
+		 * Checks whether an actioncard can be played.
+		 * @param cardIndex
+		 * @param caster
+		 * @param target - list of targets
+		 * @return a string which is empty if not possible, or a string representing the action of playing the card.
+		 */
+		public String validateActionCard(int cardIndex, Player caster,  List<Object> target){
 			Card taken;
 			Random rand = new Random();
 			Player opponent = null;
@@ -392,26 +397,22 @@ public class RulesEngine {
 			switch(caster.getHand().getCardbyIndex(cardIndex).cardName){
 			case "Unhorse": //target: CardColour
 				//color changes from purple to red, blue or yellow
-				if ((TournamentColour == CardColour.Purple) && !(colour == CardColour.Green)) {
-					return true;
+				if ((TournamentColour == CardColour.Purple) && !(colour == CardColour.Green && colour == CardColour.Purple)) {
+					return "Player " + caster.getID() + " has played Unhorse changing colour to " + colour.name() + ".";
 				}
 				break;
 			case "Change Weapon": //target: CardColour
 				// color changes from red, blue or yellow to a different one of these colors
 				if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
-					if (TournamentColour == CardColour.Yellow && colour != CardColour.Yellow) {
-						return true;
-					} else if (TournamentColour == CardColour.Red && colour != CardColour.Red) {
-						return true;
-					} else if (TournamentColour == CardColour.Blue && colour != CardColour.Blue) {
-						return true;
-					}
+					if (TournamentColour == colour) {
+						return "Player " + caster.getID() + " has played Change Weapon changing colour to " + colour.name() + ".";
+					} 
 				}
 				break;
 			case "Drop Weapon": //target: none
 				//color changes from red, blue or yellow to green
 				if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
-					return true;
+					return "Player " + caster.getID() + " has played Drop Weapon changing colour to Green.";
 				}
 				break;
 			case "Break Lance": //target: Player
@@ -423,7 +424,7 @@ public class RulesEngine {
 					if (opponent.getDisplay().getCards().size() > 1) {
 						for (Card c : opponent.getDisplay().getCards()) {
 							if (c.getCardName().contains("Purple")) {
-								return true;
+								return "Player " + caster.getID() + " has played Break Lance against Player " + opponent.getID() + ".";
 							}
 						}
 					}
@@ -440,7 +441,8 @@ public class RulesEngine {
 					if (caster.getDisplay().contains("Maiden") && last.equals("Maiden")) { break; }
 					
 					if (opponent.getDisplay().getCards().size() > 1) { 
-						return true;
+						return "Player " + caster.getID() + " has played Riposte against Player " + opponent.getID() 
+							+ " taking a " + last + ".";
 					}
 				}
 				break;
@@ -450,21 +452,22 @@ public class RulesEngine {
 					if (opponent.isShielded()) { break; }
 					
 					if (opponent.getDisplay().getCards().size() > 1) {
-						return true;
+						return "Player " + caster.getID() + " has played Dodge against Player " + opponent.getID() 
+						+ " discarding a " + chosen + ".";
 					}
 				}
 				break;
 			case "Retreat": //target: String (cardname)
 				//Take any one card from your own display back into your hand
 				if (caster.getDisplay().getCards().size() > 1) {
-					return true;
+					return "Player " + caster.getID() + " has played Retreat returning " + chosen + ".";
 				}
 				break;
 			case "Knock Down": //target: Player
 				//Draw at random one card from any one opponent’s hand and 
 				//add it to your hand, without revealing the card to other opponents.
 				if (opponent.getHandSize() > 0) {
-					return true;
+					return "Player " + caster.getID() + " has played Knock Down against Player " + opponent.getID() + ".";
 				}
 				break;
 			case "Outmaneuver": //target: none
@@ -474,7 +477,7 @@ public class RulesEngine {
 				for(Player p : playersList){
 					if (p.getPlaying() && p!= caster) {
 						if ((!p.isShielded()) && (p.getDisplay().getCards().size() > 1)) {
-							return true;
+							return "Player " + caster.getID() + " has played Outmaneuver.";
 						}
 					}
 				}
@@ -507,7 +510,7 @@ public class RulesEngine {
 				}
 				
 				if (count > 0) {
-					return true;
+					return "Player " + caster.getID() + " has played Charge.";
 				}
 				break;
 			case "Countercharge": //target: none
@@ -537,7 +540,7 @@ public class RulesEngine {
 				}
 				
 				if (count > 0) {
-					return true;
+					return "Player " + caster.getID() + " has played Countercharge.";
 				}
 				break;
 			case "Disgrace": //target: none
@@ -549,7 +552,7 @@ public class RulesEngine {
 						
 						for (Card c : p.getDisplay().getCards()) {
 							if (c.getCardName().contains("Squire") || c.getCardName().contains("Maiden")) {
-								return true;
+								return "Player " + caster.getID() + " has played Disgrace.";
 							}
 						}
 					}
@@ -567,9 +570,9 @@ public class RulesEngine {
 								dupes.add(((ColourCard)c).getValue());
 							}
 							if (dupes.size() < p.getDisplay().getCards().size()) {
-								return false;
+								return "";
 							} else {
-								return true;
+								return "Player " + caster.getID() + " has played Adapt.";
 							}
 						}
 					}
@@ -592,7 +595,9 @@ public class RulesEngine {
 				 
 				//give card
 				if (!caster.getDisplay().getCards().isEmpty() && !opponent.getDisplay().getCards().isEmpty()) {
-					return true;
+					return "Player " + caster.getID() + " has played Outwit against Player " + opponent.getID() 
+					+ " switching " + caster.getID() + "'s" + caster.getDisplay().getCard(choiceIndex) + " and "
+					+ opponent.getID() +"'s" + chosen + ".";
 				}
 				break;
 			case "Shield": //target: none
@@ -600,17 +605,17 @@ public class RulesEngine {
 				//but separate from his display. As long as a player has 
 				//the SHIELD card in front of him, all action cards have 
 				//no effect on his display.
-				return true;
+				return "Player " + caster.getID() + " has played Shield.";
 			case "Stunned": //target: Player
 				//Place this card separately face up in front of any one opponent.
 				//As long as a player has the STUNNED card in front of him, 
 				//he may add only one new card to his display each turn.
-				return true;
+				return "Player " + caster.getID() + " has played Stunned against Player " + opponent.getID() + ".";
 			default:
 				print("unexpected input");
 				break;
 			}
-			return false;
+			return "";
 		}
 	
 	//nested rules engine action card handler
@@ -652,15 +657,7 @@ public class RulesEngine {
 		case "Change Weapon": //target: CardColour
 			// color changes from red, blue or yellow to a different one of these colors
 			if (!(TournamentColour == CardColour.Purple) && !(TournamentColour == CardColour.Green)) {
-				if (TournamentColour == CardColour.Yellow && colour != CardColour.Yellow) {
-					TournamentColour = colour;
-					caster.playActionCard(cardIndex);
-					return true;
-				} else if (TournamentColour == CardColour.Red && colour != CardColour.Red) {
-					TournamentColour = colour;
-					caster.playActionCard(cardIndex);
-					return true;
-				} else if (TournamentColour == CardColour.Blue && colour != CardColour.Blue) {
+				if (TournamentColour == colour) {
 					TournamentColour = colour;
 					caster.playActionCard(cardIndex);
 					return true;
