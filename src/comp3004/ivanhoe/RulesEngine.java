@@ -685,7 +685,7 @@ public class RulesEngine {
 			temp = new ArrayList<Card>();
 
 			for(Player p : playersList){
-				if (p!= caster) {
+				if (p!= caster && !p.isShielded()) {
 					taken =	p.getDisplay().getLastPlayed();
 					temp.add(p.getDisplay().remove(taken.getCardName()));
 				}
@@ -707,7 +707,9 @@ public class RulesEngine {
 			}
 			
 			for(Player p : playersList){
+				if (!p.isShielded()) {
 					temp.addAll(p.getDisplay().removeValue(cardValue));
+				}
 			}
 
 			for(Card x : temp){
@@ -726,7 +728,9 @@ public class RulesEngine {
 			}
 			
 			for(Player p : playersList){
-				temp.addAll(p.getDisplay().removeValue(cardValue));
+				if (!p.isShielded()) {
+					temp.addAll(p.getDisplay().removeValue(cardValue));
+				}
 			}
 			
 			for(Card x : temp){
@@ -738,9 +742,11 @@ public class RulesEngine {
 			temp = new ArrayList<Card>();
 			
 			for(Player p : playersList){
-				for (Card c : p.getDisplay().getCards()) {
-					if (c.getCardName().contains("Squire") || c.getCardName().contains("Maiden")) {
-							temp.addAll(p.getDisplay().removeColour(CardColour.White));
+				if (!p.isShielded()) {
+					for (Card c : p.getDisplay().getCards()) {
+						if (c.getCardName().contains("Squire") || c.getCardName().contains("Maiden")) {
+								temp.addAll(p.getDisplay().removeColour(CardColour.White));
+						}
 					}
 				}
 			}
