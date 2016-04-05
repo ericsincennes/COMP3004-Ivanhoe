@@ -916,7 +916,6 @@ public class ClientGUI extends Client{
 		}
 		
 		send(Arrays.asList(options).indexOf(s) + 1);
-		
 	}
 	
 	@Override
