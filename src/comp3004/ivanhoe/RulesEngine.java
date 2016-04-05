@@ -671,14 +671,12 @@ public class RulesEngine {
 			caster.playActionCard(cardIndex);
 			break;
 		case "Retreat": //target: CardName
-			Card c = caster.getDisplay().remove(chosen);
-			caster.getHand().add(c);
+			Card r = caster.getDisplay().remove(chosen);
+			caster.getHand().add(r);
 			caster.playActionCard(cardIndex);
 			break;
 		case "Knock Down": //target: Player
-			int r = rand.nextInt(opponent.getHandSize());
-			
-			taken = opponent.getHand().getCardbyIndex(r);
+			taken = opponent.getHand().getCardbyIndex(rand.nextInt(opponent.getHandSize()));
 			opponent.getHand().remove(taken.getCardName());
 			caster.getHand().add(taken);
 			caster.playActionCard(cardIndex);
