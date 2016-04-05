@@ -456,7 +456,7 @@ public class Server{
 		private void sendEvent(String msg) {
 			msg = threadID + " " + msg;
 			try {
-				for (int i=0; i<numplayers; i++) {
+				for (int i=0; i<numplayers-1; i++) {
 					eventQueue.add(msg);
 				}
 			} catch (IllegalStateException e) {
