@@ -695,6 +695,8 @@ public class ClientGUI extends Client{
 			send(targets);
 			break;
 		case "Adapt":
+			//TODO
+			
 			break;
 		case "Outwit": //target: Player, Card (yours), Card (opp's card) 
 			//Place one of your faceup cards in front of an opponent, 
@@ -702,7 +704,7 @@ public class ClientGUI extends Client{
 			//and place it face up in front of yourself. 
 			//This may include the SHIELD and STUNNED cards.
 			
-			
+			//TODO
 			break;
 		case "Shield":
 			send(theBoard.hand.indexOf(selectedCard));
@@ -739,7 +741,9 @@ public class ClientGUI extends Client{
 				send(targets);
 			}
 			break;
-			
+		case "Ivanhoe":
+			//TODO
+			break;
 		}
 	}
 	
