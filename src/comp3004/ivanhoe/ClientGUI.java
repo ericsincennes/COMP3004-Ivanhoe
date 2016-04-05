@@ -347,7 +347,7 @@ public class ClientGUI extends Client{
 					}
 				}
 			});
-
+			
 			handPanel.add(button);
 
 		}
@@ -496,7 +496,9 @@ public class ClientGUI extends Client{
 		//concat opponents tokens into one string
 		StringBuilder builder = new StringBuilder();
 		for(String s : opponentTokens) {
-		    builder.append(s);
+			if(s != null){
+				builder.append(s);
+			}
 		}
 		String opponents =  builder.toString();
 		
@@ -943,7 +945,29 @@ public class ClientGUI extends Client{
 		updateTokenLable();
 		
 	}
-
+	private void handleClientFailStartTournament(){
+		String playerID = (String) get();
+		List<Card> hand = (List<Card>) get();
+		
+		String msg = "Player "+ playerID + " cannot start a tournament";
+		JPanel hp = new JPanel();
+		hp.setLayout(new FlowLayout());
+		
+		for(Card x : hand){
+			BufferedImage img = null;
+			try{
+				img = ImageIO.read(new File(ImageDirectory + x.getCardName() + ".bmp"));
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+			JLabel imgLable = new JLabel(new ImageIcon(img));
+			hp.add(imgLable);
+		}
+		hp.revalidate();
+		
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), hp, msg, JOptionPane.PLAIN_MESSAGE);
+	}
+	
 	@Override
 	protected void mainLoop(){
 		playerNum = (int) get();	//get player number from server
@@ -989,6 +1013,9 @@ public class ClientGUI extends Client{
 				break;
 			case Optcodes.GameOver:
 				handleLoseGame();
+				break;
+			case Optcodes.ClientFailStartTournament:
+				handleClientFailStartTournament();
 				break;
 			default: new Exception("Unexpected Value");
 				break;
