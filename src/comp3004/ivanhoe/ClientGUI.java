@@ -968,8 +968,15 @@ public class ClientGUI extends Client{
 		JOptionPane.showMessageDialog(frmMain.getContentPane(), hp, msg, JOptionPane.PLAIN_MESSAGE);
 	}
 	
-	private void handleGetIvanhoeChoice() {
-		
+	public void handleOppActionCardPlayed() {
+		String message = (String) get();
+		//TODO display message of what action card has been played
+	}
+	
+	public void handleGetIvanhoeChoice() {
+		String message = (String) get();
+		//TODO display actioncard played, and ask user if they want to ivanhoe
+		//7 seconds at most
 	}
 	
 	@Override
@@ -1021,6 +1028,8 @@ public class ClientGUI extends Client{
 			case Optcodes.ClientFailStartTournament:
 				handleClientFailStartTournament();
 				break;
+			case Optcodes.ClientActionCardPlayed:
+				handleOppActionCardPlayed();
 			case Optcodes.ClientGetIvanhoeChoice:
 				handleGetIvanhoeChoice();
 				break;
