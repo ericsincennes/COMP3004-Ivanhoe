@@ -54,15 +54,6 @@ public class Player {
 	}
 	
 	/**
-	 * Checks if the card is in the players hand
-	 * @param s name of card
-	 * @return boolean
-	 */
-	public boolean hasInHand(String s){
-		return hand.contains(s);
-	}
-	
-	/**
 	 * Draws a card  and adds it to hand
 	 * @param c Card
 	 */

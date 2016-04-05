@@ -347,7 +347,7 @@ public class RulesEngine {
 		Card c;
 		//System.out.println("ValidatePlay Card " + card + " ID " + id); //testing
 		//if card in player hand
-		if(p.hasInHand(card)){
+		if(p.getHand().contains(card)){
 			c = p.getHand().getCardByName(card);
 			//if card is colour card
 			if(c.getCardType() == CardType.Colour &&
@@ -1018,6 +1018,20 @@ public class RulesEngine {
 	
 	public Deck getDeck(){
 		return deck;
+	}
+	
+	/**
+	 * checks if any opponents have ivanhoe
+	 * @param ID player that's checking
+	 * @return if any opponents have ivanhoe
+	 */
+	public boolean canBeIvanhoed(long ID) {
+		for (Player p : playersList) {
+			if (p.getID() != ID && p.getHand().contains("Ivanhoe")) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

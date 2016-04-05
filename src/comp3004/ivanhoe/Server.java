@@ -299,8 +299,20 @@ public class Server{
 									eventmsg.add("actioncard");
 									eventmsg.add(result);
 									sendEvent(eventmsg);
+									if (rules.canBeIvanhoed(threadID)) { //wait 7 seconds for invanhoe response if applicable
+										List<Object> event = null;
+										try {
+											event = eventQueue.poll(7200, TimeUnit.MILLISECONDS);
+										} catch (InterruptedException e) { e.printStackTrace(); }
+										if (event != null && event.size() >= 3 && 	//reply should be ID, "Ivanhoe" and if it's played or not
+												event.get(3).equals(true)) { 		//no response is negative
+											send(Optcodes.Ivanhoe);
+											sendBoardState();
+											continue;
+										}
+									}
+									
 									rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets);
-									//TODO add handler for getting ivanhoed
 									send(Optcodes.SuccessfulCardPlay);
 								}
 								else {
@@ -474,15 +486,14 @@ public class Server{
 		/**
 		 * handles an event, somehow
 		 * @param event - the event msg received, with prepended sender ID
-		 * @return anything, null if nothing to return
 		 */
-		private Object handleEvent(List<Object> event) {
-			if (event.size() < 2) { return null; }
+		private void handleEvent(List<Object> event) {
+			if (event.size() < 2) { return; }
 			if (event.get(0) instanceof Long && (long) event.get(0) == threadID) {
 				eventQueue.add(event);
-				return null;
+				return;
 			}
-			if (!(event.get(1) instanceof String)) { return null; }
+			if (!(event.get(1) instanceof String)) { return; }
 			switch ((String) event.get(1)) {
 			case "tournamentover":
 				send(Optcodes.LoseTournament);
@@ -497,27 +508,38 @@ public class Server{
 				send(((Long) event.get(0)).toString()); //player id who failed
 				send((List<Card>)event.get(2)); //hand
 			case "actioncard":
-					if (rules.getPlayerById(threadID).getHand().contains("Ivanhoe")) {
-						send(Optcodes.ClientGetIvanhoeChoice);
-						send((String) event.get(2));
-						Long casterID = (Long) event.get(0);
-						try {
-							client.setSoTimeout(7000);
-							client.setSoTimeout(0);
-							//TODO wait for ivanhoe response
-						} catch (SocketException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					} else {
-						send(Optcodes.ClientActionCardPlayed);
-						send((String) event.get(2));
+				if (rules.getPlayerById(threadID).getHand().contains("Ivanhoe")) {
+					send(Optcodes.ClientGetIvanhoeChoice);
+					send((String) event.get(2));
+					Long casterID = (Long) event.get(0);
+					Object o = null;
+					try {
+						client.setSoTimeout(7000);
+						o = get();
+						client.setSoTimeout(0);
+						//TODO wait for ivanhoe response
+					} catch (SocketException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					break;
+					if (o instanceof Boolean) {
+						List<Object> ivanhoeEvent = new ArrayList<Object>();
+						ivanhoeEvent.add(threadID);
+						ivanhoeEvent.add("Ivanhoe");
+						ivanhoeEvent.add(o);
+						sendEvent(ivanhoeEvent);
+					}
+				} else {
+					send(Optcodes.ClientActionCardPlayed);
+					send((String) event.get(2));
+				}
+				break;
+			case "Ivanhoe":
+				break;
 			default:
 				break;
 			}
-			return null;
+			return;
 		}
 
 		/**

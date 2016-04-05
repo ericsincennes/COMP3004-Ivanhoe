@@ -341,7 +341,7 @@ public class ClientGUI extends Client{
 					for(Card x: theBoard.hand){
 						if(x.getCardName() == button.getName()){
 							selectedCard = x;
-							updateInformationLable("Selected card: " + x.getCardName());
+							updateInformationLabel("Selected card: " + x.getCardName());
 							break;
 						}
 					}
@@ -371,9 +371,9 @@ public class ClientGUI extends Client{
 					} catch (IOException e){
 						e.printStackTrace();
 					}
-					JLabel imgLable = new JLabel(new ImageIcon(img));
-					imgLable.setToolTipText(x.getCardName());
-					playerDisplayPanel.add(imgLable);
+					JLabel imgLabel = new JLabel(new ImageIcon(img));
+					imgLabel.setToolTipText(x.getCardName());
+					playerDisplayPanel.add(imgLabel);
 				}
 				playerDisplayPanel.revalidate();
 				displaysPanel.revalidate();
@@ -389,9 +389,9 @@ public class ClientGUI extends Client{
 					} catch (IOException e){
 						e.printStackTrace();
 					}
-					JLabel imgLable = new JLabel(new ImageIcon(img));
-					imgLable.setToolTipText(x.getCardName());
-					opponentPanel[theBoard.boards.indexOf(displays) -1].add(imgLable);
+					JLabel imgLabel = new JLabel(new ImageIcon(img));
+					imgLabel.setToolTipText(x.getCardName());
+					opponentPanel[theBoard.boards.indexOf(displays) -1].add(imgLabel);
 
 				}
 				opponentPanel[theBoard.boards.indexOf(displays) -1].revalidate();
@@ -413,9 +413,9 @@ public class ClientGUI extends Client{
 					} catch (IOException e){
 						e.printStackTrace();
 					}
-					JLabel imgLable = new JLabel(new ImageIcon(img));
-					imgLable.setToolTipText(x.getCardName());
-					playerActionPanel.add(imgLable);
+					JLabel imgLabel = new JLabel(new ImageIcon(img));
+					imgLabel.setToolTipText(x.getCardName());
+					playerActionPanel.add(imgLabel);
 				}
 				playerActionPanel.revalidate();
 				actionCardPanel.revalidate();
@@ -428,9 +428,9 @@ public class ClientGUI extends Client{
 					} catch (IOException e){
 						e.printStackTrace();
 					}
-					JLabel imgLable = new JLabel(new ImageIcon(img));
-					imgLable.setToolTipText(x.getCardName());
-					opponentActionPanel[theBoard.actionBoards.indexOf(actionBoard)-1].add(imgLable);
+					JLabel imgLabel = new JLabel(new ImageIcon(img));
+					imgLabel.setToolTipText(x.getCardName());
+					opponentActionPanel[theBoard.actionBoards.indexOf(actionBoard)-1].add(imgLabel);
 				}
 				opponentActionPanel[theBoard.actionBoards.indexOf(actionBoard)-1].revalidate();
 				actionCardPanel.revalidate();
@@ -470,7 +470,7 @@ public class ClientGUI extends Client{
 		JOptionPane.showMessageDialog(frmMain.getContentPane(), "Card Played", "Card Played", JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	public void updateTokenLable(){
+	public void updateTokenLabel(){
 		String playerTokens = "Your tokens: ";
 		String[] opponentTokens = new String[theBoard.tokens.size()];
 		
@@ -505,7 +505,7 @@ public class ClientGUI extends Client{
 		tokens.setText(playerTokens + opponents);
 	}
 	
-	public void updateInformationLable(String text){
+	public void updateInformationLabel(String text){
 		informationLabel.removeAll();
 		informationLabel.setText(text);
 		informationLabel.revalidate();
@@ -941,7 +941,7 @@ public class ClientGUI extends Client{
 		updateActionCardPanel();
 		updateHand();
 		UpdateInformationPanels();
-		updateTokenLable();
+		updateTokenLabel();
 		
 	}
 	private void handleClientFailStartTournament(){
@@ -959,12 +959,23 @@ public class ClientGUI extends Client{
 			} catch (IOException e){
 				e.printStackTrace();
 			}
-			JLabel imgLable = new JLabel(new ImageIcon(img));
-			hp.add(imgLable);
+			JLabel imgLabel = new JLabel(new ImageIcon(img));
+			hp.add(imgLabel);
 		}
 		hp.revalidate();
 		
 		JOptionPane.showMessageDialog(frmMain.getContentPane(), hp, msg, JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	public void handleOppActionCardPlayed() {
+		String message = (String) get();
+		//TODO display message of what action card has been played
+	}
+	
+	public void handleGetIvanhoeChoice() {
+		String message = (String) get();
+		//TODO display actioncard played, and ask user if they want to ivanhoe
+		//7 seconds at most
 	}
 	
 	@Override
@@ -1016,7 +1027,13 @@ public class ClientGUI extends Client{
 			case Optcodes.ClientFailStartTournament:
 				handleClientFailStartTournament();
 				break;
-			default: new Exception("Unexpected Value");
+			case Optcodes.ClientActionCardPlayed:
+				handleOppActionCardPlayed();
+			case Optcodes.ClientGetIvanhoeChoice:
+				handleGetIvanhoeChoice();
+				break;
+			default: 
+				new Exception("Unexpected Value");
 				break;
 			}
 		}
