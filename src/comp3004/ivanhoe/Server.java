@@ -304,8 +304,8 @@ public class Server{
 										try {
 											event = eventQueue.poll(7200, TimeUnit.MILLISECONDS);
 										} catch (InterruptedException e) { e.printStackTrace(); }
-										if (event != null && event.size() >= 3 && 	//reply should be ID, "Ivanhoe" and if it's played or not
-												event.get(3).equals(true)) { 		//no response is negative
+										boolean ivanhoed = (Boolean) handleEvent(event);
+										if (ivanhoed) { 
 											send(Optcodes.Ivanhoe);
 											sendBoardState();
 											continue;
@@ -486,14 +486,15 @@ public class Server{
 		/**
 		 * handles an event, somehow
 		 * @param event - the event msg received, with prepended sender ID
+		 * @return whatever it needs to, mainly for ivanhoe and adapt
 		 */
-		private void handleEvent(List<Object> event) {
-			if (event.size() < 2) { return; }
+		private Object handleEvent(List<Object> event) {
+			if (event.size() < 2) { return null; }
 			if (event.get(0) instanceof Long && (long) event.get(0) == threadID) {
 				eventQueue.add(event);
-				return;
+				return null;
 			}
-			if (!(event.get(1) instanceof String)) { return; }
+			if (!(event.get(1) instanceof String)) { return null; }
 			switch ((String) event.get(1)) {
 			case "tournamentover":
 				send(Optcodes.LoseTournament);
@@ -512,21 +513,22 @@ public class Server{
 					send(Optcodes.ClientGetIvanhoeChoice);
 					send((String) event.get(2));
 					Long casterID = (Long) event.get(0);
-					Object o = null;
+					Object bool = null;
 					try {
 						client.setSoTimeout(7000);
-						o = get();
+						bool = get();
 						client.setSoTimeout(0);
 						//TODO wait for ivanhoe response
 					} catch (SocketException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if (o instanceof Boolean) {
+					if (bool instanceof Boolean) {
 						List<Object> ivanhoeEvent = new ArrayList<Object>();
 						ivanhoeEvent.add(threadID);
 						ivanhoeEvent.add("Ivanhoe");
-						ivanhoeEvent.add(o);
+						ivanhoeEvent.add(bool);
+						ivanhoeEvent.add(event.get(0));
 						sendEvent(ivanhoeEvent);
 					}
 				} else {
@@ -535,11 +537,14 @@ public class Server{
 				}
 				break;
 			case "Ivanhoe":
+				if ((Long) event.get(3) == threadID) {
+					return event.get(2);
+				}
 				break;
 			default:
 				break;
 			}
-			return;
+			return null;
 		}
 
 		/**
