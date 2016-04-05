@@ -776,6 +776,11 @@ public class ClientGUI extends Client{
 		}
 	}
 	
+	public void handleLoseTournament() {
+		String winner = (String) get();
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), "The winner was Player: " + winner, "Tournament Winner", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	@Override
 	public void handleActiveTurn(){
 		if(!isActiveTurn){
@@ -867,6 +872,9 @@ public class ClientGUI extends Client{
 				break;
 			case Optcodes.ClientNotActiveTurn:
 				isActiveTurn = false;
+				break;
+			case Optcodes.LoseTournament:
+				handleLoseTournament();
 				break;
 			default: new Exception("Unexpected Value");
 				break;
