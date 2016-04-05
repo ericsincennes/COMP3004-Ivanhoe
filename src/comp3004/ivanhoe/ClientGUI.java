@@ -44,7 +44,10 @@ public class ClientGUI extends Client{
 	private JPanel actionArea;
 	private JPanel playerDisplayPanel;
 	private JPanel[] opponentPanel;
-
+	private JPanel[] opponentActionPanel;
+	private JPanel actionCardPanel;
+	private JPanel playerActionPanel;
+	
 	private JLabel informationLabel = new JLabel();
 	private JLabel tournamentColourLabel = new JLabel();
 	private JLabel highestScore = new JLabel();
@@ -52,7 +55,8 @@ public class ClientGUI extends Client{
 
 	private JScrollPane handPane;
 	private JScrollPane displayPane;
-
+	private JScrollPane actionCardPane;
+	
 	private Card selectedCard = null;
 	
 	private static final String ImageDirectory = (System.getProperty("user.dir") + "/src/Images/");
@@ -85,6 +89,7 @@ public class ClientGUI extends Client{
 	 */
 	public ClientGUI() {
 		opponentPanel = new JPanel[4];
+		opponentActionPanel = new JPanel[4];
 		//initialize();
 	}
 
@@ -132,7 +137,6 @@ public class ClientGUI extends Client{
 		actionArea.setLayout(new GridLayout(6,1));
 
 		JButton endTurnButton = new JButton("End Turn");
-		JButton ivanhoeButton = new JButton("Ivanhoe");
 		JButton withdrawButton = new JButton("Withdraw");
 		JButton playCardButton = new JButton("PlayCard");
 
@@ -175,26 +179,6 @@ public class ClientGUI extends Client{
 			}
 		});
 
-		//Ivanhoe Button Pressed
-		ivanhoeButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(theBoard.hand != null && !theBoard.hand.isEmpty()){
-					for(Card x : theBoard.hand){
-						//player has ivanhoe
-						if(x.getCardName() == "Ivanhoe"){
-							send(Optcodes.Ivanhoe);
-						} else {
-							//player does not have ivanhoe
-							JOptionPane.showMessageDialog(actionArea, "You do not have the card Ivanhoe to play", "Ivanhoe Error", JOptionPane.ERROR_MESSAGE);
-							break;
-						}
-					}
-				}
-			}
-		});
-
 		//Withdraw Button Pressed
 		withdrawButton.addActionListener(new ActionListener() {
 
@@ -214,7 +198,6 @@ public class ClientGUI extends Client{
 		actionArea.add(playerScore);
 		actionArea.add(endTurnButton);
 		actionArea.add(withdrawButton);
-		actionArea.add(ivanhoeButton);
 		actionArea.add(playCardButton);
 	}
 
@@ -234,6 +217,10 @@ public class ClientGUI extends Client{
 	private void initializeDisplayPanel(){
 		int numplayers = theBoard.players.size();
 		
+		//get player id's
+		Long[] playerid = new Long[numplayers];
+		playerid = theBoard.players.toArray(playerid);
+		
 		displaysPanel = new JPanel();
 		displaysPanel.setBackground(Color.gray);
 		displaysPanel.setLayout(new GridLayout(0, 1));
@@ -242,19 +229,47 @@ public class ClientGUI extends Client{
 
 		playerDisplayPanel = new JPanel();
 		playerDisplayPanel.setLayout(new FlowLayout());
-		playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Player"));
+		playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Your Board"));
 
 		
 		
 		for(int i=0; i<numplayers-1; i++){
 			opponentPanel[i] = new JPanel();
 			opponentPanel[i].setLayout(new FlowLayout());
-			opponentPanel[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent " + i));
+			opponentPanel[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent " + playerid[i+1]));
 			opponentPanel[i].setName("Opponent " + i);
 			displaysPanel.add(opponentPanel[i]);
 		}
 		
 		displaysPanel.add(playerDisplayPanel);
+	}
+	
+	private void initializeActionCardPanel(){
+		int numplayers = theBoard.players.size();
+		
+		//get player id's
+		Long[] playerid = new Long[numplayers];
+		playerid = theBoard.players.toArray(playerid);
+				
+		actionCardPanel = new JPanel();
+		actionCardPanel.setBackground(Color.gray);
+		actionCardPanel.setLayout(new GridLayout(0, 1));
+		
+		actionCardPane = new JScrollPane(actionCardPanel);
+		actionCardPane.setPreferredSize(new Dimension(205, 145));
+		
+		playerActionPanel = new JPanel();
+		playerActionPanel.setLayout(new FlowLayout());
+		playerActionPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Your Action Cards"));
+		
+		for(int i=0; i<numplayers-1; i++){
+			opponentActionPanel[i] = new JPanel();
+			opponentActionPanel[i].setLayout(new FlowLayout());
+			opponentActionPanel[i].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent " + playerid[i+1] +"'s Action Cards"));
+			opponentActionPanel[i].setName("Opponent " + playerid[i+1]);
+			actionCardPanel.add(opponentActionPanel[i]);
+		}
+		actionCardPanel.add(playerActionPanel);
 	}
 	
 	private void initializeInformationPanel(){
@@ -265,13 +280,13 @@ public class ClientGUI extends Client{
 		informationLabel.setText("no card selected");
 		informationLabel.setHorizontalAlignment(JLabel.CENTER);
 
-		tournamentColourLabel.setText("Tournament colour is: Tournament Colour");
+		tournamentColourLabel.setText("Tournament colour is being selected");
 		tournamentColourLabel.setHorizontalAlignment(JLabel.CENTER);
 
 		informationPanel.add(informationLabel);
 		informationPanel.add(tournamentColourLabel);
 	}
-
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -343,7 +358,7 @@ public class ClientGUI extends Client{
 		for(List<Card> displays : theBoard.boards){
 			if(theBoard.boards.indexOf(displays) == 0){
 				playerDisplayPanel.removeAll();
-				playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Your Display, Player number: " + playerNum));
+				//playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Your Board"));
 				for(Card x: displays){
 					BufferedImage img = null;
 					try{
@@ -361,7 +376,7 @@ public class ClientGUI extends Client{
 			} else {
 				//opponent displays
 				opponentPanel[theBoard.boards.indexOf(displays) -1].removeAll();
-				opponentPanel[theBoard.boards.indexOf(displays) -1].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent ID: " + theBoard.players.get(theBoard.boards.indexOf(displays)) ));
+				//opponentPanel[theBoard.boards.indexOf(displays) -1].setBorder(new TitledBorder(new LineBorder(Color.black), "Opponent ID: " + theBoard.players.get(theBoard.boards.indexOf(displays)) ));
 				for(Card x: displays){
 					BufferedImage img = null;
 					try{
@@ -380,6 +395,45 @@ public class ClientGUI extends Client{
 		}
 		displayPane.revalidate();
 	}
+	
+	public void updateActionCardPanel(){
+		for(List<Card> actionBoard : theBoard.actionBoards){
+			if(theBoard.actionBoards.indexOf(actionBoard) == 0){
+				playerActionPanel.removeAll();
+				//playerActionPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Your Action Cards"));
+				for(Card x: actionBoard){
+					BufferedImage img = null;
+					try{
+						img = ImageIO.read(new File(ImageDirectory + x.getCardName() + ".bmp"));
+					} catch (IOException e){
+						e.printStackTrace();
+					}
+					JLabel imgLable = new JLabel(new ImageIcon(img));
+					imgLable.setToolTipText(x.getCardName());
+					playerActionPanel.add(imgLable);
+				}
+				playerActionPanel.revalidate();
+				actionCardPanel.revalidate();
+			} else {
+				opponentActionPanel[theBoard.actionBoards.indexOf(actionBoard) -1].removeAll();
+				for(Card x: actionBoard){
+					BufferedImage img = null;
+					try{
+						img = ImageIO.read(new File(ImageDirectory + x.getCardName() + ".bmp"));
+					} catch (IOException e){
+						e.printStackTrace();
+					}
+					JLabel imgLable = new JLabel(new ImageIcon(img));
+					imgLable.setToolTipText(x.getCardName());
+					opponentActionPanel[theBoard.actionBoards.indexOf(actionBoard)-1].add(imgLable);
+				}
+				opponentActionPanel[theBoard.actionBoards.indexOf(actionBoard)-1].revalidate();
+				actionCardPanel.revalidate();
+			}
+		}
+		actionCardPane.revalidate();
+	}
+	
 	public void UpdateInformationPanels(){
 		int highest = theBoard.points.get(0);
 		
@@ -787,7 +841,7 @@ public class ClientGUI extends Client{
 	
 	public void handleLoseGame() {
 		String winner = (String) get();
-		JOptionPane.showMessageDialog(frmMain.getContentPane(), "The winner was Player: " + winner + "\nYou have Lost. \ngitgud", "Game Winner", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), "The winner was Player: " + winner + "\nYou have Lost. \n", "Game Winner", JOptionPane.WARNING_MESSAGE);
 	}
 	
 	@Override
@@ -832,11 +886,17 @@ public class ClientGUI extends Client{
 		
 		if(firstdraw){
 			initializeDisplayPanel();
+			initializeActionCardPanel();
+			
 			frmMain.getContentPane().add(displayPane, BorderLayout.CENTER);
+			frmMain.getContentPane().revalidate();
+			
+			frmMain.getContentPane().add( actionCardPane, BorderLayout.EAST);
 			frmMain.getContentPane().revalidate();
 		}
 		
 		updateDisplayPanel();
+		updateActionCardPanel();
 		updateHand();
 		UpdateInformationPanels();
 		
