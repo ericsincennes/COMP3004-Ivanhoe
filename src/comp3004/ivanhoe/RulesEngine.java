@@ -365,10 +365,16 @@ public class RulesEngine {
 		if (toKeep == null || toKeep.size() == 0) return false;
 		for (Long pid : toKeep.keySet()) {
 			int count[] = new int[7];
-			for (Integer in : toKeep.get(pid)) {
-				count[((ColourCard)getPlayerById(pid).getDisplay().getCard(in)).getValue()-1]++;
+			int total[] = new int[7];
+			List<Card> lc = getPlayerById(pid).getDisplay().getCards();
+			for (Card c : lc) {
+				total[((ColourCard)c).getValue()-1]++;
+				if (toKeep.get(pid).contains(lc.indexOf(c))) {
+					count[((ColourCard)c).getValue()-1]++;
+				}
 			}
 			for (int i=0; i<7; i++) {
+				if (total[0] != 0 && count[0] == 0) return false;
 				if (count[i] > 1) return false;
 			}
 		}
@@ -776,9 +782,27 @@ public class RulesEngine {
 			//All other cards with the same value are discarded. 
 			//Each player decides which of the matching-value cards he will discard.
 			
-			//This loop assumes that the order of lists in keeping
-			//matches the correct player in players list
-				
+			for (Long pid : keeping.keySet()) {
+				List<Card> clist = getPlayerById(pid).getDisplay().getCards();
+				List<Card> alist = getPlayerById(pid).getDisplay().getActionCards();
+				List<Card> kept = new ArrayList<Card>();
+				for (int i = 0; i<clist.size(); i++) {
+					if (keeping.get(pid).contains(i)) {
+						kept.add(clist.get(i));
+					}
+					else {
+						temp.add(clist.get(i));
+					}
+				}
+				getPlayerById(pid).getDisplay().clearBoard();
+				for (Card ca : alist) {
+					getPlayerById(pid).getDisplay().addCard(ca);
+				}
+				for (Card ca : kept) {
+					getPlayerById(pid).getDisplay().addCard(ca);
+				}
+			}
+			
 			for(Card y : temp){
 				deck.addToDiscard(y);
 			}
