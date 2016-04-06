@@ -613,9 +613,12 @@ public class ClientGUI extends Client{
 		case "Break Lance": //target: Player
 			//Force one opponent to discard all purple cards from his display
 			choices = new String[theBoard.players.size()-1];
-			for(int i=0; i< choices.length; i++){
-				choices[i] = "Opponent " + i;
+			for(Long l : theBoard.players){
+				if(theBoard.players.indexOf(l) != 0){
+					choices[theBoard.players.indexOf(l)-1] = "Opponent " + l;
+				}
 			}
+			
 			while (!cancelClicked){
 				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove all Purple", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 				
@@ -639,8 +642,10 @@ public class ClientGUI extends Client{
 			//Take the last card played on any one opponent’s 
 			//display and add it to your own display.
 			choices = new String[theBoard.players.size()-1];
-			for(int i=0; i< choices.length; i++){
-				choices[i] = "Opponent " + i;
+			for(Long l : theBoard.players){
+				if(theBoard.players.indexOf(l) != 0){
+					choices[theBoard.players.indexOf(l)-1] = "Opponent " + l;
+				}
 			}
 			targets = new ArrayList<Object>();
 			
@@ -671,8 +676,10 @@ public class ClientGUI extends Client{
 		case "Dodge": //target: Player, String (cardname)
 			//Discard any one card from any one opponent’s display.
 			choices = new String[theBoard.players.size()-1];
-			for(int i=0; i< choices.length; i++){
-				choices[i] = "Opponent " + i;
+			for(Long l : theBoard.players){
+				if(theBoard.players.indexOf(l) != 0){
+					choices[theBoard.players.indexOf(l)-1] = "Opponent " + l;
+				}
 			}
 			targets = new ArrayList<Object>();
 			while (!cancelClicked){
@@ -750,8 +757,10 @@ public class ClientGUI extends Client{
 			//Draw at random one card from any one opponent’s hand and 
 			//add it to your hand, without revealing the card to other opponents.
 			choices = new String[theBoard.players.size()-1];
-			for(int i=0; i< choices.length; i++){
-				choices[i] = "Opponent " + i;
+			for(Long l : theBoard.players){
+				if(theBoard.players.indexOf(l) != 0){
+					choices[theBoard.players.indexOf(l)-1] = "Opponent " + l;
+				}
 			}
 			targets = new ArrayList<Object>();
 			while (!cancelClicked){
@@ -895,8 +904,10 @@ public class ClientGUI extends Client{
 			//As long as a player has the STUNNED card in front of him, 
 			//he may add only one new card to his display each turn.
 			choices = new String[theBoard.players.size()-1];
-			for(int i=0; i< choices.length; i++){
-				choices[i] = "Opponent " + i;
+			for(Long l : theBoard.players){
+				if(theBoard.players.indexOf(l) != 0){
+					choices[theBoard.players.indexOf(l)-1] = "Opponent " + l;
+				}
 			}
 			
 			targets = new ArrayList<Object>();
