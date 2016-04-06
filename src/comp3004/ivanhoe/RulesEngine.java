@@ -284,8 +284,8 @@ public class RulesEngine {
 	public boolean giveToken(long id, CardColour c) {
 		Player p = getPlayerById(id);
 		if (TournamentColour == null) { print("why is tourney colour null?"); }
-		if (c!= null && TournamentColour != null
-				&& (TournamentColour.equals(CardColour.Purple) || c.equals(TournamentColour))) {
+		if ((c!= null && TournamentColour != null)
+				&& ((TournamentColour.equals(CardColour.Purple) || c.equals(TournamentColour)))) {
 			if (p.recieveToken(c)) return true;
 			else return false;
 		}

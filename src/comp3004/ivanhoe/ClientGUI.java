@@ -540,6 +540,9 @@ public class ClientGUI extends Client{
 		boolean cancelClicked = false;
 		
 		switch(name){
+		case "Adapt":
+			send(new ArrayList<Object>());
+			break;
 		case "Unhorse": //target: CardColour
 			//color changes from purple to red, blue or yellow
 			if(theBoard.currColour == CardColour.Purple){

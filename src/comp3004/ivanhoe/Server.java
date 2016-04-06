@@ -337,9 +337,10 @@ public class Server{
 						if(rules.getTournamentColour() == CardColour.Purple){
 							//if purple tournament give token of choice
 							CardColour c = null;
-							do {
-							c = getTokenChoice();
-							print("Got token of colour " + c + " from thread " + threadID + ".");
+							print("Getting token from player.");
+							do {			
+								c = getTokenChoice();
+								print("Got token of colour " + c + " from thread " + threadID + ".");
 							} while(rules.giveToken(threadID, c));
 						} else {
 							//give current tournament colour token
