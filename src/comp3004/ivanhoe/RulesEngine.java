@@ -363,7 +363,22 @@ public class RulesEngine {
 	
 	public boolean validateAdaptTargets(HashMap<Long, List<Integer>> toKeep) {
 		if (toKeep == null || toKeep.size() == 0) return false;
-		return false;
+		for (Long pid : toKeep.keySet()) {
+			int count[] = new int[7];
+			int total[] = new int[7];
+			List<Card> lc = getPlayerById(pid).getDisplay().getCards();
+			for (Card c : lc) {
+				total[((ColourCard)c).getValue()-1]++;
+				if (toKeep.get(pid).contains(lc.indexOf(c))) {
+					count[((ColourCard)c).getValue()-1]++;
+				}
+			}
+			for (int i=0; i<7; i++) {
+				if (total[0] != 0 && count[0] == 0) return false;
+				if (count[i] > 1) return false;
+			}
+		}
+		return true;
 	}
 	
 		/**
@@ -620,7 +635,7 @@ public class RulesEngine {
 		String chosen = null;
 		CardColour colour = null;
 		int choiceIndex = 0; //used for outwit
-		ArrayList<ArrayList<Integer>> keeping = null; //used for Adapt
+		HashMap<Long,List<Integer>> keeping = null; //used for Adapt
 		ArrayList<Card> temp = new ArrayList<Card>();
 		int cardValue;
 				
@@ -633,8 +648,8 @@ public class RulesEngine {
 				colour = (CardColour) o;
 			} else if (o.getClass().equals(int.class)) {
 				choiceIndex = (int) o;
-			} else if (o.getClass().equals(ArrayList.class)){
-				keeping.add((ArrayList<Integer>) o);
+			} else if (o instanceof HashMap<?,?>){
+				keeping = (HashMap<Long,List<Integer>>) o;
 			}
 		}
 		
@@ -767,17 +782,24 @@ public class RulesEngine {
 			//All other cards with the same value are discarded. 
 			//Each player decides which of the matching-value cards he will discard.
 			
-			//This loop assumes that the order of lists in keeping
-			//matches the correct player in players list
-			for(ArrayList<Integer> intArray : keeping ){
-				for(Integer index: intArray){
-					Player p = playersList.get(keeping.indexOf(intArray));
-					List<Card> cards = p.getDisplay().getCards();
-					for(Card x: cards){
-						if(cards.indexOf(x) == index){
-							temp.add(p.getDisplay().remove(index));
-						}
+			for (Long pid : keeping.keySet()) {
+				List<Card> clist = getPlayerById(pid).getDisplay().getCards();
+				List<Card> alist = getPlayerById(pid).getDisplay().getActionCards();
+				List<Card> kept = new ArrayList<Card>();
+				for (int i = 0; i<clist.size(); i++) {
+					if (keeping.get(pid).contains(i)) {
+						kept.add(clist.get(i));
 					}
+					else {
+						temp.add(clist.get(i));
+					}
+				}
+				getPlayerById(pid).getDisplay().clearBoard();
+				for (Card ca : alist) {
+					getPlayerById(pid).getDisplay().addCard(ca);
+				}
+				for (Card ca : kept) {
+					getPlayerById(pid).getDisplay().addCard(ca);
 				}
 			}
 			
