@@ -17,9 +17,12 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -28,9 +31,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
+import java.awt.Checkbox;
+
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
@@ -795,10 +801,6 @@ public class ClientGUI extends Client{
 			targets = new ArrayList<Object>();
 			send(targets);
 			break;
-		case "Adapt":
-			//TODO
-			
-			break;
 		case "Outwit": //target: Player, Card (yours), Card (opp's card) 
 			//Place one of your faceup cards in front of an opponent, 
 			//and take one faceup card from this opponent 
@@ -920,9 +922,6 @@ public class ClientGUI extends Client{
 				send(theBoard.hand.indexOf(selectedCard));
 				send(targets);
 			}
-			break;
-		case "Ivanhoe":
-			//TODO
 			break;
 		}
 	}
@@ -1086,6 +1085,53 @@ public class ClientGUI extends Client{
 		ivanhoeTimer = false;
 	}
 	
+	private void handleClientGetAdapt(){
+		//Each player may only keep one card of each value in his display. All other cards
+		//with the same value are discarded. Each player decides which of the matching-value
+		//cards he will discard.
+		List<Integer> keepingCards = new ArrayList<Integer>();
+		
+		JPanel checkPanel = new JPanel();
+		checkPanel.setLayout(new GridLayout(0, 1));
+		
+		List<String> cardNames = new ArrayList<String>();
+		for(Card x : theBoard.hand){
+			cardNames.add(x.getCardName());
+		}
+		
+		for(Card x : theBoard.hand){			
+			BufferedImage ba = null;
+			try{
+				ba = ImageIO.read(new File(ImageDirectory + x.getCardName()+ ".bmp"));
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+			JCheckBox jcb = new JCheckBox(new ImageIcon(ba), false);
+			jcb.setName(x.getCardName());
+			
+			jcb.addItemListener(new ItemListener() {
+				
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					JCheckBox source = (JCheckBox) e.getItemSelectable();
+					if (e.getStateChange() == ItemEvent.SELECTED){
+						int x = cardNames.indexOf(source.getName());
+						keepingCards.add(x);
+					} else if(e.getStateChange() == ItemEvent.DESELECTED){
+						int x = cardNames.indexOf(source.getName());
+						keepingCards.remove(x);
+					}
+				}
+			});
+			checkPanel.add(jcb);
+		}
+		checkPanel.revalidate();
+		
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), checkPanel, "You may only keep one card of each Value", JOptionPane.PLAIN_MESSAGE);
+		
+		send(keepingCards);
+	}
+	
 	@Override
 	protected void mainLoop(){
 		playerNum = (int) get();	//get player number from server
@@ -1139,6 +1185,9 @@ public class ClientGUI extends Client{
 				handleOppActionCardPlayed();
 			case Optcodes.ClientGetIvanhoeChoice:
 				handleGetIvanhoeChoice();
+				break;
+			case Optcodes.ClientGetAdapt:
+				handleClientGetAdapt();
 				break;
 			default: 
 				new Exception("Unexpected Value");
