@@ -35,7 +35,8 @@ public class Server{
 			numplayers = in.nextInt();
 		}
 		in.close();
-		rules = new RulesEngine(numplayers);
+		//rules = new RulesEngine(numplayers);
+		rules = RulesEngine.testRuleEngine(numplayers);
 		eventQueue = new LinkedBlockingQueue<List<Object>>();
 		connectAndRecieve(numplayers);
 	}
@@ -252,6 +253,8 @@ public class Server{
 								
 								String result = rules.validateActionCard(cardIndex, rules.getPlayerById(threadID), targets);
 								if (result.length()!=0) { //valid play
+									log.logmsg(threadID + " is playing an actioncard: " 
+										+ rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName() + ".");
 									
 									//get info for Adapt
 									if (cardChosen.getCardName().equals("Adapt")) { 
@@ -285,6 +288,7 @@ public class Server{
 									
 									//ivanhoe stuff
 									if (rules.canBeIvanhoed(threadID)) { //wait 7 seconds for invanhoe response if applicable
+										log.logmsg(threadID + " waiting on Ivanhoe response.");
 										List<Object> event = null;
 										try {
 											sleep(200);
@@ -298,6 +302,7 @@ public class Server{
 											continue;
 										}
 									}
+									else {}
 									
 									rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets);
 									send(Optcodes.SuccessfulCardPlay);

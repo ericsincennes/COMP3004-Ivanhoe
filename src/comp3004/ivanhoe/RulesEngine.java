@@ -831,7 +831,7 @@ public class RulesEngine {
 		}
 		highestScore = playersList.get(0).getDisplay().calculatePoints();
 		for (Player p : playersList) {
-			highestScore = (p.getDisplay().calculatePoints() > highestScore) ? p.getDisplay().calculatePoints() : highestScore;
+			highestScore = (p.getDisplay().calculatePoints() > highestScore) ? p.getDisplay().calculatePoints()-1 : highestScore;
 		}
 	}
 
