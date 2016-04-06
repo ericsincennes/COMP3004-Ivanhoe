@@ -9,6 +9,9 @@ wbp-meta/
 #images
 src/Images/
 
+#logs
+/src/Logs/
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
