@@ -1074,7 +1074,12 @@ public class ClientGUI extends Client{
 	}
 	
 	private void handleGameWinner(){
-		JOptionPane.showMessageDialog(frmMain.getContentPane(), "You have won the game!" , "Tournament Winner", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), "You have won the game!" , "Game Winner", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	private void handleGettingIvanhoed() {
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), 
+				"Your action card just got countered by an Ivanhoe!" , "Ivanhoe'd!", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	public void handleGetIvanhoeChoice() {
@@ -1216,6 +1221,9 @@ public class ClientGUI extends Client{
 				break;
 			case Optcodes.GameWinner:
 				handleGameWinner();
+				break;
+			case Optcodes.Ivanhoe:
+				handleGettingIvanhoed();
 				break;
 			default: 
 				new Exception("Unexpected Value");
