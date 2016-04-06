@@ -134,7 +134,7 @@ public class Player {
 	 * @return success status
 	 */
 	public boolean recieveToken(CardColour colour){
-		if(tokens.containsKey(colour) && tokens.get(colour) == 1){
+		if(tokens.containsKey(colour) && tokens.get(colour) == 0){
 			tokens.put(colour, 1);
 			return true;
 		} else {

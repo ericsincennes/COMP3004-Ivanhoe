@@ -204,6 +204,7 @@ public class RulesEngineTest {
 	@Test
 	public void blueTournamentTest(){
 		tournamentSetup();
+		assertEquals(CardColour.Blue, rules.getTournamentColour());
 		Player p1 = rules.getPlayerList().get(0);
 		Player p2 = rules.getPlayerList().get(1);
 		Player p3 = rules.getPlayerList().get(2);
@@ -247,8 +248,9 @@ public class RulesEngineTest {
 	
 		p = rules.getPlayerList().get(0);
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
-		p.recieveToken(rules.getTournamentColour());
-		assertEquals(p.getTokenCount(),1);
+		assertEquals(0,p.getTokenCount());
+		assertTrue(rules.giveToken(p.getID(), rules.getTournamentColour()));
+		assertEquals(1,p.getTokenCount());
 		assertFalse(rules.isTournamentRunning());
 		
 		//cleanup
@@ -269,6 +271,7 @@ public class RulesEngineTest {
 	public void redTournamentTest(){
 		tournamentSetup();
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Red);
+		assertEquals(CardColour.Red, rules.getTournamentColour());
 		Player p1 = rules.getPlayerList().get(0);
 		Player p2 = rules.getPlayerList().get(1);
 		Player p3 = rules.getPlayerList().get(2);
@@ -312,8 +315,9 @@ public class RulesEngineTest {
 	
 		p = rules.getPlayerList().get(0);
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
-		p.recieveToken(rules.getTournamentColour());
-		assertEquals(p.getTokenCount(),1);
+		assertEquals(0,p.getTokenCount());
+		assertTrue(rules.giveToken(p.getID(), rules.getTournamentColour()));
+		assertEquals(1,p.getTokenCount());
 		assertFalse(rules.isTournamentRunning());
 		
 		//cleanup
@@ -333,6 +337,7 @@ public class RulesEngineTest {
 	public void yellowTournamentTest(){ 
 		tournamentSetup();
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Yellow);
+		assertEquals(CardColour.Yellow, rules.getTournamentColour());
 		Player p1 = rules.getPlayerList().get(0);
 		Player p2 = rules.getPlayerList().get(1);
 		Player p3 = rules.getPlayerList().get(2);
@@ -376,8 +381,9 @@ public class RulesEngineTest {
 	
 		p = rules.getPlayerList().get(0);
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
-		p.recieveToken(rules.getTournamentColour());
-		assertEquals(p.getTokenCount(),1);
+		assertEquals(0,p.getTokenCount());
+		assertTrue(rules.giveToken(p.getID(), rules.getTournamentColour()));
+		assertEquals(1,p.getTokenCount());
 		assertFalse(rules.isTournamentRunning());
 		
 		//cleanup
@@ -397,6 +403,7 @@ public class RulesEngineTest {
 	public void purpleTournamentTest(){
 		tournamentSetup();
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
+		assertEquals(CardColour.Purple, rules.getTournamentColour());
 		Player p1 = rules.getPlayerList().get(0);
 		Player p2 = rules.getPlayerList().get(1);
 		Player p3 = rules.getPlayerList().get(2);
@@ -440,8 +447,9 @@ public class RulesEngineTest {
 	
 		p = rules.getPlayerList().get(0);
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
-		p.recieveToken(rules.getTournamentColour());
-		assertEquals(p.getTokenCount(),1);
+		assertEquals(0,p.getTokenCount());
+		assertTrue(rules.giveToken(p.getID(), rules.getTournamentColour()));
+		assertEquals(1,p.getTokenCount());
 		assertFalse(rules.isTournamentRunning());
 		
 		//cleanup
@@ -461,6 +469,7 @@ public class RulesEngineTest {
 	public void greenTournamentTest() {
 		tournamentSetup();
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Green);
+		assertEquals(CardColour.Green, rules.getTournamentColour());
 		Player p1 = rules.getPlayerList().get(0);
 		Player p2 = rules.getPlayerList().get(1);
 		Player p3 = rules.getPlayerList().get(2);
@@ -503,8 +512,9 @@ public class RulesEngineTest {
 	
 		p = rules.getPlayerList().get(0);
 		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
-		p.recieveToken(rules.getTournamentColour());
-		assertEquals(p.getTokenCount(),1);
+		assertEquals(0,p.getTokenCount());
+		assertTrue(rules.giveToken(p.getID(), rules.getTournamentColour()));
+		assertEquals(1,p.getTokenCount());
 		assertFalse(rules.isTournamentRunning());
 		
 		//cleanup
