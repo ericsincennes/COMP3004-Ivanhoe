@@ -1183,6 +1183,7 @@ public class ClientGUI extends Client{
 				break;
 			case Optcodes.ClientActionCardPlayed:
 				handleOppActionCardPlayed();
+				break;
 			case Optcodes.ClientGetIvanhoeChoice:
 				handleGetIvanhoeChoice();
 				break;
