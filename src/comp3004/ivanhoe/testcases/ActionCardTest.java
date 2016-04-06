@@ -109,7 +109,7 @@ public class ActionCardTest {
 			rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
 		}
 		assertTrue(rules.getTournamentColour().equals(CardColour.Green));
-		assertTrue(!rules.getPlayerById(1).getHand().contains("Drop Weapon"));
+		assertNotEquals("Drop Weapon", rules.getPlayerById(1).getHand().getCardbyIndex(rules.getPlayerById(1).getHandSize()-1));
 		
 		//unsuccessful play
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Purple);
