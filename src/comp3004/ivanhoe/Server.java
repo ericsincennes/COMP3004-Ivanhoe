@@ -143,6 +143,7 @@ public class Server{
 					}
 					else {
 						send(Optcodes.GameOver);
+						send(Long.valueOf(rules.gameWinner().getID()));
 					}
 					break; //or possibly ask to start again?
 				}
