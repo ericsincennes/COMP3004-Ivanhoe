@@ -76,14 +76,16 @@ public class Player {
 	/**
 	 * Plays the Action card to the discard pile and causes the effect
 	 * @param position of card in hand
-	 * @param id
+	 * @return the card played
 	 */
-	public void playActionCard(int posinhand){
+	public Card playActionCard(int posinhand){
 		Card card = hand.getCardbyIndex(posinhand);
 		if (card.getCardName().equals("Shield")) {
 			display.addCard(card);
+			return null;
 		}
 		getHand().removeByIndex(posinhand);
+		return card;
 	}
 	
 	public int getHandSize(){

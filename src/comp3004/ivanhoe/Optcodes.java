@@ -2,7 +2,8 @@ package comp3004.ivanhoe;
 
 public class Optcodes {
 	//Server to Client Opt codes
-	public static final int ClientUpdateBoardState 		= 102;
+	public static final int ClientUpdateBoardState 		= 101;
+	public static final int ClientGetAdapt		 		= 102;
 	public static final int ClientGetCardsToBePlayed	= 103;
 	public static final int ClientGetColourChoice 		= 104;
 	public static final int ClientFailStartTournament 	= 105;

@@ -128,28 +128,6 @@ public class Server{
 		}
 
 		public void run(){
-			/*
-				if no tournament running
-					run init tournament
-						deals players hands
-						sets their status to playing (instead of withdrawn)
-						colourChosen = false
-				endif
-
-				start turn
-						draw a card
-				if colourchosen = false
-					check if can start tournament with a colour
-					set tournament colour to that colour
-					if cant start tournament, 
-						colourchosen = false
-						reveal hand
-					endif
-				endif
-				play rest of turn
-				end turn or withdraw
-			 */
-
 			//log.logmsg(threadID + ": Main loop started");
 			print(threadID + "");
 
@@ -267,9 +245,10 @@ public class Server{
 							send(Optcodes.InvalidCard);
 						}
 						else {
+							Card cardChosen = rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex);
 							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
-								rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName());
-							if(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardType() == CardType.Action){
+									cardChosen.getCardName());
+							if(cardChosen.getCardType() == CardType.Action){
 								//TODO Finish this
 								//if the card to play is an action card
 								//getActionCardTargets(cardIndex);
@@ -289,24 +268,54 @@ public class Server{
 								}
 								if (targets == null) {
 									send(Optcodes.InvalidCard);
+									sendBoardState();
 									continue;
 								}
 								
 								String result = rules.validateActionCard(cardIndex, rules.getPlayerById(threadID), targets);
-								if (result.length()!=0) {
+								if (result.length()!=0) { //valid play
+									
+									//get info for Adapt
+									if (cardChosen.getCardName().equals("Adapt")) { 
+										HashMap<Long,List<Integer>> adaptTargets = new HashMap<Long,List<Integer>>();
+										
+										while (!rules.validateAdaptTargets(adaptTargets)) {
+											List<Object> adaptevent = new ArrayList<Object>();
+											adaptevent.add(Long.valueOf(threadID));
+											adaptevent.add("Adapt");
+											sendEvent(adaptevent);
+											send(Optcodes.ClientGetAdapt);
+											List<Integer> chosen = (List<Integer>) get();
+											adaptTargets.put(threadID, chosen);
+											//TODO get chosen lists from other threads
+											for (int i=0; i<numplayers-1;) {
+												Object adaptTarget = handleEvent(eventQueue.poll());
+												if (adaptTarget instanceof HashMap<?,?>) {
+													adaptTargets.putAll((HashMap<Long,List<Integer>>) adaptTarget);
+													i++;
+												}
+											}
+										}
+										targets.add(adaptTargets);
+									}
+									
 									List<Object> eventmsg = new ArrayList<Object>();
 									eventmsg.add(Long.valueOf(threadID));
 									eventmsg.add("actioncard");
 									eventmsg.add(result);
 									sendEvent(eventmsg);
+									
+									//ivanhoe stuff
 									if (rules.canBeIvanhoed(threadID)) { //wait 7 seconds for invanhoe response if applicable
 										List<Object> event = null;
 										try {
-											event = eventQueue.poll(7200, TimeUnit.MILLISECONDS);
+											sleep(200);
+											event = eventQueue.poll(7000, TimeUnit.MILLISECONDS);
 										} catch (InterruptedException e) { e.printStackTrace(); }
-										if (event != null && event.size() >= 3 && 	//reply should be ID, "Ivanhoe" and if it's played or not
-												event.get(3).equals(true)) { 		//no response is negative
+										Boolean ivanhoed = (Boolean) handleEvent(event);
+										if (ivanhoed != null && ivanhoed) { 
 											send(Optcodes.Ivanhoe);
+											rules.getDeck().addToDiscard(rules.getPlayerById(threadID).playActionCard(cardIndex));
 											sendBoardState();
 											continue;
 										}
@@ -319,7 +328,7 @@ public class Server{
 									send(Optcodes.InvalidCard);
 								}
 							}
-							else if (rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardType() == CardType.Ivanhoe) {
+							else if (cardChosen.getCardType() == CardType.Ivanhoe) {
 								send(Optcodes.InvalidCard);
 							}
 							else {
@@ -486,14 +495,15 @@ public class Server{
 		/**
 		 * handles an event, somehow
 		 * @param event - the event msg received, with prepended sender ID
+		 * @return whatever it needs to, mainly for ivanhoe and adapt
 		 */
-		private void handleEvent(List<Object> event) {
-			if (event.size() < 2) { return; }
+		private Object handleEvent(List<Object> event) {
+			if (event == null || event.size() < 2) { return null; }
 			if (event.get(0) instanceof Long && (long) event.get(0) == threadID) {
 				eventQueue.add(event);
-				return;
+				return null;
 			}
-			if (!(event.get(1) instanceof String)) { return; }
+			if (!(event.get(1) instanceof String)) { return null; }
 			switch ((String) event.get(1)) {
 			case "tournamentover":
 				send(Optcodes.LoseTournament);
@@ -512,21 +522,25 @@ public class Server{
 					send(Optcodes.ClientGetIvanhoeChoice);
 					send((String) event.get(2));
 					Long casterID = (Long) event.get(0);
-					Object o = null;
+					Object bool = null;
 					try {
-						client.setSoTimeout(7000);
-						o = get();
+						client.setSoTimeout(6900);
+						bool = get();
 						client.setSoTimeout(0);
-						//TODO wait for ivanhoe response
 					} catch (SocketException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if (o instanceof Boolean) {
+					if (bool instanceof Boolean) {
+						try {
+							sleep(100);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 						List<Object> ivanhoeEvent = new ArrayList<Object>();
 						ivanhoeEvent.add(threadID);
 						ivanhoeEvent.add("Ivanhoe");
-						ivanhoeEvent.add(o);
+						ivanhoeEvent.add(bool);
+						ivanhoeEvent.add(event.get(0));
 						sendEvent(ivanhoeEvent);
 					}
 				} else {
@@ -535,11 +549,43 @@ public class Server{
 				}
 				break;
 			case "Ivanhoe":
+				if ((Long) event.get(3) == threadID) { //active thread or the thread playing the actioncard getting ivanhoed
+					return event.get(2);
+				}
+				break;
+			case "Adapt":
+				List<Integer> adaptList = (List<Integer>) get();
+				List<Object> adapt = new ArrayList<Object>();
+				adapt.add(threadID);
+				adapt.add("adaptlist");
+				adapt.add(adaptList);
+				adapt.add(event.get(0));
+				eventQueue.add(adapt);
+				try { //so main thread has time to grab all adapt target lists
+					sleep(300);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				break;
+			case "adaptlist":
+				if ((Long) event.get(3) == threadID) { //active thread or the thread playing the adapt
+					HashMap<Long,List<Integer>> adaptTargets = new HashMap<Long,List<Integer>>();
+					adaptTargets.put((Long) event.get(0), (List<Integer>) event.get(2));
+					return adaptTargets;
+				}
+				else {
+					eventQueue.add(event); //in case one of them grabs one by accident
+					try { //so main thread has time to grab all adapt target lists
+						sleep(300);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 				break;
 			default:
 				break;
 			}
-			return;
+			return null;
 		}
 
 		/**
