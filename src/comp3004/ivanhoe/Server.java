@@ -608,9 +608,9 @@ public class Server{
 		private boolean loggable(Object o) {
 			if ((o instanceof BoardState)) {
 				return false;
-			} else if (((Integer)o).equals(101)) {
+			} else if (o.equals(101)) {
 				return false;
-			} else if (threadID != rules.getPlayerList().get(0).getID() && ((Integer)o).equals(150)) {
+			} else if (threadID != rules.getPlayerList().get(0).getID() && o.equals(150)) {
 				return false;
 			}
 			return true;
