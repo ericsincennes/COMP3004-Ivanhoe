@@ -125,6 +125,7 @@ public class Deck {
 	}
 	
 	public void addToDiscard(Card c) {
+		if (c == null) return;
 		if (isDiscard) {
 			cards.add(c);
 		}
