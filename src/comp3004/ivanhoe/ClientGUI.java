@@ -386,7 +386,9 @@ public class ClientGUI extends Client{
 					playerDisplayPanel.add(imgLabel);
 				}
 				playerDisplayPanel.revalidate();
+				playerDisplayPanel.repaint();
 				displaysPanel.revalidate();
+				displaysPanel.repaint();;
 
 			} else {
 				//opponent displays
@@ -1038,6 +1040,8 @@ public class ClientGUI extends Client{
 		UpdateInformationPanels();
 		updateTokenLabel();
 		
+		frmMain.revalidate();
+		frmMain.repaint();
 	}
 	private void handleClientFailStartTournament(){
 		String playerID = (String) get();
