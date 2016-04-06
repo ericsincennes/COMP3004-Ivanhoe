@@ -624,7 +624,8 @@ public class Server{
 				out.reset();
 			} catch (IOException e) {
 				rules.removePlayer(threadID);
-				this.interrupt();
+				this.isRunning = false;
+				return false;
 			}
 			return true;
 		}
