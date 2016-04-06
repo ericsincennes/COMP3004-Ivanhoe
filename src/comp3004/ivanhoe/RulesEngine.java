@@ -361,6 +361,11 @@ public class RulesEngine {
 		return false;
 	}
 	
+	public boolean validateAdaptTargets(HashMap<Long, List<Integer>> toKeep) {
+		if (toKeep == null || toKeep.size() == 0) return false;
+		return false;
+	}
+	
 		/**
 		 * Checks whether an actioncard can be played.
 		 * @param cardIndex
@@ -636,15 +641,15 @@ public class RulesEngine {
 		switch(caster.getHand().getCardbyIndex(cardIndex).cardName){
 		case "Unhorse": //target: CardColour
 			TournamentColour = colour;
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Change Weapon": //target: CardColour
 			TournamentColour = colour;
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Drop Weapon": //target: none
 			TournamentColour = CardColour.Green;
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Break Lance": //target: Player
 			temp = new ArrayList<Card>();
@@ -657,29 +662,29 @@ public class RulesEngine {
 			for(Card x : temp){
 				deck.addToDiscard(x);
 			}
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Riposte": //target Player
 			String last = opponent.getDisplay().getLastPlayed().getCardName();
 		
 			taken = opponent.getDisplay().remove(last);
 			caster.getDisplay().addCard(taken);
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Dodge": //target: Player, CardName
 			deck.addToDiscard(opponent.getDisplay().remove(chosen));
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Retreat": //target: CardName
 			Card r = caster.getDisplay().remove(chosen);
 			caster.getHand().add(r);
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Knock Down": //target: Player
 			taken = opponent.getHand().getCardbyIndex(rand.nextInt(opponent.getHandSize()));
 			opponent.getHand().remove(taken.getCardName());
 			caster.getHand().add(taken);
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Outmaneuver": //target: none
 			temp = new ArrayList<Card>();
@@ -694,7 +699,7 @@ public class RulesEngine {
 			for(Card x : temp){
 				deck.addToDiscard(x);
 			}
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Charge": //target: none
 			temp = new ArrayList<Card>();
@@ -715,7 +720,7 @@ public class RulesEngine {
 			for(Card x : temp){
 				deck.addToDiscard(x);
 			}
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Countercharge": //target: none
 			temp = new ArrayList<Card>();
@@ -736,7 +741,7 @@ public class RulesEngine {
 			for(Card x : temp){
 				deck.addToDiscard(x);
 			}
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Disgrace": //target: none
 			temp = new ArrayList<Card>();
@@ -754,7 +759,7 @@ public class RulesEngine {
 			for(Card x : temp){
 				deck.addToDiscard(x);
 			}
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Adapt": //target: none
 			temp = new ArrayList<Card>();
@@ -779,7 +784,7 @@ public class RulesEngine {
 			for(Card y : temp){
 				deck.addToDiscard(y);
 			}
-			
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Outwit": //target: Player, Card (yours), Card (opp's card) 
 			Card give = caster.getDisplay().getCard(choiceIndex);
@@ -790,15 +795,15 @@ public class RulesEngine {
 		
 			caster.getDisplay().remove(choiceIndex);
 			opponent.getDisplay().remove(chosen);
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Shield": //target: none
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Stunned": //target: Player
 			Card stun = new ActionCard("Stunned");
 			opponent.getDisplay().addCard(stun);
-			caster.playActionCard(cardIndex);
+			deck.addToDiscard(caster.playActionCard(cardIndex));
 			break;
 		case "Ivanhoe":
 			//todo
