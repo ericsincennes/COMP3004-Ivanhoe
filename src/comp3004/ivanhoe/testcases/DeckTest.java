@@ -2,6 +2,9 @@ package comp3004.ivanhoe.testcases;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,6 +65,18 @@ public class DeckTest {
 		assertEquals(testDeck.draw().getCardName(),"Squire 3");
 		assertEquals(testDeck.draw().getCardName(),"Squire 3");
 		assertTrue(testDeck.draw() == null);
+	}
+	
+	@Test 
+	public void cycleDeck() {
+		testDeck.ivanhoeDeck();
+		List<Card> hugeHand = new ArrayList<Card>();
+		for (int i=0; i<110; i++) {
+			hugeHand.add(testDeck.draw());
+		}
+		assertTrue(testDeck.draw() == null);
+		testDeck.addToDiscard(hugeHand.get(0));
+		assertNotNull(testDeck.draw());
 	}
 	
 	@Test

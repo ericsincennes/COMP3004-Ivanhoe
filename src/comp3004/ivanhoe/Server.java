@@ -35,7 +35,8 @@ public class Server{
 			numplayers = in.nextInt();
 		}
 		in.close();
-		rules = new RulesEngine(numplayers);
+		//rules = new RulesEngine(numplayers);
+		rules = RulesEngine.testRuleEngine(numplayers);
 		eventQueue = new LinkedBlockingQueue<List<Object>>();
 		connectAndRecieve(numplayers);
 	}
@@ -130,12 +131,11 @@ public class Server{
 
 		public void run(){
 			//log.logmsg(threadID + ": Main loop started");
-			print(threadID + "");
 
 			//Send player their player number
 			send(playerNum);
 			sendBoardState();
-			print(threadID + ": isRunning");
+			log.logmsg("Thread " + threadID + " starting up.");
 			while(isRunning){
 				if (rules.gameWinner() != null) {
 					if (rules.gameWinner().getID() == threadID) {
@@ -213,7 +213,7 @@ public class Server{
 							if (rules.withdrawPlayer(threadID)) {
 								CardColour c = null;
 								do {
-									c = getTokenChoice();
+									c = getTokenChoice(false);
 								} while (rules.getPlayerById(threadID).removeToken(c)); //may need validation
 							}
 							//when its winner's turn, they'll get a choice of token when their loop hits code
@@ -252,6 +252,8 @@ public class Server{
 								
 								String result = rules.validateActionCard(cardIndex, rules.getPlayerById(threadID), targets);
 								if (result.length()!=0) { //valid play
+									log.logmsg(threadID + " is playing an actioncard: " 
+										+ rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex).getCardName() + ".");
 									
 									//get info for Adapt
 									if (cardChosen.getCardName().equals("Adapt")) { 
@@ -285,10 +287,11 @@ public class Server{
 									
 									//ivanhoe stuff
 									if (rules.canBeIvanhoed(threadID)) { //wait 7 seconds for invanhoe response if applicable
+										log.logmsg(threadID + " waiting on Ivanhoe response.");
 										List<Object> event = null;
 										try {
 											sleep(200);
-											event = eventQueue.poll(7000, TimeUnit.MILLISECONDS);
+											event = eventQueue.poll(10000, TimeUnit.MILLISECONDS);
 										} catch (InterruptedException e) { e.printStackTrace(); }
 										Boolean ivanhoed = (Boolean) handleEvent(event);
 										if (ivanhoed != null && ivanhoed) { 
@@ -298,6 +301,7 @@ public class Server{
 											continue;
 										}
 									}
+									else {}
 									
 									rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets);
 									send(Optcodes.SuccessfulCardPlay);
@@ -332,9 +336,10 @@ public class Server{
 						if(rules.getTournamentColour() == CardColour.Purple){
 							//if purple tournament give token of choice
 							CardColour c = null;
-							do {
-							c = getTokenChoice();
-							print("Got token of colour " + c + " from thread " + threadID + ".");
+							print("Getting token from player.");
+							do {			
+								c = getTokenChoice(true);
+								print("Got token of colour " + c + " from thread " + threadID + ".");
 							} while(rules.giveToken(threadID, c));
 						} else {
 							//give current tournament colour token
@@ -350,10 +355,12 @@ public class Server{
 		
 		/**
 		 * Gets the token colour choice from the player if they win a purple tournament
+		 * @param receiving/losing a token
 		 * @return CardColour
 		 */
-		private CardColour getTokenChoice(){
-			send(Optcodes.ClientGetTokenChoice);
+		private CardColour getTokenChoice(boolean win){
+			if (win) send(Optcodes.ClientWinTokenChoice);
+			else send (Optcodes.ClientLoseTokenChoice);
 			int o = (int) get();
 			CardColour colour = null;
 			
@@ -428,7 +435,7 @@ public class Server{
 		 * @return CardColour
 		 */
 		private CardColour GetTournamentColourFromClient(){
-			print("Thread " + threadID + ": getting tournament colour from client");
+			log.logmsg("Thread " + threadID + ": getting tournament colour from client");
 			send(Optcodes.ClientGetColourChoice);
 			CardColour colour = null;
 
@@ -504,7 +511,7 @@ public class Server{
 					Long casterID = (Long) event.get(0);
 					Object bool = null;
 					try {
-						client.setSoTimeout(6900);
+						client.setSoTimeout(9900);
 						bool = get();
 						client.setSoTimeout(0);
 					} catch (SocketException e) {

@@ -284,8 +284,8 @@ public class RulesEngine {
 	public boolean giveToken(long id, CardColour c) {
 		Player p = getPlayerById(id);
 		if (TournamentColour == null) { print("why is tourney colour null?"); }
-		if (c!= null && TournamentColour != null
-				&& (TournamentColour.equals(CardColour.Purple) || c.equals(TournamentColour))) {
+		if ((c!= null && TournamentColour != null)
+				&& ((TournamentColour.equals(CardColour.Purple) || c.equals(TournamentColour)))) {
 			if (p.recieveToken(c)) return true;
 			else return false;
 		}
@@ -358,6 +358,9 @@ public class RulesEngine {
 	public boolean validateAdaptTargets(HashMap<Long, List<Integer>> toKeep) {
 		if (toKeep == null || toKeep.size() == 0) return false;
 		for (Long pid : toKeep.keySet()) {
+			if (getPlayerById(pid).isShielded() || getPlayerById(pid).getDisplay().getCards().size() < 1) {
+				continue;
+			}
 			int count[] = new int[7];
 			int total[] = new int[7];
 			List<Card> lc = getPlayerById(pid).getDisplay().getCards();
@@ -777,6 +780,9 @@ public class RulesEngine {
 			//Each player decides which of the matching-value cards he will discard.
 			
 			for (Long pid : keeping.keySet()) {
+				if (getPlayerById(pid).isShielded() || getPlayerById(pid).getDisplay().getCards().size() < 1) {
+					continue;
+				}
 				List<Card> clist = getPlayerById(pid).getDisplay().getCards();
 				List<Card> alist = getPlayerById(pid).getDisplay().getActionCards();
 				List<Card> kept = new ArrayList<Card>();
@@ -831,7 +837,7 @@ public class RulesEngine {
 		}
 		highestScore = playersList.get(0).getDisplay().calculatePoints();
 		for (Player p : playersList) {
-			highestScore = (p.getDisplay().calculatePoints() > highestScore) ? p.getDisplay().calculatePoints() : highestScore;
+			highestScore = (p.getDisplay().calculatePoints() > highestScore) ? p.getDisplay().calculatePoints()-1 : highestScore;
 		}
 	}
 

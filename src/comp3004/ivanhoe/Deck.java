@@ -29,6 +29,19 @@ public class Deck {
 	 * Initialize a test deck with 80 squire-2s.
 	 */
 	public void testDeck(){
+		cards.add(new ActionCard("Ivanhoe"));
+		cards.add(new ActionCard("Adapt"));
+		cards.add(new ActionCard("Ivanhoe"));
+		cards.add(new ActionCard("Drop Weapon"));
+		for (int i=0;i<5;i++) {
+			cards.add(new SupporterCard(2));
+		}
+		cards.add(new ActionCard("Ivanhoe"));
+		cards.add(new ActionCard("Adapt"));
+		cards.add(new ActionCard("Drop Weapon"));
+		for (int i=0;i<5;i++) {
+			cards.add(new SupporterCard(2));
+		}
 		for (int i=0;i<80;i++) {
 			cards.add(new SupporterCard(2));
 		}
