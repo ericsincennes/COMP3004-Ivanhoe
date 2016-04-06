@@ -139,24 +139,10 @@ public class Server{
 				if (rules.gameWinner() != null) {
 					if (rules.gameWinner().getID() == threadID) {
 						//send winner msg to client
-						List<Object> eventmsg = new ArrayList<Object>(2);
-						eventmsg.add(Long.valueOf(threadID));
-						eventmsg.add("gameover");
-						sendEvent(eventmsg);
 						send(Optcodes.GameWinner);
 					}
 					else {
-						try {
-							List<Object> event = eventQueue.poll(200, TimeUnit.SECONDS);
-							if (event != null) {
-								handleEvent(event);
-							}
-						}
-
-						catch (InterruptedException ie) {
-							ie.printStackTrace();
-							break;
-						}
+						send(Optcodes.GameOver);
 					}
 					break; //or possibly ask to start again?
 				}
@@ -605,8 +591,7 @@ public class Server{
 				rules.removePlayer(threadID);
 				this.interrupt();
 			}
-			if (threadID == rules.getPlayerList().get(0).getID()) 
-				print("Received a " + o.getClass().getName() + " " + o.toString() + " from thread " + threadID);
+			print("Received a " + o.getClass().getName() + " " + o.toString() + " from thread " + threadID);
 			return o;
 		}
 
@@ -617,8 +602,7 @@ public class Server{
 		 */
 		private boolean send(Object o){
 			try {
-				if (threadID == rules.getPlayerList().get(0).getID()) 
-					print("Thread " + threadID + " sending a " + o.getClass().getName() + " " + o.toString());
+				print("Thread " + threadID + " sending a " + o.getClass().getName() + " " + o.toString());
 				out.writeObject(o);
 				out.flush();
 				out.reset();
