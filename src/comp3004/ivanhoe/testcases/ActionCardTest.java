@@ -559,11 +559,11 @@ public class ActionCardTest {
 		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(2));
 		
 		rules.getPlayerById(2).addCard(new ActionCard("Adapt"));
-		p1keep.add(1);
-		p1keep.add(3);
-		p2keep.add(1);
+		p1keep.add(0);
+		p1keep.add(2);
+		p2keep.add(0);
+		p3keep.add(1);
 		p3keep.add(2);
-		p3keep.add(3);
 		keeping.put(p1, p1keep);
 		keeping.put(p2, p2keep);
 		keeping.put(p3, p3keep);
