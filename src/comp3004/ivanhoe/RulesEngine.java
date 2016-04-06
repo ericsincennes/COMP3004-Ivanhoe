@@ -358,6 +358,9 @@ public class RulesEngine {
 	public boolean validateAdaptTargets(HashMap<Long, List<Integer>> toKeep) {
 		if (toKeep == null || toKeep.size() == 0) return false;
 		for (Long pid : toKeep.keySet()) {
+			if (getPlayerById(pid).isShielded() || getPlayerById(pid).getDisplay().getCards().size() < 1) {
+				continue;
+			}
 			int count[] = new int[7];
 			int total[] = new int[7];
 			List<Card> lc = getPlayerById(pid).getDisplay().getCards();
@@ -777,6 +780,9 @@ public class RulesEngine {
 			//Each player decides which of the matching-value cards he will discard.
 			
 			for (Long pid : keeping.keySet()) {
+				if (getPlayerById(pid).isShielded() || getPlayerById(pid).getDisplay().getCards().size() < 1) {
+					continue;
+				}
 				List<Card> clist = getPlayerById(pid).getDisplay().getCards();
 				List<Card> alist = getPlayerById(pid).getDisplay().getActionCards();
 				List<Card> kept = new ArrayList<Card>();
