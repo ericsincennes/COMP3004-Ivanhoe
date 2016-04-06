@@ -405,9 +405,11 @@ public class ClientGUI extends Client{
 
 				}
 				opponentPanel[theBoard.boards.indexOf(displays) -1].revalidate();
+				displaysPanel.repaint();
 				displaysPanel.revalidate();
 			}
 		}
+		displayPane.repaint();
 		displayPane.revalidate();
 	}
 	
@@ -489,7 +491,7 @@ public class ClientGUI extends Client{
 		playerid = theBoard.players.toArray(playerid);
 		
 		for(int i =0; i<opponentTokens.length-1; i++){
-			opponentTokens[i] = "Opponent " + playerid[i+1] + " ";
+			opponentTokens[i] = "- Opponent " + playerid[i+1] + ": ";
 		}
 		
 		for(List<CardColour> tokensList : theBoard.tokens){
