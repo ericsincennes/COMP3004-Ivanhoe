@@ -239,18 +239,6 @@ public class Server{
 							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
 									cardChosen.getCardName());
 							if(cardChosen.getCardType() == CardType.Action){
-								//TODO Finish this
-								//if the card to play is an action card
-								//getActionCardTargets(cardIndex);
-								//Send targets to RulesEngine to validate
-									//rules.actionHandler(rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex), )
-								//If valid: 
-									//then play
-									//send points
-									//update all boards
-									//send hand
-								//else send invalid play optcode
-								//ActionCard played = (ActionCard) rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex);
 								List<Object> targets = null;
 								Object o = get();
 								if (o instanceof List<?>) {
@@ -604,7 +592,8 @@ public class Server{
 		 */
 		private boolean send(Object o){
 			try {
-				log.logmsg("Thread " + threadID + " sending a " + o.getClass().getName() + " " + o.toString());
+				if (!(o instanceof BoardState) || (o instanceof Integer && ((Integer)o).equals(101)))
+					log.logmsg("Thread " + threadID + " sending a " + o.getClass().getName() + " " + o.toString());
 				out.writeObject(o);
 				out.flush();
 				out.reset();

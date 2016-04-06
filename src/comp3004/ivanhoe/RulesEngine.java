@@ -567,7 +567,7 @@ public class RulesEngine {
 				
 				for (Player p : playersList) {
 					if (p.getPlaying()) {
-						if (!p.isShielded()) {
+						if (!p.isShielded() && p.getDisplay().getCards().size() > 0) {
 							for (Card c : p.getDisplay().getCards()) {
 								dupes.add(((ColourCard)c).getValue());
 							}
