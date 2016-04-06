@@ -83,7 +83,7 @@ public class Client {
 				break;
 			case Optcodes.ClientWithdraw:
 				break;
-			case Optcodes.ClientGetTokenChoice:
+			case Optcodes.ClientWinTokenChoice:
 				handleTokenChoice();
 				break;
 			case Optcodes.ClientGetActionCardTarget:

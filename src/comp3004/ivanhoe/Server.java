@@ -131,12 +131,11 @@ public class Server{
 
 		public void run(){
 			//log.logmsg(threadID + ": Main loop started");
-			print(threadID + "");
 
 			//Send player their player number
 			send(playerNum);
 			sendBoardState();
-			print(threadID + ": isRunning");
+			log.logmsg("Thread " + threadID + " starting up.");
 			while(isRunning){
 				if (rules.gameWinner() != null) {
 					if (rules.gameWinner().getID() == threadID) {
@@ -214,7 +213,7 @@ public class Server{
 							if (rules.withdrawPlayer(threadID)) {
 								CardColour c = null;
 								do {
-									c = getTokenChoice();
+									c = getTokenChoice(false);
 								} while (rules.getPlayerById(threadID).removeToken(c)); //may need validation
 							}
 							//when its winner's turn, they'll get a choice of token when their loop hits code
@@ -339,7 +338,7 @@ public class Server{
 							CardColour c = null;
 							print("Getting token from player.");
 							do {			
-								c = getTokenChoice();
+								c = getTokenChoice(true);
 								print("Got token of colour " + c + " from thread " + threadID + ".");
 							} while(rules.giveToken(threadID, c));
 						} else {
@@ -356,10 +355,12 @@ public class Server{
 		
 		/**
 		 * Gets the token colour choice from the player if they win a purple tournament
+		 * @param receiving/losing a token
 		 * @return CardColour
 		 */
-		private CardColour getTokenChoice(){
-			send(Optcodes.ClientGetTokenChoice);
+		private CardColour getTokenChoice(boolean win){
+			if (win) send(Optcodes.ClientWinTokenChoice);
+			else send (Optcodes.ClientLoseTokenChoice);
 			int o = (int) get();
 			CardColour colour = null;
 			
@@ -434,7 +435,7 @@ public class Server{
 		 * @return CardColour
 		 */
 		private CardColour GetTournamentColourFromClient(){
-			print("Thread " + threadID + ": getting tournament colour from client");
+			log.logmsg("Thread " + threadID + ": getting tournament colour from client");
 			send(Optcodes.ClientGetColourChoice);
 			CardColour colour = null;
 

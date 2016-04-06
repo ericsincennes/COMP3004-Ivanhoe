@@ -942,14 +942,15 @@ public class ClientGUI extends Client{
 		}
 	}
 	
-	protected void handleTokenChoice(){
+	protected void handleTokenChoice(boolean win){
 		String[] options = {"Purple", "Green", "Red", "Blue", "Yellow"};
 		int x = 0;
 		String s;
 		
 		if(theBoard.currColour == CardColour.Purple){
 			while (true){
-				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"You won a Purple tournament! Choose a token of your choice","Get a Token", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+				String msg = (win) ? "You won a Purple tournament! Choose a token of your choice" : "You have withdrawn with a maiden. Choose a token to lose.";
+				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() , msg,"Get a Token", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 				
 				try {
 					x = Integer.parseInt(s);
@@ -1082,7 +1083,7 @@ public class ClientGUI extends Client{
 		String title = "Player " + msgArray[1] + " played an action card";
 		
 		//wait 6 seconds to send no
-		Timer t = new Timer(9500, new ActionListener() {
+		Timer t = new Timer(9900, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ivanhoeTimer = true;
 				send(false);
@@ -1090,7 +1091,7 @@ public class ClientGUI extends Client{
 		});
 		t.start();
 		
-		int x = JOptionPane.showConfirmDialog(frmMain.getContentPane(), message + "\nWould you like to use Ivanhoe?\n Answer in ", title, JOptionPane.YES_NO_OPTION);
+		int x = JOptionPane.showConfirmDialog(frmMain.getContentPane(), message + "\nWould you like to use Ivanhoe?\n Answer in 10s.", title, JOptionPane.YES_NO_OPTION);
 		if(x == JOptionPane.YES_OPTION){
 			if(!ivanhoeTimer){
 				t.stop();
@@ -1180,8 +1181,11 @@ public class ClientGUI extends Client{
 			case Optcodes.ClientWithdraw:
 				handleClientWithdraw();
 				break;
-			case Optcodes.ClientGetTokenChoice:
-				handleTokenChoice();
+			case Optcodes.ClientWinTokenChoice:
+				handleTokenChoice(true);
+				break;
+			case Optcodes.ClientLoseTokenChoice:
+				handleTokenChoice(false);
 				break;
 			case Optcodes.ClientGetActionCardTarget:
 				getActionCardTargets();
