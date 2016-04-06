@@ -882,6 +882,7 @@ public class RulesEngine {
 	 */
 	public Player gameWinner() {
 		for (Player p : playersList) {
+			if (numPlayers < 2) return p;
 			if ((numPlayers >=2 && numPlayers <=3 && p.getTokenCount() == 4) ||
 					(numPlayers >=4 && p.getTokenCount() == 5)){
 				return p;
