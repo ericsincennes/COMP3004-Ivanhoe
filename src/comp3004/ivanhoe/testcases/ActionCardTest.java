@@ -635,10 +635,4 @@ public class ActionCardTest {
 		
 		rules.roundCleanup();
 	}
-	
-	@Test
-	public void testIvanhoe() { //unaffected by shield
-		fail();
-	}
-	
 }
