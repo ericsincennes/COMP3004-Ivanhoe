@@ -575,9 +575,9 @@ public class RulesEngine {
 								dupes.add(((ColourCard)c).getValue());
 							}
 							if (dupes.size() < p.getDisplay().getCards().size()) {
-								return "";
-							} else {
 								return "Player " + caster.getID() + " has played Adapt";
+							} else {
+								return "";
 							}
 						}
 					}
