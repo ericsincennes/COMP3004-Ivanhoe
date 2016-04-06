@@ -550,13 +550,13 @@ public class ActionCardTest {
 		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Yellow);
 		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Yellow, 3));
 		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Yellow, 3));
-		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4)); //p1board: 3,3,4
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
 		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
-		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4)); //p2board: 4,4,4
 		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Yellow, 3));
 		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(3));
-		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(2));
+		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(2)); //p3board:3,3,2
 		
 		rules.getPlayerById(2).addCard(new ActionCard("Adapt"));
 		p1keep.add(0);
@@ -570,8 +570,11 @@ public class ActionCardTest {
 		toSend.add(keeping);
 		if (rules.validateActionCard(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend).length() > 0) {
 			rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend);
+		} else {
+			fail("Adapt should be playable.");
 		}
 		
+		assertEquals(2, rules.getPlayerById(1).getDisplay().getCards().size());
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 3"));
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 4"));
 		//assertTrue(rules.getPlayerById(1).getDisplay().getCards().size() == 2);
