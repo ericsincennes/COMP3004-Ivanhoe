@@ -3,6 +3,7 @@ package comp3004.ivanhoe.testcases;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.After;
@@ -541,7 +542,52 @@ public class ActionCardTest {
 	
 	@Test
 	public void testAdapt() {
-		fail();
+		HashMap<Long, List<Integer>> keeping = new HashMap<Long, List<Integer>>();
+		List<Integer> p1keep = new ArrayList<Integer>();
+		List<Integer> p2keep = new ArrayList<Integer>();
+		List<Integer> p3keep = new ArrayList<Integer>();
+		
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Yellow);
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Yellow, 3));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Yellow, 3));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Yellow, 4));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Yellow, 3));
+		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(3));
+		rules.getPlayerById(3).getDisplay().addCard(new SupporterCard(2));
+		
+		rules.getPlayerById(2).addCard(new ActionCard("Adapt"));
+		p1keep.add(1);
+		p1keep.add(3);
+		p2keep.add(1);
+		p3keep.add(2);
+		p3keep.add(3);
+		keeping.put(p1, p1keep);
+		keeping.put(p2, p2keep);
+		keeping.put(p3, p3keep);
+		toSend.add(keeping);
+		if (rules.validateActionCard(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend).length() > 0) {
+			rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend);
+		}
+		
+		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 3"));
+		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 4"));
+		//assertTrue(rules.getPlayerById(1).getDisplay().getCards().size() == 2);
+		
+		assertTrue(rules.getPlayerById(2).getDisplay().contains("Yellow 4"));
+		//assertTrue(rules.getPlayerById(2).getDisplay().getCards().size() == 1);
+		
+		assertFalse(rules.getPlayerById(3).getDisplay().contains("Yellow 3"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Squire 2"));
+		assertTrue(rules.getPlayerById(3).getDisplay().contains("Squire 3"));
+		//assertTrue(rules.getPlayerById(3).getDisplay().getCards().size() == 2);
+		
+		assertTrue(!rules.getPlayerById(2).getHand().contains("Adapt"));
+		toSend.clear();
+		
+		rules.roundCleanup();		
 	}
 	
 	@Test
