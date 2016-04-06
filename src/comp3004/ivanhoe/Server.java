@@ -214,7 +214,7 @@ public class Server{
 								CardColour c = null;
 								do {
 									c = getTokenChoice(false);
-								} while (rules.getPlayerById(threadID).removeToken(c)); //may need validation
+								} while (!rules.getPlayerById(threadID).removeToken(c)); //may need validation
 							}
 							//when its winner's turn, they'll get a choice of token when their loop hits code
 							long winner = rules.withdrawCleanup(threadID);
@@ -340,7 +340,7 @@ public class Server{
 							do {			
 								c = getTokenChoice(true);
 								print("Got token of colour " + c + " from thread " + threadID + ".");
-							} while(rules.giveToken(threadID, c));
+							} while(!rules.giveToken(threadID, c));
 						} else {
 							//give current tournament colour token
 							rules.giveToken(threadID, rules.getTournamentColour());
