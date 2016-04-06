@@ -70,7 +70,7 @@ public class ClientGUI extends Client{
 	private Card selectedCard = null;
 	private boolean ivanhoeTimer = false;
 	
-	private static final String ImageDirectory = (System.getProperty("user.dir") + "/src/Images/");
+	private static final String ImageDirectory = (System.getProperty("user.dir") + "/Images/");
 
 	/**
 	 * Launch the application.
@@ -1079,7 +1079,7 @@ public class ClientGUI extends Client{
 		String title = "Player " + msgArray[1] + " played an action card";
 		
 		//wait 6 seconds to send no
-		Timer t = new Timer(6000, new ActionListener() {
+		Timer t = new Timer(9500, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ivanhoeTimer = true;
 				send(false);

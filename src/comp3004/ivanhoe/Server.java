@@ -288,7 +288,7 @@ public class Server{
 										List<Object> event = null;
 										try {
 											sleep(200);
-											event = eventQueue.poll(7000, TimeUnit.MILLISECONDS);
+											event = eventQueue.poll(10000, TimeUnit.MILLISECONDS);
 										} catch (InterruptedException e) { e.printStackTrace(); }
 										Boolean ivanhoed = (Boolean) handleEvent(event);
 										if (ivanhoed != null && ivanhoed) { 
@@ -504,7 +504,7 @@ public class Server{
 					Long casterID = (Long) event.get(0);
 					Object bool = null;
 					try {
-						client.setSoTimeout(6900);
+						client.setSoTimeout(9900);
 						bool = get();
 						client.setSoTimeout(0);
 					} catch (SocketException e) {
