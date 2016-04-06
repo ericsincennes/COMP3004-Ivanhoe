@@ -178,10 +178,7 @@ public class RulesEngine {
 			colourChosen = false;
 			return false;
 		}
-		for(Player p : playersList){
-			p.getDisplay().setColour(colour);
-		}
-		TournamentColour = colour;
+		setTournamentColour(colour);
 		colourChosen = true;
 		return true;
 	}
@@ -303,7 +300,7 @@ public class RulesEngine {
 	 */
 	public synchronized boolean playCard(int posinhand, Long id){
 		Player p = players.get(id);
-		if (p.isShielded() && p.hasPlayedToBoard) return false;
+		if (p.isStunned() && p.hasPlayedToBoard) return false;
 		Card c;
 		//Check if the card is in the players hand
 		if(posinhand > -1 && posinhand < p.getHandSize()){
@@ -914,6 +911,16 @@ public class RulesEngine {
 	
 	public Card.CardColour getTournamentColour() {
 		return TournamentColour;
+	}
+	
+	/**
+	 * Sets tournament colour, and changes colour of all displays to match
+	 */
+	public void setTournamentColour(CardColour colour) {
+		for(Player p : playersList){
+			p.getDisplay().setColour(colour);
+		}
+		TournamentColour = colour;
 	}
 	
 	public Deck getDeck(){
