@@ -570,14 +570,14 @@ public class RulesEngine {
 				
 				for (Player p : playersList) {
 					if (p.getPlaying()) {
-						if (!p.isShielded() && p.getDisplay().getCards().size() > 0) {
+						if (!p.isShielded() && p.getDisplay().getCards().size() > 1) {
 							for (Card c : p.getDisplay().getCards()) {
 								dupes.add(((ColourCard)c).getValue());
 							}
 							if (dupes.size() < p.getDisplay().getCards().size()) {
-								return "";
-							} else {
 								return "Player " + caster.getID() + " has played Adapt";
+							} else {
+								return "";
 							}
 						}
 					}
