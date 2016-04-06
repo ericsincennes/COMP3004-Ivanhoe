@@ -228,6 +228,7 @@ public class RulesEngine {
 	public boolean startTurn(long id){
 		Player p = getPlayerById(id);
 		if(p.getPlaying()){
+			p.hasPlayedToBoard = false;
 			p.addCard(deck.draw());
 			return true;
 		} else {
@@ -323,12 +324,7 @@ public class RulesEngine {
 			p.hasPlayedToBoard = true;
 			p.playColourCard(posinhand);
 			return true;
-		} else if(c != null && c.cardType == CardType.Action){
-			//if card is an action card
-			
-			p.playActionCard(posinhand);
-			return true;
-		}
+		} 
 		return false;
 	}
 	
