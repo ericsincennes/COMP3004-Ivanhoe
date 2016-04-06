@@ -363,7 +363,16 @@ public class RulesEngine {
 	
 	public boolean validateAdaptTargets(HashMap<Long, List<Integer>> toKeep) {
 		if (toKeep == null || toKeep.size() == 0) return false;
-		return false;
+		for (Long pid : toKeep.keySet()) {
+			int count[] = new int[7];
+			for (Integer in : toKeep.get(pid)) {
+				count[((ColourCard)getPlayerById(pid).getDisplay().getCard(in)).getValue()-1]++;
+			}
+			for (int i=0; i<7; i++) {
+				if (count[i] > 1) return false;
+			}
+		}
+		return true;
 	}
 	
 		/**
@@ -620,7 +629,7 @@ public class RulesEngine {
 		String chosen = null;
 		CardColour colour = null;
 		int choiceIndex = 0; //used for outwit
-		ArrayList<ArrayList<Integer>> keeping = null; //used for Adapt
+		HashMap<Long,List<Integer>> keeping = null; //used for Adapt
 		ArrayList<Card> temp = new ArrayList<Card>();
 		int cardValue;
 				
@@ -633,8 +642,8 @@ public class RulesEngine {
 				colour = (CardColour) o;
 			} else if (o.getClass().equals(int.class)) {
 				choiceIndex = (int) o;
-			} else if (o.getClass().equals(ArrayList.class)){
-				keeping.add((ArrayList<Integer>) o);
+			} else if (o instanceof HashMap<?,?>){
+				keeping = (HashMap<Long,List<Integer>>) o;
 			}
 		}
 		
@@ -769,18 +778,7 @@ public class RulesEngine {
 			
 			//This loop assumes that the order of lists in keeping
 			//matches the correct player in players list
-			for(ArrayList<Integer> intArray : keeping ){
-				for(Integer index: intArray){
-					Player p = playersList.get(keeping.indexOf(intArray));
-					List<Card> cards = p.getDisplay().getCards();
-					for(Card x: cards){
-						if(cards.indexOf(x) == index){
-							temp.add(p.getDisplay().remove(index));
-						}
-					}
-				}
-			}
-			
+				
 			for(Card y : temp){
 				deck.addToDiscard(y);
 			}
