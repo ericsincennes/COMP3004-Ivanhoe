@@ -570,6 +570,8 @@ public class ActionCardTest {
 		toSend.add(keeping);
 		if (rules.validateActionCard(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend).length() > 0) {
 			rules.actionHandler(rules.getPlayerById(2).getHandSize()-1, rules.getPlayerById(2), toSend);
+		} else {
+			fail("Adapt should be playable.");
 		}
 		
 		assertTrue(rules.getPlayerById(1).getDisplay().contains("Yellow 3"));
