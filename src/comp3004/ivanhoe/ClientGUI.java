@@ -863,9 +863,9 @@ public class ClientGUI extends Client{
 						targets.add(s);
 						
 						//get your hand as choices
-						choices = new String[theBoard.hand.size()];
-						for(Card a : theBoard.hand){
-							choices[theBoard.hand.indexOf(a)] = a.getCardName();
+						choices = new String[theBoard.boards.get(0).size()];
+						for(Card a : theBoard.boards.get(0)){
+							choices[theBoard.boards.get(0).indexOf(a)] = a.getCardName();
 						}
 						
 						s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a card to give.","Card to give", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
