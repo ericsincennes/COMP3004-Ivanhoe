@@ -136,8 +136,8 @@ public class Server{
 			sendBoardState();
 			print(threadID + ": isRunning");
 			while(isRunning){
-				if (rules.getPlayerList().size() == 1 || rules.gameWinner() != null) {
-					if (rules.getPlayerList().size() == 1 || rules.gameWinner().getID() == threadID) {
+				if (rules.gameWinner() != null) {
+					if (rules.gameWinner().getID() == threadID) {
 						//send winner msg to client
 						List<Object> eventmsg = new ArrayList<Object>(2);
 						eventmsg.add(Long.valueOf(threadID));
