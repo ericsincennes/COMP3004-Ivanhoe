@@ -83,6 +83,7 @@ public class Player {
 		Card card = hand.getCardbyIndex(posinhand);
 		if (card.getCardName().equals("Shield")) {
 			display.addCard(card);
+			hand.removeByIndex(posinhand);
 			return null;
 		}
 		getHand().removeByIndex(posinhand);
