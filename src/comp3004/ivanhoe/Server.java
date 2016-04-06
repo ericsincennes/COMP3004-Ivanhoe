@@ -592,7 +592,7 @@ public class Server{
 		 */
 		private boolean send(Object o){
 			try {
-				if (!(o instanceof BoardState) || (o instanceof Integer && ((Integer)o).equals(101)))
+				if (loggable(o))
 					log.logmsg("Thread " + threadID + " sending a " + o.getClass().getName() + " " + o.toString());
 				out.writeObject(o);
 				out.flush();
@@ -600,6 +600,17 @@ public class Server{
 			} catch (IOException e) {
 				rules.removePlayer(threadID);
 				this.isRunning = false;
+				return false;
+			}
+			return true;
+		}
+		
+		private boolean loggable(Object o) {
+			if ((o instanceof BoardState)) {
+				return false;
+			} else if (((Integer)o).equals(101)) {
+				return false;
+			} else if (threadID != rules.getPlayerList().get(0).getID() && ((Integer)o).equals(150)) {
 				return false;
 			}
 			return true;
