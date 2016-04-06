@@ -223,8 +223,10 @@ public class Server{
 							//Client withdrawing
 							print("Got withdraw from thread " + threadID + ".");
 							if (rules.withdrawPlayer(threadID)) {
-								CardColour c = getTokenChoice();
-								rules.getPlayerById(threadID).removeToken(c); //may need validation
+								CardColour c = null;
+								do {
+									c = getTokenChoice();
+								} while (rules.getPlayerById(threadID).removeToken(c)); //may need validation
 							}
 							//when its winner's turn, they'll get a choice of token when their loop hits code
 							long winner = rules.withdrawCleanup(threadID);
@@ -353,9 +355,11 @@ public class Server{
 						sendEvent(eventmsg);
 						if(rules.getTournamentColour() == CardColour.Purple){
 							//if purple tournament give token of choice
-							CardColour c = getTokenChoice();
+							CardColour c = null;
+							do {
+							c = getTokenChoice();
 							print("Got token of colour " + c + " from thread " + threadID + ".");
-							rules.giveToken(threadID, c);
+							} while(rules.giveToken(threadID, c));
 						} else {
 							//give current tournament colour token
 							rules.giveToken(threadID, rules.getTournamentColour());
