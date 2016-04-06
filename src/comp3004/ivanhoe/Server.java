@@ -21,12 +21,13 @@ public class Server{
 	private ServerSocket 	listeningSocket;
 	private BlockingQueue<List<Object>> eventQueue; //interthread communication - active thread will never poll but will be only sender
 											  //except in the case of ivanhoe...
-	//private Log				log = new Log(this.getClass().getName(), "ServerLog");
+	private Log log;				//log = new Log(this.getClass().getName(), "ServerLog");
 	private RulesEngine		rules;
 
 
 	public Server(){
-		Scanner in = new Scanner(System.in);		
+		Scanner in = new Scanner(System.in);
+		log = new Log(this.getClass().getName(), "ServerLog");
 		port = 2244;
 
 		while(numplayers < 2 || numplayers > 5){
@@ -592,7 +593,7 @@ public class Server{
 				rules.removePlayer(threadID);
 				this.interrupt();
 			}
-			print("Received a " + o.getClass().getName() + " " + o.toString() + " from thread " + threadID);
+			log.logmsg("Received a " + o.getClass().getName() + " " + o.toString() + " from thread " + threadID);
 			return o;
 		}
 
@@ -603,7 +604,7 @@ public class Server{
 		 */
 		private boolean send(Object o){
 			try {
-				print("Thread " + threadID + " sending a " + o.getClass().getName() + " " + o.toString());
+				log.logmsg("Thread " + threadID + " sending a " + o.getClass().getName() + " " + o.toString());
 				out.writeObject(o);
 				out.flush();
 				out.reset();
