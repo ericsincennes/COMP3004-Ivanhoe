@@ -1069,6 +1069,10 @@ public class ClientGUI extends Client{
 		JOptionPane.showMessageDialog(frmMain.getContentPane(), message, "Action card played", JOptionPane.PLAIN_MESSAGE);
 	}
 	
+	private void handleGameWinner(){
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), "You have won the game!" , "Tournament Winner", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	public void handleGetIvanhoeChoice() {
 		String message = (String) get();
 		String[] msgArray = new String(message).split(" ");
@@ -1202,6 +1206,9 @@ public class ClientGUI extends Client{
 				break;
 			case Optcodes.ClientGetAdapt:
 				handleClientGetAdapt();
+				break;
+			case Optcodes.GameWinner:
+				handleGameWinner();
 				break;
 			default: 
 				new Exception("Unexpected Value");
