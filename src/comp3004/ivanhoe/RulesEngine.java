@@ -252,6 +252,7 @@ public class RulesEngine {
 	public boolean withdrawPlayer(Long id){
 		Player p = getPlayerById(id);
 		p.setPlaying(false);
+		p.hasPlayedToBoard = false;
 		boolean hasMaiden = p.getDisplay().contains("Maiden");
 		List<Card> toDiscard = p.getDisplay().clearBoard();
 		for (Card c : toDiscard) {
@@ -301,6 +302,7 @@ public class RulesEngine {
 	 */
 	public synchronized boolean playCard(int posinhand, Long id){
 		Player p = players.get(id);
+		if (p.isShielded() && p.hasPlayedToBoard) return false;
 		Card c;
 		//Check if the card is in the players hand
 		if(posinhand > -1 && posinhand < p.getHandSize()){
@@ -318,14 +320,13 @@ public class RulesEngine {
 		
 		if(b){
 			//if card is a valid colour card
+			p.hasPlayedToBoard = true;
 			p.playColourCard(posinhand);
-			notifyAll();
 			return true;
 		} else if(c != null && c.cardType == CardType.Action){
 			//if card is an action card
 			
 			p.playActionCard(posinhand);
-			notifyAll();
 			return true;
 		}
 		return false;
@@ -858,6 +859,7 @@ public class RulesEngine {
 	public boolean endTurn(long id){
 		if(canEndTurn(id)){
 			highestScore = players.get(id).getDisplay().calculatePoints();
+			players.get(id).hasPlayedToBoard = false;
 			Collections.rotate(playersList, -1);
 			return true;
 		}

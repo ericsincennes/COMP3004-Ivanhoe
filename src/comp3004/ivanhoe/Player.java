@@ -15,6 +15,7 @@ public class Player {
 	private HashMap<CardColour, Integer> tokens;
 	private long id;
 	private boolean isPlaying = false;
+	public boolean hasPlayedToBoard = false;
 	
 	
 	public Player(){
