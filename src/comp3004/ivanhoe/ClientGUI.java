@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneLayout;
+import javax.swing.Timer;
 import javax.swing.JOptionPane;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,6 +17,8 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -59,6 +62,7 @@ public class ClientGUI extends Client{
 	private JScrollPane actionCardPane;
 	
 	private Card selectedCard = null;
+	private boolean ivanhoeTimer = false;
 	
 	private static final String ImageDirectory = (System.getProperty("user.dir") + "/src/Images/");
 
@@ -801,7 +805,83 @@ public class ClientGUI extends Client{
 			//and place it face up in front of yourself. 
 			//This may include the SHIELD and STUNNED cards.
 			
-			//TODO
+			//get list of opponents for JOptionPane
+			choices =  new String[theBoard.players.size()-1];
+			for(Long l : theBoard.players){
+				if(theBoard.players.indexOf(l) != 0){
+					choices[theBoard.players.indexOf(l)-1] = "Opponent " + l;
+				}
+			}
+			
+			targets = new ArrayList<Object>();
+			cancelClicked = false;
+			while(!cancelClicked){
+				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+			
+				try {
+					x = Integer.parseInt(s);
+				} catch (NumberFormatException e){ }
+
+				if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
+				
+				if (!cancelClicked && (s != null) && (s.length() > 0)) {
+					//if opponent selected get index of opponent
+					x = theBoard.players.indexOf(Arrays.asList(choices).indexOf(s) + 1);
+					
+					//add to targets
+					targets.add(theBoard.players.get(x));
+					
+					for(List<Card> l : theBoard.boards){
+						if(theBoard.boards.indexOf(l) == x){
+							choices = new String[l.size()];
+							for(Card a : l){
+								choices[l.indexOf(a)] = a.getCardName();
+							}
+						}
+					}
+					s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target Card.","Remove card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+					
+					try {
+						x = Integer.parseInt(s);
+					} catch (NumberFormatException e){ }
+
+					if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
+					
+					if (!cancelClicked && (s != null) && (s.length() > 0)) {
+						//if card was selected add card to targets
+						targets.add(s);
+						
+						//get your hand as choices
+						choices = new String[theBoard.hand.size()];
+						for(Card a : theBoard.hand){
+							choices[theBoard.hand.indexOf(a)] = a.getCardName();
+						}
+						
+						s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a card to give.","Card to give", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+						
+						try {
+							x = Integer.parseInt(s);
+						} catch (NumberFormatException e){ }
+
+						if(x == JOptionPane.CANCEL_OPTION){ cancelClicked = true; }
+
+						if (!cancelClicked && (s != null) && (s.length() > 0)) { 
+							//if card from hand selected get index of card
+							x = Arrays.asList(choices).indexOf(s);
+							
+							//add index to targets
+							targets.add(x);
+							break;
+						}
+					}
+				}
+			}
+			
+			if(!cancelClicked){
+				send(theBoard.hand.indexOf(selectedCard));
+				send(targets);
+			}
+			
 			break;
 		case "Shield":
 			send(theBoard.hand.indexOf(selectedCard));
@@ -817,7 +897,10 @@ public class ClientGUI extends Client{
 				choices[i] = "Opponent " + i;
 			}
 			
-			while (true){ 
+			targets = new ArrayList<Object>();
+			cancelClicked = false;
+			
+			while (!cancelClicked){ 
 				s = (String) JOptionPane.showInputDialog(frmMain.getContentPane() ,"Choose a target opponent.","Remove card", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 				
 				try {
@@ -828,7 +911,7 @@ public class ClientGUI extends Client{
 				
 				if (!cancelClicked && (s != null) && (s.length() > 0)) { 
 					x = Arrays.asList(choices).indexOf(s) + 1;
-					targets = new ArrayList<Object>();
+					
 					targets.add(theBoard.players.get(x));
 					break;
 				}
@@ -969,13 +1052,38 @@ public class ClientGUI extends Client{
 	
 	public void handleOppActionCardPlayed() {
 		String message = (String) get();
-		//TODO display message of what action card has been played
+		
+		//display message of what action card has been played
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), message, "Action card played", JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	public void handleGetIvanhoeChoice() {
 		String message = (String) get();
-		//TODO display actioncard played, and ask user if they want to ivanhoe
-		//7 seconds at most
+		String[] msgArray = new String(message).split(" ");
+		String title = "Player " + msgArray[1] + " played an action card";
+		
+		//wait 6 seconds to send no
+		Timer t = new Timer(6000, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ivanhoeTimer = true;
+				send(false);
+            }
+		});
+		t.start();
+		
+		int x = JOptionPane.showConfirmDialog(frmMain.getContentPane(), message + "\nWould you like to use Ivanhoe?\n Answer in ", title, JOptionPane.YES_NO_OPTION);
+		if(x == JOptionPane.YES_OPTION){
+			if(!ivanhoeTimer){
+				t.stop();
+				send(true);
+			}
+		} else if(x == JOptionPane.CLOSED_OPTION || x == JOptionPane.NO_OPTION){
+			if(!ivanhoeTimer){
+				t.stop();
+				send(false);
+			}
+		}
+		ivanhoeTimer = false;
 	}
 	
 	@Override
