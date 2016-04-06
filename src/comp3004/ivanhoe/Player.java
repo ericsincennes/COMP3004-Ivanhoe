@@ -131,19 +131,27 @@ public class Player {
 	/**
 	 * Adds a token to the players collection
 	 * @param colour Colour of the token
+	 * @return success status
 	 */
-	public void recieveToken(CardColour colour){
-		if(tokens.containsKey(colour)){
+	public boolean recieveToken(CardColour colour){
+		if(tokens.containsKey(colour) && tokens.get(colour) == 1){
 			tokens.put(colour, 1);
+			return true;
+		} else {
+			return false;
 		}
 	}
 	/**
 	 * Remove a token from the player
 	 * @param colour
+	 * @return success status
 	 */
-	public void removeToken(CardColour colour){
+	public boolean removeToken(CardColour colour){
 		if(tokens.containsKey(colour) && tokens.get(colour) == 1){
 			tokens.put(colour, 0);
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
