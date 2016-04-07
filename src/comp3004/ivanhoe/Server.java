@@ -539,7 +539,7 @@ public class Server{
 					Long casterID = (Long) event.get(0);
 					Object bool = null;
 					bool = get();
-					if (bool instanceof Boolean) {
+					if (bool instanceof Boolean && ((Boolean) bool).booleanValue()) {
 						log.logmsg("Thread " + threadID + " played Ivanhoe against last action card.");
 						List<Object> ivanhoeEvent = new ArrayList<Object>();
 						ivanhoeEvent.add(threadID);
