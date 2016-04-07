@@ -349,6 +349,9 @@ public class RulesEngine {
 				return true;
 			//Support cards don't care about tournament colour
 			} else if(c.getCardType() == CardType.Supporter){
+				if (c.getCardName().equals("Maiden") && p.getDisplay().contains("Maiden")) {
+					return false;
+				}
 				return true;
 			}
 		}
