@@ -69,8 +69,9 @@ public class Player {
 	public void playColourCard(int posinhand){
 		Card c = hand.getCardbyIndex(posinhand);
 		if(c.cardType == CardType.Colour || c.cardType == CardType.Supporter){
-			display.addCard(c);
-			getHand().removeByIndex(posinhand);
+			if(display.addCard(c)) {
+				getHand().removeByIndex(posinhand);	
+			}
 		}
 	}
 	
