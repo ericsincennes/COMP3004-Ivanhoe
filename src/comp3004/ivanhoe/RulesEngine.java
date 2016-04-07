@@ -937,6 +937,10 @@ public class RulesEngine {
 		return deck;
 	}
 	
+	public void setDeck(Deck d){
+		deck = d;
+	}
+	
 	/**
 	 * checks if any opponents have ivanhoe
 	 * @param ID player that's checking
