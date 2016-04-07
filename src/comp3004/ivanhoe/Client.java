@@ -29,13 +29,22 @@ public class Client {
 		p.mainLoop();
 	}
 
+	/**
+	 * returns true if it is currently the players turn
+	 * @return boolean
+	 */
 	public boolean isActiveTurn() {
 		return isActiveTurn;
 	}
 
-	public Client(){
-	}
+	public Client(){}
 
+	/**
+	 * Connects the client to a specified ip address and port 
+	 * @param IPaddr string from which an ip is parsed
+	 * @param port integer port
+	 * @return true if connect was successful
+	 */
 	public boolean connect(String IPaddr, int port){
 		InetAddress host;
 
@@ -56,6 +65,10 @@ public class Client {
 		}
 	}
 
+	/**
+	 * The main loop of the client function that calls all other functions as needed.
+	 * Waits for an optcode from the server and calls a specified function to handle the optcode
+	 */
 	protected void mainLoop(){
 		playerNum = (int) get();	//get player number from server
 
@@ -106,11 +119,17 @@ public class Client {
 	}
 	
 
-
+	/**
+	 * The handler function for optcode NonActiveTurn
+	 */
 	protected void handleNonActiveTurn() {
 		isActiveTurn = false;
 	}
-
+	
+	/**
+	 * The handler function for optcode ActiveTurn
+	 * Currently overridden by clientGUI
+	 */
 	protected void handleActiveTurn() {
 		// TODO Auto-generated method stub
 		isActiveTurn = true;
@@ -143,6 +162,7 @@ public class Client {
 	}
 
 	/**
+	 * handler for optcode ActionCardTargets.
 	 * Gets the target for action cards
 	 */
 	protected void getActionCardTargets(){
@@ -157,6 +177,10 @@ public class Client {
 		}
 	}
 	
+	/**
+	 * handler for optcode TournamentColour
+	 * Changes the current tournament colour to one specified by the server
+	 */
 	protected void setColour() {
 		Object o = get();
 		print("setColour() getting " + o.getClass().getName() + " " + o.toString());
@@ -165,8 +189,9 @@ public class Client {
 	
 	
 	/**
-	 * Gets input of what cards are goint to be sent to the server to be played
-	 * If card is an action card then gets input of the card's targets 
+	 * Handler for optcode ClientGetCardsToBePlayed.
+	 * Gets input of what cards are goint to be sent to the server to be played.
+	 * If card is an action card then gets input of the card's targets.
 	 */
 	protected void sendCardsToBePlayed(){
 		int choice = -1;
@@ -190,7 +215,8 @@ public class Client {
 	}
 	
 	/**
-	 * Gets the state of the board from the server
+	 * Handler for optcode ClientUpdateBoardState.
+	 * Gets the state of the board from the server and updates.
 	 */
 	protected void handleUpdateBoardState(){
 		Object o = get();
@@ -253,8 +279,8 @@ public class Client {
 	}
 	
 	/**
+	 * Handler for optcode ClientGetColourChoice.
 	 * Gets the player input for tournament colour
-	 * @return Card.CardColour
 	 */
 	protected void handleGetTournamentColour(){
 		int choice = -1;

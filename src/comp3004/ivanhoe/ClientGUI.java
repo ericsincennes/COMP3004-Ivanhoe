@@ -68,7 +68,6 @@ public class ClientGUI extends Client{
 	private JScrollPane actionCardPane;
 	
 	private Card selectedCard = null;
-	private boolean ivanhoeTimer = false;
 	
 	private static final String ImageDirectory = (System.getProperty("user.dir") + "/Images/");
 
@@ -1102,28 +1101,13 @@ public class ClientGUI extends Client{
 		String[] msgArray = new String(message).split(" ");
 		String title = "Player " + msgArray[1] + " played an action card";
 		
-		//wait 6 seconds to send no
-		Timer t = new Timer(9900, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ivanhoeTimer = true;
-				send(false);
-            }
-		});
-		t.start();
-		
 		int x = JOptionPane.showConfirmDialog(frmMain.getContentPane(), message + "\nWould you like to use Ivanhoe?\n Answer in 10s.", title, JOptionPane.YES_NO_OPTION);
+		
 		if(x == JOptionPane.YES_OPTION){
-			if(!ivanhoeTimer){
-				t.stop();
-				send(true);
-			}
+			send(true);
 		} else if(x == JOptionPane.CLOSED_OPTION || x == JOptionPane.NO_OPTION){
-			if(!ivanhoeTimer){
-				t.stop();
-				send(false);
-			}
+			send(false);
 		}
-		ivanhoeTimer = false;
 	}
 	
 	private void handleClientGetAdapt(){

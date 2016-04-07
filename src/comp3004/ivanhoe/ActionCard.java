@@ -1,9 +1,6 @@
 package comp3004.ivanhoe;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**\
+/**
  * Representation of an Action Card in the game Ivanhoe
  * 
  */
