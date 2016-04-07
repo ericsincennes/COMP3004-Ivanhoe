@@ -2,6 +2,11 @@ package comp3004.ivanhoe;
 
 import java.io.Serializable;
 
+/**
+ * 
+ * 
+ *
+ */
 public abstract class Card implements Serializable{
 	
 	public enum CardType {

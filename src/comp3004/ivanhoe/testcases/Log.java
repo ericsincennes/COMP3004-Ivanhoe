@@ -15,7 +15,7 @@ public class Log {
 		try {  
 
 			//configure the logger  
-			fh = new FileHandler(LogDirectory + classname + ".log");
+			fh = new FileHandler(classname + ".log");
 			logger.addHandler(fh);
 			SimpleFormatter formatter = new SimpleFormatter();  
 			fh.setFormatter(formatter);
