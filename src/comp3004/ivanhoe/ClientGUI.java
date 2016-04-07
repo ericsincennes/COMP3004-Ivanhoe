@@ -1096,7 +1096,7 @@ public class ClientGUI extends Client{
 		String[] msgArray = new String(message).split(" ");
 		String title = "Player " + msgArray[1] + " played an action card";
 		
-		int x = JOptionPane.showConfirmDialog(frmMain.getContentPane(), message + "\nWould you like to use Ivanhoe?\n Answer in 10s.", title, JOptionPane.YES_NO_OPTION);
+		int x = JOptionPane.showConfirmDialog(frmMain.getContentPane(), message + "\nWould you like to use Ivanhoe?", title, JOptionPane.YES_NO_OPTION);
 		
 		if(x == JOptionPane.YES_OPTION){
 			send(true);
