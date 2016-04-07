@@ -236,7 +236,7 @@ public class Server{
 						}
 						else {
 							Card cardChosen = rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex);
-							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
+							log.logmsg("Thread " + threadID + ": attempting to play card " + cardIndex + ": " + 
 									cardChosen.getCardName());
 							if(cardChosen.getCardType() == CardType.Action){
 								List<Object> targets = null;
@@ -246,6 +246,7 @@ public class Server{
 								}
 								if (targets == null) {
 									send(Optcodes.InvalidCard);
+									log.logmsg("Thread " + threadID + ": Invalid targets for " + cardChosen.getCardName());
 									sendBoardState();
 									continue;
 								}
@@ -305,9 +306,13 @@ public class Server{
 									
 									rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets);
 									send(Optcodes.SuccessfulCardPlay);
+									log.logmsg("Thread " + threadID + ": successfully played action card " + cardIndex + ": " + 
+											cardChosen.getCardName());
 								}
 								else {
 									send(Optcodes.InvalidCard);
+									log.logmsg("Thread " + threadID + ": invalid play action card " + cardIndex + ": " + 
+											cardChosen.getCardName());
 								}
 							}
 							else if (cardChosen.getCardType() == CardType.Ivanhoe) {
@@ -316,9 +321,13 @@ public class Server{
 							else {
 								if (rules.playCard(cardIndex, threadID)) {
 									send(Optcodes.SuccessfulCardPlay);
+									log.logmsg("Thread " + threadID + ": successfully played value card " + cardIndex + ": " + 
+											cardChosen.getCardName());
 								}
 								else {
 									send(Optcodes.InvalidCard);
+									log.logmsg("Thread " + threadID + ": invalid play value card " + cardIndex + ": " + 
+											cardChosen.getCardName());
 								}
 							}
 						}
