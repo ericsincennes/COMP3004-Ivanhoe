@@ -6,6 +6,10 @@ import java.util.List;
 
 import comp3004.ivanhoe.Card.CardColour;
 
+/**
+ * Represents the boardstate one player can see. Used to give this info to the game client.
+ *
+ */
 public final class BoardState implements Serializable{
 	
 	public long owner; //player by threadID
