@@ -35,8 +35,8 @@ public class Server{
 			numplayers = in.nextInt();
 		}
 		in.close();
-		//rules = new RulesEngine(numplayers);
-		rules = RulesEngine.testRuleEngine(numplayers);
+		rules = new RulesEngine(numplayers);
+		//rules = RulesEngine.testRuleEngine(numplayers);
 		eventQueue = new LinkedBlockingQueue<List<Object>>();
 		connectAndRecieve(numplayers);
 	}
