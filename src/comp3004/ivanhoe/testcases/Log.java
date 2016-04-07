@@ -7,7 +7,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import com.sun.jmx.snmp.Timestamp;
 
 public class Log {
 	Logger logger;
@@ -15,12 +14,12 @@ public class Log {
 	private String LogDirectory = (System.getProperty("user.dir") + "/Logs/");
 
 	public Log(String loggername, String classname){
-		String timeStamp = new SimpleDateFormat("dd.HH.mm.ss").format(new Date());
+		String timeStamp = new SimpleDateFormat("yyyy-MM-dd.HH.mm.ss").format(new Date());
 		logger = Logger.getLogger(loggername);
 		try {  
 
 			//configure the logger  
-			fh = new FileHandler(classname +"_" + timeStamp + ".log");
+			fh = new FileHandler(LogDirectory + classname +"_" + timeStamp + ".log");
 			logger.addHandler(fh);
 			SimpleFormatter formatter = new SimpleFormatter();  
 			fh.setFormatter(formatter);

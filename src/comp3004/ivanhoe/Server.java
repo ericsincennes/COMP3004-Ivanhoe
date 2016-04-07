@@ -547,6 +547,8 @@ public class Server{
 						ivanhoeEvent.add(bool);
 						ivanhoeEvent.add(event.get(0));
 						sendEvent(ivanhoeEvent);
+					} else {
+						log.logmsg("Thread " + threadID + " didn't Ivanhoe last action card.");
 					}
 				} else {
 					send(Optcodes.ClientActionCardPlayed);
