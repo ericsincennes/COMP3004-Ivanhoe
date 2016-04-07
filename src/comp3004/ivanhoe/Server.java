@@ -28,7 +28,8 @@ public class Server{
 	public Server(){
 		Scanner in = new Scanner(System.in);
 		log = new Log(this.getClass().getName(), "ServerLog");
-		port = 2244;
+		print("Enter a port for the game server: ");
+		port = in.nextInt();
 
 		while(numplayers < 2 || numplayers > 5){
 			print("Enter number of players to play (between 2 and 5)");
