@@ -6,13 +6,15 @@ import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Scanner;
 
 import comp3004.ivanhoe.Card.CardColour;
 import comp3004.ivanhoe.Card.CardType;
 import comp3004.ivanhoe.Optcodes;
 
+/**
+ * Representation of a player in the game Ivanhoe.
+ */
 public class Client {
 	protected Socket socket;
 	protected ObjectInputStream in;
@@ -256,7 +258,11 @@ public class Client {
 			System.out.println("");
 		}
 	}		
-
+	
+	/**
+	 * Handler for optcode ClientWinTokenChoice
+	 * if the last tournament was purple then gets input for token choice from client.
+	 */
 	protected void handleTokenChoice(){
 		int choice = -1;
 
@@ -333,14 +339,26 @@ public class Client {
 		return true;
 	}
 
+	/**
+	 * Convenience function to avoid typing system.out.println
+	 * @param s String to be printed
+	 */
 	protected void print(String s){
 		System.out.println(s);
 	}
 	
+	/**
+	 * Convenience function to avoid typing system.out.print
+	 * @param s String to be printed
+	 */
 	protected void printlist(String s){
 		System.out.print(s);
 	}
-
+	
+	/**
+	 * Gets the player number of the client
+	 * @return integer
+	 */
 	protected int getPlayerNum(){
 		return playerNum;
 	}
