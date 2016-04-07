@@ -180,13 +180,14 @@ public class Server{
 						if (rules.canStartTournament(threadID)) {
 							CardColour c;
 							c = GetTournamentColourFromClient();
-							print("Got tourney colour |" + c + "| from thread " + threadID + ".");
+							log.logmsg("Thread " + threadID + ": got tourney colour " + c + ".");
 							while(!rules.initializeTournamentColour(threadID, c)) {
 								//send some message about bad colour input
 								c = GetTournamentColourFromClient();
 							}	
 
 						} else {
+							log.logmsg("Thread " + threadID + ": failed to start a tournament.");
 							List<Object> eventmsg = new ArrayList<Object>(2);
 							eventmsg.add(Long.valueOf(threadID));
 							eventmsg.add("failstart");
@@ -209,7 +210,7 @@ public class Server{
 						
 						if(cardIndex == -2){ 
 							//Client withdrawing
-							print("Got withdraw from thread " + threadID + ".");
+							log.logmsg("Thread " + threadID + ": withdrawn.");
 							if (rules.withdrawPlayer(threadID)) {
 								CardColour c = null;
 								do {
@@ -225,8 +226,8 @@ public class Server{
 							break;
 						} else if(cardIndex == -3) { 
 							//end turn optcode received
-							print("Got end turn from thread " + threadID + ".");
 							if (rules.endTurn(threadID)) {
+								log.logmsg("Thread " + threadID + ": ended turn.");
 								List<Object> eventmsg = new ArrayList<Object>(2);
 								eventmsg.add(Long.valueOf(threadID));
 								eventmsg.add("endturn");
@@ -240,6 +241,7 @@ public class Server{
 							}
 							
 						} else if(cardIndex == -1){
+							log.logmsg("Thread " + threadID + ": invalid card.");
 							send(Optcodes.InvalidCard);
 						}
 						else {
@@ -300,7 +302,7 @@ public class Server{
 										List<Object> event = null;
 										try {
 											sleep(200);
-											event = eventQueue.poll(10000, TimeUnit.MILLISECONDS);
+											event = eventQueue.take();
 										} catch (InterruptedException e) { e.printStackTrace(); }
 										Boolean ivanhoed = (Boolean) handleEvent(event);
 										if (ivanhoed != null && ivanhoed) { 
@@ -536,19 +538,9 @@ public class Server{
 					send((String) event.get(2));
 					Long casterID = (Long) event.get(0);
 					Object bool = null;
-					try {
-						client.setSoTimeout(9900);
-						bool = get();
-						client.setSoTimeout(0);
-					} catch (SocketException e) {
-						e.printStackTrace();
-					}
+					bool = get();
 					if (bool instanceof Boolean) {
-						try {
-							sleep(100);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+						log.logmsg("Thread " + threadID + " played Ivanhoe against last action card.");
 						List<Object> ivanhoeEvent = new ArrayList<Object>();
 						ivanhoeEvent.add(threadID);
 						ivanhoeEvent.add("Ivanhoe");
