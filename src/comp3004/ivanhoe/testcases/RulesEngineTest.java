@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import comp3004.ivanhoe.*;
-import comp3004.ivanhoe.ActionCard;
 import comp3004.ivanhoe.Card.CardColour;
 
 public class RulesEngineTest {
@@ -16,7 +15,12 @@ public class RulesEngineTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		rules = RulesEngine.testRuleEngine(3);
+		Deck td = Deck.createDeck(Deck.createDiscard());
+		for (int i=0; i<100; i++) {
+			td.addCard(new SupporterCard(2));
+		}
+		rules = new RulesEngine(3);
+		rules.setDeck(td);
 		rules.registerThread(1);
 		rules.registerThread(2);
 		rules.registerThread(3);

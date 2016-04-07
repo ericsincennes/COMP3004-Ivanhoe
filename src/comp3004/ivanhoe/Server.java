@@ -216,6 +216,10 @@ public class Server{
 									c = getTokenChoice(false);
 								} while (!rules.getPlayerById(threadID).removeToken(c)); //may need validation
 							}
+							List<Object> eventmsg = new ArrayList<Object>(2);
+							eventmsg.add(Long.valueOf(threadID));
+							eventmsg.add("withdraw");
+							sendEvent(eventmsg);
 							//when its winner's turn, they'll get a choice of token when their loop hits code
 							long winner = rules.withdrawCleanup(threadID);
 							break;
@@ -223,6 +227,10 @@ public class Server{
 							//end turn optcode received
 							print("Got end turn from thread " + threadID + ".");
 							if (rules.endTurn(threadID)) {
+								List<Object> eventmsg = new ArrayList<Object>(2);
+								eventmsg.add(Long.valueOf(threadID));
+								eventmsg.add("endturn");
+								sendEvent(eventmsg);
 								send(Optcodes.ClientNotActiveTurn);
 								break;
 							}
@@ -236,7 +244,7 @@ public class Server{
 						}
 						else {
 							Card cardChosen = rules.getPlayerById(threadID).getHand().getCardbyIndex(cardIndex);
-							System.out.println("Thread " + threadID + ": playing card " + cardIndex + ": " + 
+							log.logmsg("Thread " + threadID + ": attempting to play card " + cardIndex + ": " + 
 									cardChosen.getCardName());
 							if(cardChosen.getCardType() == CardType.Action){
 								List<Object> targets = null;
@@ -246,6 +254,7 @@ public class Server{
 								}
 								if (targets == null) {
 									send(Optcodes.InvalidCard);
+									log.logmsg("Thread " + threadID + ": Invalid targets for " + cardChosen.getCardName());
 									sendBoardState();
 									continue;
 								}
@@ -305,9 +314,13 @@ public class Server{
 									
 									rules.actionHandler(cardIndex, rules.getPlayerById(threadID), targets);
 									send(Optcodes.SuccessfulCardPlay);
+									log.logmsg("Thread " + threadID + ": successfully played action card " + cardIndex + ": " + 
+											cardChosen.getCardName());
 								}
 								else {
 									send(Optcodes.InvalidCard);
+									log.logmsg("Thread " + threadID + ": invalid play action card " + cardIndex + ": " + 
+											cardChosen.getCardName());
 								}
 							}
 							else if (cardChosen.getCardType() == CardType.Ivanhoe) {
@@ -316,9 +329,13 @@ public class Server{
 							else {
 								if (rules.playCard(cardIndex, threadID)) {
 									send(Optcodes.SuccessfulCardPlay);
+									log.logmsg("Thread " + threadID + ": successfully played value card " + cardIndex + ": " + 
+											cardChosen.getCardName());
 								}
 								else {
 									send(Optcodes.InvalidCard);
+									log.logmsg("Thread " + threadID + ": invalid play value card " + cardIndex + ": " + 
+											cardChosen.getCardName());
 								}
 							}
 						}
@@ -504,6 +521,15 @@ public class Server{
 				send(Optcodes.OppFailStartTournament);
 				send(((Long) event.get(0)).toString()); //player id who failed
 				send((List<Card>)event.get(2)); //hand
+				break;
+			case "withdraw":
+				send(Optcodes.OppWithdraw);
+				send(event.get(0));
+				break;
+			case "endturn":
+				send(Optcodes.OppEndTurn);
+				send(event.get(0));
+				break;
 			case "actioncard":
 				if (rules.getPlayerById(threadID).getHand().contains("Ivanhoe")) {
 					send(Optcodes.ClientGetIvanhoeChoice);
