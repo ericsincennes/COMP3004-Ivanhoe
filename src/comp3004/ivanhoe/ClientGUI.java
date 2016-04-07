@@ -240,7 +240,7 @@ public class ClientGUI extends Client{
 
 		playerDisplayPanel = new JPanel();
 		playerDisplayPanel.setLayout(new FlowLayout());
-		playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "Your Board"));
+		playerDisplayPanel.setBorder(new TitledBorder(new LineBorder(Color.black), "You " + playerid[0]));
 
 		
 		
@@ -1077,6 +1077,17 @@ public class ClientGUI extends Client{
 		JOptionPane.showMessageDialog(frmMain.getContentPane(), "You have won the game!" , "Game Winner", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
+	/**
+	 * msg to notify client when others' turn are over
+	 * @param mode 1 if they ended, 2 if they withdrew
+	 */
+	private void handleOppTurnOver(int mode) {
+		Long pid = (Long) get();
+		JOptionPane.showMessageDialog(frmMain.getContentPane(), 
+				"Player " + pid + " has " + ((mode%2 == 0) ? "withdrawn." : "ended their turn."),
+				"Turn Changed", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	private void handleGettingIvanhoed() {
 		JOptionPane.showMessageDialog(frmMain.getContentPane(), 
 				"Your action card just got countered by an Ivanhoe!" , "Ivanhoe'd!", JOptionPane.INFORMATION_MESSAGE);
@@ -1224,6 +1235,12 @@ public class ClientGUI extends Client{
 				break;
 			case Optcodes.Ivanhoe:
 				handleGettingIvanhoed();
+				break;
+			case Optcodes.OppEndTurn:
+				handleOppTurnOver(1);
+				break;
+			case Optcodes.OppWithdraw:
+				handleOppTurnOver(2);
 				break;
 			default: 
 				new Exception("Unexpected Value");

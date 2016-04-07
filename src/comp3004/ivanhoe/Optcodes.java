@@ -23,6 +23,8 @@ public class Optcodes {
 	public static final int TournamentColour			= 303;
 	
 	public static final int OppFailStartTournament 		= 205;
+	public static final int OppWithdraw					= 201;
+	public static final int OppEndTurn					= 202;
 	
 	public static final int WinTournament				= 501;
 	public static final int LoseTournament				= 499;
