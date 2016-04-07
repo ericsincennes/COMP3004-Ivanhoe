@@ -47,16 +47,16 @@ public final class BoardState implements Serializable{
 			return false;
 		}
 		BoardState other = (BoardState) otherobj;
-		boolean a,b,c,d,e,f,g;
+		boolean a,b,c,d,e,f,g,h;
 		a = this.owner == other.owner;
 		b = this.players.equals(other.players);
 		c = this.hand.equals(other.hand);
 		d = this.boards.equals(other.boards);
 		e = this.actionBoards.equals(other.actionBoards);
 		f = this.points.equals(other.points);
-		g = this.currColour == other.currColour;
-		boolean h = this.currColour != null && this.currColour.equals(other.currColour);
-		return a && b && c && d && e && f && g;
+		g = this.tokens.equals(other.tokens);
+		h = this.currColour != null && this.currColour.equals(other.currColour);
+		return a && b && c && d && e && f && g && h;
 	}
 	
 }
