@@ -23,6 +23,13 @@ public class ActionCardTest {
 	List<Object> toSend = new ArrayList<Object>();
 	long p1, p2, p3;
 	
+	private void testhand(Player p) {
+		p.getHand().discardHand();
+		for (int i=0; i<9; i++) {
+			p.addCard(new ColourCard(CardColour.Green, 1));
+		}
+	}
+	
 	@Before
 	public void setUp() throws Exception {
 		rules = RulesEngine.testRuleEngine(3);
@@ -724,5 +731,30 @@ public class ActionCardTest {
 		toSend.clear();
 		
 		rules.roundCleanup();
+	}
+	
+	@Test
+	public void GreenChargeTest() {
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Green);
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(1).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(2).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		rules.getPlayerById(3).getDisplay().addCard(new ColourCard(CardColour.Green, 1));
+		
+		rules.getPlayerById(1).addCard(new ActionCard("Charge"));
+		if (rules.validateActionCard(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend).length() > 0) {
+			rules.actionHandler(rules.getPlayerById(1).getHandSize()-1, rules.getPlayerById(1), toSend);
+		}
+		
+		assertEquals(1, rules.getPlayerById(1).getDisplay().getCards().size());
+		assertEquals(1, rules.getPlayerById(2).getDisplay().getCards().size());
+		assertEquals(1, rules.getPlayerById(3).getDisplay().getCards().size());
+		assertNotEquals("Charge", rules.getPlayerById(2).getHand().getCardbyIndex(rules.getPlayerById(1).getHandSize()-1).getCardName());
+
 	}
 }
