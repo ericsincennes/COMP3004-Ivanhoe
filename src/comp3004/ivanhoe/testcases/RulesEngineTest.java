@@ -218,6 +218,7 @@ public class RulesEngineTest {
 	@Test
 	public void blueTournamentTest(){
 		tournamentSetup();
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
 		assertEquals(CardColour.Blue, rules.getTournamentColour());
 		Player p1 = rules.getPlayerList().get(0);
 		Player p2 = rules.getPlayerList().get(1);
