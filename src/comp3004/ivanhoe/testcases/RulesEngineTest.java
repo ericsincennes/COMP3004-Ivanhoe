@@ -106,6 +106,16 @@ public class RulesEngineTest {
 		p.addCard(new ColourCard(CardColour.Purple, 7));
 		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
 		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Purple 7"); //playing on colour
+		
+		//play a single maiden
+		p.addCard(new SupporterCard(6));
+		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
+		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Maiden"); //single maiden play
+		
+		//play a single supporter
+		p.addCard(new SupporterCard(2));
+		assertTrue(rules.playCard(p.getHandSize()-1, p.getID()));
+		assertEquals(p.getDisplay().getLastPlayed().getCardName(), "Squire 2"); //single maiden play
 	}
 	 
 	@Test
@@ -532,6 +542,43 @@ public class RulesEngineTest {
 		assertEquals(0, p3.getDisplay().getCards().size());
 		assertEquals(0, p3.getDisplay().getActionCards().size());
 		assertTrue(rules.getDeck().viewDiscard().size() > beforecleanupDiscard);
+	}
+	
+	@Test
+	public void oneTurnWin() {
+		tournamentSetup();
+		rules.initializeTournamentColour(rules.getPlayerById(1).getID(), CardColour.Blue);
+		assertEquals(CardColour.Blue, rules.getTournamentColour());
+		Player p1 = rules.getPlayerList().get(0);
+		Player p2 = rules.getPlayerList().get(1);
+		Player p3 = rules.getPlayerList().get(2);
+		Player p;
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p1.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.playCard(0, p.getID());
+		rules.endTurn(p.getID());
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p2.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.withdrawPlayer(p.getID());
+		rules.withdrawCleanup(p.getID());
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p3.getID()); //check player turn order
+		rules.startTurn(p.getID());
+		rules.withdrawPlayer(p.getID());
+		Long winner = rules.withdrawCleanup(p.getID());
+		assertEquals(winner, Long.valueOf(p1.getID()));
+		
+		p = rules.getPlayerList().get(0);
+		assertEquals(p.getID(), p1.getID()); //winner is now 1st in list
+		assertEquals(0,p.getTokenCount());
+		assertTrue(rules.giveToken(p.getID(), rules.getTournamentColour()));
+		assertEquals(1,p.getTokenCount());
+		assertFalse(rules.isTournamentRunning());
 	}
 	
 }
